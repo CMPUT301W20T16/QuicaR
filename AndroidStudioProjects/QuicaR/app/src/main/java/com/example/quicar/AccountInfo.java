@@ -26,8 +26,8 @@ public class AccountInfo {
         this.accNo = accNo;
     }
 
-    public void setDriverInfo(DriverInfo driverInfo) {
-        this.driverInfo = driverInfo;
+    public void setDriverInfo( ) {
+        this.driverInfo = new DriverInfo();
     }
 
     public void setPassword(String password) {
