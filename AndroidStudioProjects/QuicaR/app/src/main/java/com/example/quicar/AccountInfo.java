@@ -59,6 +59,4 @@ public class AccountInfo {
     public Wallet getWallet() {
         return wallet;
     }
-
-
 }
