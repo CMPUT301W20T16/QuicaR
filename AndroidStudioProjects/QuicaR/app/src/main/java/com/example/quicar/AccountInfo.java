@@ -1,16 +1,18 @@
 package com.example.quicar;
 
 
+import java.security.PrivateKey;
+
 public class AccountInfo {
     /**
      This java class Account
      */
 
-    DriverInfo driverInfo;
-    Wallet wallet;
-    String phone;
-    String password;
-    String accNo;
+    private DriverInfo driverInfo;
+    private Wallet wallet;
+    private String phone;
+    private String password;
+    private String accNo;
 
     public AccountInfo() {
         this.driverInfo = null;
