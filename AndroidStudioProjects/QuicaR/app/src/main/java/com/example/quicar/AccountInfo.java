@@ -1,6 +1,5 @@
 package com.example.quicar;
 
-
 import java.security.PrivateKey;
 
 public class AccountInfo {

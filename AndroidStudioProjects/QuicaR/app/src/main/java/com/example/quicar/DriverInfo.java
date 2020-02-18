@@ -3,55 +3,64 @@ package com.example.quicar;
 import java.util.Date;
 
 public class DriverInfo {
-    private Double rating = 0.0;
-    private Integer orderNumber = 0;
-    private String plateNumber = null;
-    private String license = null;
-    private Date birthDate = null;
-    private String sinNumber = null;
+    private Double rating;
+    private Integer orderNumber;
+    private String plateNumber;
+    private String license;
+    private Date birthDate;
+    private String sinNumber;
+
+    protected DriverInfo(){
+        this.rating = 0.0;
+        this.orderNumber = 0;
+        this.plateNumber = null;
+        this.license = null;
+        this.birthDate = null;
+        this.sinNumber = null;
+    }
 
     protected void costumerRating(Double newRating){
-        rating = (rating * orderNumber + newRating) / (orderNumber++);
+        this.rating = (rating * orderNumber + newRating) / (orderNumber++);
     }
 
     protected Double getRating(){
-        return rating;
+        return this.rating;
     }
 
     protected Integer getOrderNumber(){
-        return orderNumber;
+        return this.orderNumber;
     }
 
     protected void setPlateNumber(String info){
-        plateNumber = info;
+        this.plateNumber = info;
     }
 
     protected String getPlateNumber(){
-        return plateNumber;
+        return this.plateNumber;
     }
 
-    protected void setLisence(String info){
-        license = info;
+    protected void setLisence(String license){
+        this.license = license;
     }
 
     protected String getLisence(){
-        return license;
+        return this.license;
     }
 
     protected void setBirthDate(Date date){
-        birthDate = date;
+        this.birthDate = date;
     }
 
     protected Date getBirthDate(){
-        return birthDate;
+        return this.birthDate;
     }
 
     protected void setSinNumber(String info){
-        sinNumber = info;
+        this.sinNumber = info;
     }
 
     protected String getSinNumber(){
-        return sinNumber;
+        return this.sinNumber;
     }
 
 }
