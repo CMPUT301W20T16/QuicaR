@@ -1,6 +1,7 @@
 package com.example.quicar;
 
 import java.security.PrivateKey;
+import java.util.Date;
 
 public class AccountInfo {
     /**
@@ -25,8 +26,12 @@ public class AccountInfo {
         this.accNo = accNo;
     }
 
-    public void setDriverInfo( ) {
-        this.driverInfo = new DriverInfo();
+    public void setDriverInfo(Double rating, String plateNumber, String license, Date birthDate, String sinNumber) {
+        this.driverInfo.setBirthDate(birthDate);
+        this.driverInfo.setLisence(license);
+        this.driverInfo.setPlateNumber(plateNumber);
+        this.driverInfo.setSinNumber(sinNumber);
+        this.driverInfo.setRatingAndOrder(rating);
     }
 
     public void setPassword(String password) {

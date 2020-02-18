@@ -8,7 +8,7 @@ public class User {
         this.accountinfo = null;
         this.isDriver = false;
     }
-    
+
     protected void setIsDriver(){
         this.isDriver = (this.accountinfo.getDriverInfo() != null);
     }

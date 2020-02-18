@@ -19,8 +19,8 @@ public class DriverInfo {
         this.sinNumber = null;
     }
 
-    protected void costumerRating(Double newRating){
-        this.rating = (rating * orderNumber + newRating) / (orderNumber++);
+    protected void setRatingAndOrder(Double newRating){
+        this.rating = (this.rating * this.orderNumber + newRating) / (++this.orderNumber);
     }
 
     protected Double getRating(){
