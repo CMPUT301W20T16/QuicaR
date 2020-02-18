@@ -5,18 +5,23 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseHelper {
     private FirebaseFirestore db;
@@ -34,6 +39,8 @@ public class DatabaseHelper {
     final private String TAG = "quicarDB";
     final private String RECORD_KEY = "record_data";
     final private String REQUEST_KEY = "request_data";
+
+    private Request queryRequest;
 
     public DatabaseHelper() {
         db = FirebaseFirestore.getInstance();
@@ -55,11 +62,12 @@ public class DatabaseHelper {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Log.d(TAG, String.valueOf(doc.getData().get(RECORD_KEY)));
                         recordID = doc.getId();
-                        Record record = (Record) doc.getData().get(RECORD_KEY);
+                        //delRecord(recordID);
+                        Record record = doc.toObject(Record.class);
                         records.add(record);
                     }
                     // recordID is a string "record" + "ID", so ID is indexing from 6 (length of "record")
-                    countRec = Integer.parseInt(recordID.substring(6));
+                    // countRec = Integer.parseInt(recordID.substring(6));
                 }
             }
         });
@@ -82,11 +90,12 @@ public class DatabaseHelper {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Log.d(TAG, String.valueOf(doc.getData().get(REQUEST_KEY)));
                         requestID = doc.getId();
-                        Request request = (Request) doc.getData().get(REQUEST_KEY);
+                        //delRequest(requestID);
+                        Request request = doc.toObject(Request.class);
                         activeRequests.add(request);
                     }
                     // requestID is a string "request" + "ID", so ID is indexing from 3 (length of "request")
-                    countReq = Integer.parseInt(requestID.substring(7));
+                    //countReq = Integer.parseInt(requestID.substring(7));
                 }
             }
         });
@@ -94,14 +103,18 @@ public class DatabaseHelper {
 
 
     public void addRecord(Record record) {
+//        HashMap<String, Record> myRecord = new HashMap<>();
+//        myRecord.put(REQUEST_KEY, record);
         collectionReferenceRec
-                .add(record)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document()
+                .set(record)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, documentReference.getId() + " addition successful");
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,  " record addition successful");
                         countRec++;
                     }
+
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -132,13 +145,17 @@ public class DatabaseHelper {
     }
 
 
-    public void addRecquest(Request request) {
+    public void addRequest(Request request) {
+//        HashMap<String, Request> myRequest = new HashMap<>();
+//        myRequest.put(REQUEST_KEY, request);
+
         collectionReferenceReq
-                .add(request)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document()
+                .set(request)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, documentReference.getId() + " addition successful");
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,  " request addition successful");
                         countReq++;
                     }
                 })
@@ -167,6 +184,32 @@ public class DatabaseHelper {
                         Log.d(TAG, requestID + " deletion failed" + e.toString());
                     }
                 });
+    }
+
+    public Request queryRequest(String username) {
+         // final Request request;
+
+         collectionReferenceReq
+                .whereEqualTo("rider.name", username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            // queryRequest = (Request) document.getData().get(Request.class);
+                            queryRequest = document.toObject(Request.class);
+                            System.out.println("*****************************");
+                            System.out.println(queryRequest.getRider().getName());
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                        //queryRequest = null;
+                    }
+                }
+            });
+         return queryRequest;
     }
 
 }
