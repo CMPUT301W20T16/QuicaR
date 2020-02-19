@@ -1,5 +1,7 @@
 package com.example.quicar;
 
+import java.util.Date;
+
 public class User {
     private AccountInfo accountinfo;
     private boolean isDriver;
@@ -17,11 +19,17 @@ public class User {
         return this.isDriver;
     }
 
-    protected void setAccountinfo(Wallet wallet, String phone, String password, String accNo){
-        this.accountinfo.setWallet(wallet);
+    protected void setAccountinfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet){
+        this.accountinfo.setAccNo(accNo);
+        this.accountinfo.setFirstname(firstname);
+        this.accountinfo.setLastname(lastname);
+        this.accountinfo.setBirthDate(birthDate);
+        this.accountinfo.setGender(gender);
+        this.accountinfo.setUsername(username);
         this.accountinfo.setPassword(password);
         this.accountinfo.setPhone(phone);
-        this.accountinfo.setAccNo(accNo);
+        this.accountinfo.setEmail(email);
+        this.accountinfo.setWallet(wallet);
     }
 
     protected AccountInfo getAccountinfo(){
