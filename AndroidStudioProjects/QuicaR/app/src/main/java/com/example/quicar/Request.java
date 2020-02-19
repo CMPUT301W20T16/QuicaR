@@ -1,10 +1,13 @@
 package com.example.quicar;
 
+
 public class Request {
     private Location start;
     private Location destination;
     private User rider;
     private User driver;
+
+    public Request() {}
 
     public Request(Location start, Location destination, User rider, User driver) {
         this.start = start;

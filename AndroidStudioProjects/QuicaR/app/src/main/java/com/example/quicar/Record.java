@@ -1,12 +1,17 @@
 package com.example.quicar;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Record {
     private Request request;
     private Long dateTime;
     private Float payment;
     private Float rating;
+
+    public Record() {}
 
     public Record(Request request, Float payment, Float rating) {
         this.request = request;
@@ -45,5 +50,11 @@ public class Record {
 
     public void setRating(Float rating) {
         this.rating = rating;
+    }
+
+    public String getDateTimeString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.CANADA);
+        Date resultdate = new Date(dateTime);
+        return sdf.format(resultdate);
     }
 }

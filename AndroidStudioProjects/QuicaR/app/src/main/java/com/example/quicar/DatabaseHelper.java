@@ -1,5 +1,6 @@
 package com.example.quicar;
 
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,27 +21,33 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DatabaseHelper {
-    private FirebaseFirestore db;
-    private CollectionReference collectionReferenceRec;
-    private CollectionReference collectionReferenceReq;
+    private static FirebaseFirestore db;
+    private static CollectionReference collectionReferenceRec;
+    private static CollectionReference collectionReferenceReq;
 
-    static private Integer countRec = 0;
-    static private Integer countReq = 0;
+    //static private Integer countRec = 0;
+    //static private Integer countReq = 0;
 
-    private ArrayList<Record> records = new ArrayList<>();
-    private ArrayList<Request> activeRequests = new ArrayList<>();
+    private static ArrayList<Record> records = new ArrayList<>();
+    private static ArrayList<Request> activeRequests = new ArrayList<>();
 
-    final private String REC_COLL_NAME = "Records";
-    final private String REQ_COLL_NAME = "Requests";
-    final private String TAG = "quicarDB";
-    final private String RECORD_KEY = "record_data";
-    final private String REQUEST_KEY = "request_data";
+    final private static String REC_COLL_NAME = "Records";
+    final private static String REQ_COLL_NAME = "Requests";
+    final private static String TAG = "quicarDB";
+    final private static String RECORD_KEY = "record_data";
+    final private static String REQUEST_KEY = "request_data";
 
-    private Request queryRequest;
+    private static Request query;
+
+    public Request getQueryRequest() {
+        return query;
+    }
+
+    public void setQueryRequest(Request queryRequest) {
+        this.query = queryRequest;
+    }
 
     public DatabaseHelper() {
         db = FirebaseFirestore.getInstance();
@@ -112,7 +119,7 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " record addition successful");
-                        countRec++;
+                        //countRec++;
                     }
 
                 })
@@ -133,7 +140,7 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, recordID + " deletion successful");
-                        countRec--;
+                        //countRec--;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -156,7 +163,7 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " request addition successful");
-                        countReq++;
+                        //countReq++;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -175,7 +182,7 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
-                        countReq--;
+                        //countReq--;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -189,27 +196,39 @@ public class DatabaseHelper {
     public Request queryRequest(String username) {
          // final Request request;
 
-         collectionReferenceReq
-                .whereEqualTo("rider.name", username)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            // queryRequest = (Request) document.getData().get(Request.class);
-                            queryRequest = document.toObject(Request.class);
-                            System.out.println("*****************************");
-                            System.out.println(queryRequest.getRider().getName());
-                        }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                        //queryRequest = null;
-                    }
-                }
-            });
-         return queryRequest;
+//         collectionReferenceReq
+//                .whereEqualTo("rider.name", username)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                //setQueryRequest(document.toObject(Request.class));
+//                                query = document.toObject(Request.class);
+//                                System.out.println("*****************************");
+//                                System.out.println(query.getRider().getName());
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                            //queryRequest = null;
+//                        }
+//                    }
+//            });
+         Task<QuerySnapshot> task = collectionReferenceReq.whereEqualTo("rider.name", username).get();
+         // wait until the query is done
+         while (!task.isSuccessful()) {}
+
+         for (QueryDocumentSnapshot document : task.getResult()) {
+             Log.d(TAG, document.getId() + " => " + document.getData());
+             //setQueryRequest(document.toObject(Request.class));
+             query = document.toObject(Request.class);
+             System.out.println("*****************************");
+             System.out.println(query.getRider().getName());
+         }
+
+         return query;
     }
 
 }

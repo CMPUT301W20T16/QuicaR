@@ -14,12 +14,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DatabaseHelper databaseHelper = new DatabaseHelper();
         Request request = new Request(new Location(), new Location(), new User(), new User());
-        Record record = new Record(request, new Float(10), new Float(5));
-        databaseHelper.addRecquest(request);
+        Record record = new Record(request, 10.0f, 5.0f);
+        //System.out.println(record.getDateTime());
+        databaseHelper.addRequest(request);
         databaseHelper.addRecord(record);
-        databaseHelper.addRecord(record);
-        //databaseHelper.delRequest("request1");
-        //databaseHelper.delRecord("record1");
-        //databaseHelper.delRecord("record2");
+        Request query = databaseHelper.queryRequest("testing");
+        System.out.println("------------------------------" + query.getRider().getName());
     }
 }
