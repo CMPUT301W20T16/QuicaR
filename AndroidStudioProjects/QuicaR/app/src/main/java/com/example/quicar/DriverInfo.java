@@ -7,7 +7,6 @@ public class DriverInfo {
     private Integer orderNumber;
     private String plateNumber;
     private String license;
-    private Date birthDate;
     private String sinNumber;
 
     protected DriverInfo(){
@@ -15,7 +14,6 @@ public class DriverInfo {
         this.orderNumber = 0;
         this.plateNumber = null;
         this.license = null;
-        this.birthDate = null;
         this.sinNumber = null;
     }
 
@@ -45,14 +43,6 @@ public class DriverInfo {
 
     protected String getLisence(){
         return this.license;
-    }
-
-    protected void setBirthDate(Date date){
-        this.birthDate = date;
-    }
-
-    protected Date getBirthDate(){
-        return this.birthDate;
     }
 
     protected void setSinNumber(String info){
