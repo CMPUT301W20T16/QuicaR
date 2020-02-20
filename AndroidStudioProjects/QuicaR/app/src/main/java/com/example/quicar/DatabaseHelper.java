@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -44,12 +45,27 @@ public class DatabaseHelper {
 
     public DatabaseHelper() {
         db = FirebaseFirestore.getInstance();
+
+        //  Configure offline persistence
+        // The default cache size threshold is 100 MB. Configure "setCacheSizeBytes"
+        // for a different threshold (minimum 1 MB) or set to "CACHE_SIZE_UNLIMITED"
+        // to disable clean-up.
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build();
+        db.setFirestoreSettings(settings);
+
         collectionReferenceRec = db.collection(REC_COLL_NAME);
         collectionReferenceReq = db.collection(REQ_COLL_NAME);
 
         collectionReferenceRec.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen error", e);
+                    return;
+                }
                 if (queryDocumentSnapshots != null) {
                     // notification for local and server update
                     Log.d(TAG,"Got a " +
