@@ -6,6 +6,7 @@ public class Request {
     private Location destination;
     private User rider;
     private User driver;
+    private Boolean isAccepted;
 
     public Request() {}
 
@@ -14,6 +15,7 @@ public class Request {
         this.destination = destination;
         this.rider = rider;
         this.driver = driver;
+        this.isAccepted = false;
     }
 
     public Location getStart() {
@@ -46,5 +48,13 @@ public class Request {
 
     public void setDriver(User driver) {
         this.driver = driver;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
     }
 }
