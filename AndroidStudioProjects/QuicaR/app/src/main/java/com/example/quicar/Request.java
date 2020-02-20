@@ -1,11 +1,19 @@
 package com.example.quicar;
 
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.PropertyName;
+
 public class Request {
+
     private Location start;
+
     private Location destination;
+
     private User rider;
+
     private User driver;
+
     private Boolean isAccepted;
 
     public Request() {}
@@ -50,10 +58,12 @@ public class Request {
         this.driver = driver;
     }
 
+    @PropertyName("isAccepted")
     public Boolean getAccepted() {
         return isAccepted;
     }
 
+    @PropertyName("isAccepted")
     public void setAccepted(Boolean accepted) {
         isAccepted = accepted;
     }
