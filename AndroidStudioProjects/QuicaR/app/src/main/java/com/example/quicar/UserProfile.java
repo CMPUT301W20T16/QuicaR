@@ -55,7 +55,7 @@ public class UserProfile extends AppCompatActivity {
                 }
 
                 // need to be change here
-                
+
                 mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
