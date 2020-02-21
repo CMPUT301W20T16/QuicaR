@@ -4,11 +4,19 @@ package com.example.quicar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.google.firebase.firestore.PropertyName;
 
 public class Record {
+    @PropertyName("request")
     private Request request;
-    private Long dateTime;
+
+    @PropertyName("date&time")
+    private Date dateTime;
+
+    @PropertyName("payment")
     private Float payment;
+
+    @PropertyName("rating")
     private Float rating;
 
     public Record() {}
@@ -17,7 +25,7 @@ public class Record {
         this.request = request;
         this.payment = payment;
         this.rating = rating;
-        this.dateTime = System.currentTimeMillis();
+        this.dateTime = new Date();
     }
 
     public Request getRequest() {
@@ -28,11 +36,11 @@ public class Record {
         this.request = request;
     }
 
-    public Long getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Long dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -54,7 +62,7 @@ public class Record {
 
     public String getDateTimeString() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.CANADA);
-        Date resultdate = new Date(dateTime);
-        return sdf.format(resultdate);
+//        Date resultdate = new Date(dateTime);
+        return sdf.format(dateTime);
     }
 }

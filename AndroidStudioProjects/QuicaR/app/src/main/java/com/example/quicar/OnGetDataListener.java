@@ -22,6 +22,9 @@ public interface OnGetDataListener {
     //  notify listener that request is successfully deleted
     void onSuccessDelete();
 
+    //  notify listener that request is completed, request deleted and new record created
+    void onSuccessComplete();
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

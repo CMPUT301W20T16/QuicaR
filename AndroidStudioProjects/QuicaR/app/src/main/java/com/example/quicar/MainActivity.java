@@ -14,7 +14,9 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new DatabaseHelper();
-        Request request = new Request(new Location(), new Location(), new User(), new User());
+        User newUser = new User();
+        newUser.setName("testing");
+        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
         Record record = new Record(request, 10.0f, 5.0f);
         //System.out.println(record.getDateTime());
         DatabaseHelper.addRequest(request);
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
         if (request != null) {
             //  always check if the return value is valid
             System.out.println("---------------" + request.getDriver().getName() + "---------------");
+            DatabaseHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
         }
     }
 
@@ -60,11 +63,18 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
         System.out.println("------------ request is set to active -----------");
         DatabaseHelper.queryAllOpenRequests(new Location(), this);
         DatabaseHelper.queryDriverActiveRequest("new Driver", this);
+
     }
 
     @Override
     public void onSuccessDelete() {
         System.out.println("------------ request is deleted -----------");
+    }
+
+    @Override
+    public void onSuccessComplete() {
+        System.out.println("------------ request is completed & deleted -----------");
+        System.out.println("------------ new record is created -----------");
     }
 
     @Override

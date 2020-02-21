@@ -1,36 +1,70 @@
 package com.example.quicar;
 
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.PropertyName;
+
+import java.util.Date;
+import com.google.firebase.firestore.PropertyName;
 
 public class User {
 
-    private String name;
+    private AccountInfo accountInfo;
 
-    private Boolean isDriver;
+    private boolean isDriver = false;
 
-    public User() {
-        name = "testing";
-        isDriver = false;
+    protected User() {
+        this.accountInfo = new AccountInfo();
+        this.isDriver = false;
     }
 
-    @PropertyName("username")
-    public String getName() {
-        return name;
+    @PropertyName("account")
+    public AccountInfo getAccountInfo() {
+        return accountInfo;
     }
 
-    @PropertyName("username")
-    public void setName(String name) {
-        this.name = name;
+    @PropertyName("account")
+    public void setAccountInfo(AccountInfo accountinfo) {
+        this.accountInfo = accountinfo;
     }
 
     @PropertyName("isDriver")
-    public Boolean getDriver() {
+    public boolean isDriver() {
         return isDriver;
     }
 
     @PropertyName("isDriver")
-    public void setDriver(Boolean driver) {
+    public void setDriver(boolean driver) {
         isDriver = driver;
     }
+//    protected void setIsDriver(){
+//        this.isDriver = (this.accountinfo.getDriverInfo() != null);
+//    }
+//
+//    protected boolean getIsDriver(){
+//        return this.isDriver;
+//    }
+//
+    protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet){
+        this.accountInfo.setAccNo(accNo);
+        this.accountInfo.setFirstName(firstname);
+        this.accountInfo.setLastName(lastname);
+        this.accountInfo.setBirthDate(birthDate);
+        this.accountInfo.setGender(gender);
+        this.accountInfo.setUserName(username);
+        this.accountInfo.setPassword(password);
+        this.accountInfo.setPhone(phone);
+        this.accountInfo.setEmail(email);
+        this.accountInfo.setWallet(wallet);
+    }
+
+//    protected Accountinfo getAccountinfo(){
+//        return this.accountinfo;
+//    }
+
+    protected void setName(String name) {
+        setAccountInfo(null, null, null, null, null, null, null, name, null, null);
+    }
+
+    protected String getName() {
+        return this.accountInfo.getUserName();
+    }
+
 }

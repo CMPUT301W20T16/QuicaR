@@ -1,8 +1,6 @@
 package com.example.quicar;
 
-
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.PropertyName;
+import com.google.firebase.firestore.PropertyName;
 
 public class Request {
 
@@ -16,14 +14,17 @@ public class Request {
 
     private Boolean isAccepted;
 
+    private Float estimatedCost;
+
     public Request() {}
 
-    public Request(Location start, Location destination, User rider, User driver) {
+    public Request(Location start, Location destination, User rider, User driver, Float estimatedCost) {
         this.start = start;
         this.destination = destination;
         this.rider = rider;
         this.driver = driver;
         this.isAccepted = false;
+        this.estimatedCost = estimatedCost;
     }
 
     public Location getStart() {
@@ -66,5 +67,13 @@ public class Request {
     @PropertyName("isAccepted")
     public void setAccepted(Boolean accepted) {
         isAccepted = accepted;
+    }
+
+    public Float getEstimatedCost() {
+        return estimatedCost;
+    }
+
+    public void setEstimatedCost(Float estimatedCost) {
+        this.estimatedCost = estimatedCost;
     }
 }
