@@ -67,4 +67,8 @@ public class User {
         return this.accountInfo.getUserName();
     }
 
+    protected void setBasic(String email, String password) {
+        setAccountInfo(null, null, null, null, null, null, email, null, password, null);
+    }
+
 }

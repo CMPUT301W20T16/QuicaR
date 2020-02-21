@@ -11,37 +11,35 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MetadataChanges;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 public class DatabaseHelper {
     private static final String REC_COLL_NAME = "Records";
     private static final String REQ_COLL_NAME = "Requests";
+    private static final String USER_COLL_NAME = "Users";
     private static final String TAG = "quicarDB";
     private static final String RECORD_KEY = "record_data";
     private static final String REQUEST_KEY = "request_data";
+    private static final String USER_KEY = "user_account";
 
     private static FirebaseFirestore db;
     private static CollectionReference collectionReferenceRec;
     private static CollectionReference collectionReferenceReq;
-
-    //static private Integer countRec = 0;
-    //static private Integer countReq = 0;
+    private static CollectionReference collectionReferenceUser;
 
     private static ArrayList<Record> records = new ArrayList<>();
     private static ArrayList<Request> requests = new ArrayList<>();
-//    private static Request query;
+    private static ArrayList<User> users = new ArrayList<>();
+
+    private static String currentUserName;
 
     public DatabaseHelper() {
         db = FirebaseFirestore.getInstance();
@@ -58,6 +56,7 @@ public class DatabaseHelper {
 
         collectionReferenceRec = db.collection(REC_COLL_NAME);
         collectionReferenceReq = db.collection(REQ_COLL_NAME);
+        collectionReferenceUser = db.collection(USER_COLL_NAME);
 
         collectionReferenceRec.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
             @Override
@@ -70,7 +69,7 @@ public class DatabaseHelper {
                     // notification for local and server update
                     Log.d(TAG,"Got a " +
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
-                            + " update");
+                            + " update for record");
 
                     DatabaseHelper.records.clear();
 
@@ -83,8 +82,6 @@ public class DatabaseHelper {
                         Record record = doc.toObject(Record.class);
                         DatabaseHelper.records.add(record);
                     }
-                    // recordID is a string "record" + "ID", so ID is indexing from 6 (length of "record")
-                    // countRec = Integer.parseInt(recordID.substring(6));
                 }
             }
         });
@@ -96,7 +93,7 @@ public class DatabaseHelper {
                     // notification for local and server update
                     Log.d(TAG,"Got a " +
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
-                            + " update");
+                            + " update for request");
 
                     DatabaseHelper.requests.clear();
 
@@ -109,13 +106,43 @@ public class DatabaseHelper {
                         Request request = doc.toObject(Request.class);
                         DatabaseHelper.requests.add(request);
                     }
-                    // requestID is a string "request" + "ID", so ID is indexing from 3 (length of "request")
-                    //countReq = Integer.parseInt(requestID.substring(7));
+                }
+            }
+        });
+
+        collectionReferenceUser.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for user account");
+
+                    DatabaseHelper.users.clear();
+
+                    String userID = "request0";
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Log.d(TAG, String.valueOf(doc.getData().get(USER_KEY)));
+                        userID = doc.getId();
+//                        delUser(userID);
+                        User user = doc.toObject(User.class);
+                        DatabaseHelper.users.add(user);
+                    }
                 }
             }
         });
     }
 
+
+    public static String getCurrentUserName() {
+        return currentUserName;
+    }
+
+    public static void setCurrentUserName(String currentUserName) {
+        DatabaseHelper.currentUserName = currentUserName;
+    }
 
     private static void addRecord(final Record record) {
         collectionReferenceRec
@@ -125,7 +152,6 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " record addition successful");
-                        //countRec++;
                     }
 
                 })
@@ -146,7 +172,6 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, recordID + " deletion successful");
-                        //countRec--;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -158,7 +183,7 @@ public class DatabaseHelper {
     }
 
 
-    public static void addRequest(final Request request) {
+    private static void addRequest(final Request request, final OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document()
                 .set(request)
@@ -166,16 +191,53 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " request addition successful");
-                        //countReq++;
+                        listener.onSuccessAddRequest();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG,  "Request addition failed" + e.toString());
+                        listener.onFailure("Request addition failed" + e.toString());
                     }
                 });
     }
+
+
+    public static void addNewRequest(final Request request, final OnGetRequestDataListener listener) {
+        if (request == null)
+            listener.onFailure("request provided is a null object");
+        final String riderName = request.getRider().getName();
+        collectionReferenceReq
+                .whereEqualTo("rider.account.userName", riderName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            Request query = null;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                query = document.toObject(Request.class);
+                                count++;
+                            }
+                            if (count > 0) {
+                                System.out.println("*****  user \" " + riderName + " \" already has one request");
+                                listener.onFailure(riderName + " already has one request");
+                            } else {
+                                DatabaseHelper.addRequest(request, listener);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
 
     private static void delRequest(final String requestID) {
         collectionReferenceReq
@@ -185,7 +247,6 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
-                        //countReq--;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -198,7 +259,7 @@ public class DatabaseHelper {
 
 
     private static void updateRequest(final String docID, final Request request,
-                                      final OnGetDataListener listener) {
+                                      final OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document(docID)
                 .set(request)
@@ -207,7 +268,6 @@ public class DatabaseHelper {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " Request update successful");
                         listener.onSuccessSetActive();
-                        //countRec++;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -220,7 +280,139 @@ public class DatabaseHelper {
     }
 
 
-    public static void queryRiderOpenRequest(final String riderName, final OnGetDataListener listener) {
+    private static void addUser(final User newUser, final OnGetUserDataListener listener) {
+        collectionReferenceUser
+                .document()
+                .set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,  "User addition successful");
+                        listener.onSuccessAddUser();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,  "User addition failed" + e.toString());
+                    }
+                });
+    }
+
+    private static void delUser(final String userID) {
+        collectionReferenceUser
+                .document(userID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, userID + " deletion successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, userID + " deletion failed" + e.toString());
+                    }
+                });
+    }
+
+
+    private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
+        collectionReferenceUser
+                .document(userID)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,  "User update successful");
+                        listener.onSuccessUpdateUser();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,  "User update failed" + e.toString());
+                        listener.onFailure("User update failed" + e.toString());
+                    }
+                });
+    }
+
+
+    public static void addNewUser(final User user, final OnGetUserDataListener listener) {
+        if (user == null)
+            listener.onFailure("user provided is a null object");
+        final String userName = user.getName();
+        collectionReferenceUser
+                .whereEqualTo("account.userName", userName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            User user = null;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                user = document.toObject(User.class);
+                                count++;
+                            }
+                            if (count > 0) {
+                                System.out.println("*****  user \" " + userName + " \" has an existing account");
+                                listener.onFailure(userName + " has anexisting request");
+                            } else {
+                                DatabaseHelper.addUser(user, listener);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
+
+    public static void updateUserProfile(final String userName, final OnGetUserDataListener listener) {
+        if (userName == null || userName.length() == 0)
+            listener.onFailure("user name provided is a null or empty");
+        collectionReferenceUser
+                .whereEqualTo("account.userName", userName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            User user = null;
+                            String userID = "";
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                user = document.toObject(User.class);
+                                userID = document.getId();
+                                count++;
+                            }
+                            if (count > 1) {
+                                System.out.println("*****  user \" " + userName + " \" has more than one account");
+                                listener.onFailure(userName + " has more than one request");
+                            } else {
+                                DatabaseHelper.updateUser(user, userID, listener);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
+
+    public static void queryRiderOpenRequest(final String riderName, final OnGetRequestDataListener listener) {
+        if (riderName == null || riderName.length() == 0)
+            listener.onFailure("rider name provided is a null or empty");
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -249,23 +441,12 @@ public class DatabaseHelper {
                         }
                     }
                 });
-//         Task<QuerySnapshot> task = collectionReferenceReq.whereEqualTo("rider.name", username).get();
-//         // wait until the query is done
-//         while (!task.isSuccessful()) {}
-//
-//         for (QueryDocumentSnapshot document : task.getResult()) {
-//             Log.d(TAG, document.getId() + " => " + document.getData());
-//             //setQueryRequest(document.toObject(Request.class));
-//             query = document.toObject(Request.class);
-//             System.out.println("*****************************");
-//             System.out.println(query.getRider().getName());
-//         }
-
-        //return query;
     }
 
 
-    public static void queryDriverActiveRequest(final String driverName, final OnGetDataListener listener) {
+    public static void queryDriverActiveRequest(final String driverName, final OnGetRequestDataListener listener) {
+        if (driverName == null || driverName.length() == 0)
+            listener.onFailure("driver name provided is a null or empty");
         collectionReferenceReq
                 .whereEqualTo("driver.account.userName", driverName)
                 .get()
@@ -297,7 +478,7 @@ public class DatabaseHelper {
     }
 
 
-    public static void queryAllOpenRequests(final Location location, final OnGetDataListener listener) {
+    public static void queryAllOpenRequests(final Location location, final OnGetRequestDataListener listener) {
         //listener.onStart();
         Float latRange = 10.0f;
         Float lonRange = 10.0f;
@@ -330,7 +511,11 @@ public class DatabaseHelper {
 
 
     public static void setRequestActive(final String riderName, final User driver,
-                                        final OnGetDataListener listener) {
+                                        final OnGetRequestDataListener listener) {
+        if (riderName == null || riderName.length() == 0)
+            listener.onFailure("rider name provided is a null or empty");
+        else if (driver == null)
+            listener.onFailure("driver provided is a null object");
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -369,7 +554,9 @@ public class DatabaseHelper {
                 });
     }
 
-    public static void cancelRequest(final String riderName, final OnGetDataListener listener) {
+    public static void cancelRequest(final String riderName, final OnGetRequestDataListener listener) {
+        if (riderName == null || riderName.length() == 0)
+            listener.onFailure("rider name provided is a null or empty");
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -402,7 +589,7 @@ public class DatabaseHelper {
                                 } else {
                                     System.out.println("***** " + docID);
                                     DatabaseHelper.delRequest(docID);
-                                    listener.onSuccessDelete();
+                                    listener.onSuccessCancel();
                                 }
 
                             }
@@ -415,7 +602,9 @@ public class DatabaseHelper {
     }
 
     public static void completeRequest(final String driverName, final Float payment, final Float rating,
-                                       final OnGetDataListener listener) {
+                                       final OnGetRequestDataListener listener) {
+        if (driverName == null || driverName.length() == 0)
+            listener.onFailure("driver name provided is a null or empty");
         collectionReferenceReq
                 .whereEqualTo("driver.account.userName", driverName)
                 .get()

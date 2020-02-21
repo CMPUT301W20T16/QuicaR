@@ -2,25 +2,27 @@ package com.example.quicar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnGetDataListener {
+public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //  database test cases
         new DatabaseHelper();
         User newUser = new User();
         newUser.setName("testing");
         Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
         Record record = new Record(request, 10.0f, 5.0f);
         //System.out.println(record.getDateTime());
-        DatabaseHelper.addRequest(request);
-        //DatabaseHelper.addRecord(record);
+        DatabaseHelper.addNewRequest(request, this);
         DatabaseHelper.queryRiderOpenRequest("testing", this);
         DatabaseHelper.queryAllOpenRequests(new Location(),this);
         User newDriver = new User();
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
         DatabaseHelper.setRequestActive("testing", newDriver, this);
         //DatabaseHelper.cancelRequest("testing", this);
         DatabaseHelper.queryDriverActiveRequest(newDriver.getName(), this);
+
+        //  test adding new user in register page
+        startActivity(new Intent(getApplicationContext(), Login.class));
     }
 
     @Override
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
     }
 
     @Override
-    public void onSuccessDelete() {
+    public void onSuccessCancel() {
         System.out.println("------------ request is deleted -----------");
     }
 
@@ -75,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements OnGetDataListener
     public void onSuccessComplete() {
         System.out.println("------------ request is completed & deleted -----------");
         System.out.println("------------ new record is created -----------");
+    }
+
+    @Override
+    public void onSuccessAddRequest() {
+
     }
 
     @Override

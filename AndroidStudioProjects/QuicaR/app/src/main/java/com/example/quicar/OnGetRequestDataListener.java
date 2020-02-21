@@ -6,7 +6,7 @@ package com.example.quicar;
 
 import java.util.ArrayList;
 
-public interface OnGetDataListener {
+public interface OnGetRequestDataListener {
     //  provide request that is open by the user
     void onSuccessRiderOpenRequest(Request request);
 
@@ -16,11 +16,14 @@ public interface OnGetDataListener {
     //  provide request that the driver accepted
     void onSuccessDriverActiveRequest(Request request);
 
+    // notify listener that new request is added successfully
+    void onSuccessAddRequest();
+
     //  notify listener that request is successfully updated to active
     void onSuccessSetActive();
 
     //  notify listener that request is successfully deleted
-    void onSuccessDelete();
+    void onSuccessCancel();
 
     //  notify listener that request is completed, request deleted and new record created
     void onSuccessComplete();
