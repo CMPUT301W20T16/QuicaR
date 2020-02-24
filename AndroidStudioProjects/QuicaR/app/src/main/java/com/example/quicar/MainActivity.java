@@ -17,22 +17,24 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         //  database test cases
         new DatabaseHelper();
-        User newUser = new User();
-        newUser.setName("testing");
-        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
-        Record record = new Record(request, 10.0f, 5.0f);
-        //System.out.println(record.getDateTime());
-        DatabaseHelper.addNewRequest(request, this);
-        DatabaseHelper.queryRiderOpenRequest("testing", this);
-        DatabaseHelper.queryAllOpenRequests(new Location(),this);
-        User newDriver = new User();
-        newDriver.setName("new Driver");
-        DatabaseHelper.setRequestActive("testing", newDriver, this);
-        //DatabaseHelper.cancelRequest("testing", this);
-        DatabaseHelper.queryDriverActiveRequest(newDriver.getName(), this);
+//        User newUser = new User();
+//        newUser.setName("testing");
+//        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
+//        Record record = new Record(request, 10.0f, 5.0f);
+//        //System.out.println(record.getDateTime());
+//        DatabaseHelper.addNewRequest(request, this);
+//        DatabaseHelper.queryRiderOpenRequest("testing", this);
+//        DatabaseHelper.queryAllOpenRequests(new Location(),this);
+//        User newDriver = new User();
+//        newDriver.setName("new Driver");
+//        DatabaseHelper.setRequestActive("testing", newDriver, this);
+//        //DatabaseHelper.cancelRequest("testing", this);
+//        DatabaseHelper.queryDriverActiveRequest(newDriver.getName(), this);
 
         //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
+        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+
     }
 
     @Override

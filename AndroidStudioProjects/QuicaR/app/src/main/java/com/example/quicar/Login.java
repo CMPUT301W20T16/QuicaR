@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-                            DatabaseHelper.setCurrentUserName(currentUser.getDisplayName());
+                            DatabaseHelper.setCurrentUserName("new User");
                             Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
