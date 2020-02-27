@@ -7,15 +7,28 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class handle storing, retrieving and removing data from sharedpreferences of android
+ * as local memory
+ */
 public class LocalMemoryHelper {
     private Context context;
     private int length = 0;
 
+    /**
+     * This is the constructor of LocalMemoryHelper
+     * @param context
+     */
     public LocalMemoryHelper(Context context) {
         this.context = context;
     }
 
+    /**
+     * This method get an array list (pointer) as parameter and store data into the the list
+     * so that data is retrieved from local memory to the list
+     * @param stateDataList
+     *  This is the list that will get data from local memory
+     */
     public void retrieveItems(ArrayList<UserState> stateDataList) {
         //  retrieved value will be added into the stateDataList so that all values
         //  can be transfer back to where this function is call, without returning any value
@@ -39,6 +52,11 @@ public class LocalMemoryHelper {
         }
     }
 
+    /**
+     * This method store an item into local memory
+     * @param newUserState
+     *  This is the candidate item to add
+     */
     public void addItem(UserState newUserState) {
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
@@ -55,6 +73,11 @@ public class LocalMemoryHelper {
         length++;
     }
 
+    /**
+     * This method delete an item from the local memory using it's index / position
+     * @param position
+     *  This is the candidate index of the item wanted to be deleted
+     */
     public void deleteItem(int position) {
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
@@ -79,6 +102,13 @@ public class LocalMemoryHelper {
         length--;
     }
 
+    /**
+     * This method will update an item in the local memory
+     * @param position
+     *  This is the candidate position / index of the item to be updated
+     * @param newUserState
+     *  This is the new object of the item with new values
+     */
     public void modifyItem(int position, UserState newUserState) {
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();

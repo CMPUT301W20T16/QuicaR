@@ -6,6 +6,10 @@ package com.example.quicar;
 
 import java.util.ArrayList;
 
+/**
+ * This is the interface that act as a listener when interacting with database helper
+ * so that it can be notified when requests data transfer is successful or failed.
+ */
 public interface OnGetRequestDataListener {
     //  provide request that is open by the user
     void onSuccessRiderOpenRequest(Request request);

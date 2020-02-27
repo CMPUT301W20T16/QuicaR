@@ -21,6 +21,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This is the class that handle data transfer between the app and firebase
+ */
 public class DatabaseHelper {
     private static final String REC_COLL_NAME = "Records";
     private static final String REQ_COLL_NAME = "Requests";
@@ -41,6 +44,10 @@ public class DatabaseHelper {
 
     private static String currentUserName;
 
+    /**
+     * This is the constructor of database helper which initialize the firebase instance
+     * and set up values for interacting.
+     */
     public DatabaseHelper() {
         db = FirebaseFirestore.getInstance();
 
@@ -135,7 +142,11 @@ public class DatabaseHelper {
         });
     }
 
-
+    /**
+     * This is the method that return the current user name stored locally
+     * @return
+     *  current user name
+     */
     public static String getCurrentUserName() {
         return currentUserName;
     }
@@ -163,7 +174,11 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that delete a record from firebase
+     * @param recordID
+     *  id of record to be deleted
+     */
     private static void delRecord(final String recordID) {
         collectionReferenceRec
                 .document(recordID)
@@ -182,7 +197,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that add request to firebase and will notify the listener when success
+     * @param request
+     *  request to be added
+     * @param listener
+     *  listener for notification
+     */
     private static void addRequest(final Request request, final OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document()
@@ -203,7 +224,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that check if the request is valid and call addRequest method
+     * @param request
+     *  candidate request to be added
+     * @param listener
+     *  listener for notification
+     */
     public static void addNewRequest(final Request request, final OnGetRequestDataListener listener) {
         if (request == null)
             listener.onFailure("request provided is a null object");
@@ -238,7 +265,11 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that delete request from firebase
+     * @param requestID
+     *  id of request to be deleted
+     */
     private static void delRequest(final String requestID) {
         collectionReferenceReq
                 .document(requestID)
@@ -257,7 +288,15 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that update request in firebase
+     * @param docID
+     *  document id of the request
+     * @param request
+     *  new request ot be updated
+     * @param listener
+     *  listener for notification
+     */
     private static void updateRequest(final String docID, final Request request,
                                       final OnGetRequestDataListener listener) {
         collectionReferenceReq
@@ -279,7 +318,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This is the method that add a user to firebase
+     * @param newUser
+     *  new user to be added
+     * @param listener
+     *  listener for notification
+     */
     private static void addUser(final User newUser, final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .document()
@@ -299,6 +344,11 @@ public class DatabaseHelper {
                 });
     }
 
+    /**
+     * This is the method that delete a user from firebase
+     * @param userID
+     *  id of user to be deleted
+     */
     private static void delUser(final String userID) {
         collectionReferenceUser
                 .document(userID)
@@ -317,7 +367,15 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This id the method that update a user in firebase
+     * @param user
+     *  user ot be updated
+     * @param userID
+     *  id of the user
+     * @param listener
+     *  listener for notification
+     */
     private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .document(userID)
@@ -338,7 +396,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This method will check if the user already exists and call addUser method
+     * @param user
+     *  new user to be added
+     * @param listener
+     *  listener for notification
+     */
     public static void addNewUser(final User user, final OnGetUserDataListener listener) {
         if (user == null)
             listener.onFailure("user provided is a null object");
@@ -373,7 +437,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This method will check if the user exists and call updateUser method
+     * @param userName
+     *  user name of the user to be updated
+     * @param listener
+     *  listener for notification
+     */
     public static void updateUserProfile(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0)
             listener.onFailure("user name provided is a null or empty");
@@ -409,7 +479,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This method will check if the request is opened and return request data to listener
+     * @param riderName
+     *  rider name of query
+     * @param listener
+     *  listener for notification and obtain return value
+     */
     public static void queryRiderOpenRequest(final String riderName, final OnGetRequestDataListener listener) {
         if (riderName == null || riderName.length() == 0)
             listener.onFailure("rider name provided is a null or empty");
@@ -443,7 +519,14 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This method will check if there is an active request belongs to the driver and return the
+     * request data to listener
+     * @param driverName
+     *  driver name of query
+     * @param listener
+     *  listener for notification and obtain return value
+     */
     public static void queryDriverActiveRequest(final String driverName, final OnGetRequestDataListener listener) {
         if (driverName == null || driverName.length() == 0)
             listener.onFailure("driver name provided is a null or empty");
@@ -477,7 +560,13 @@ public class DatabaseHelper {
                 });
     }
 
-
+    /**
+     * This method will query all open request and return a list of request to listener
+     * @param location
+     *  location of the driver
+     * @param listener
+     *  listener for notification and obtain return value
+     */
     public static void queryAllOpenRequests(final Location location, final OnGetRequestDataListener listener) {
         //listener.onStart();
         Float latRange = 10.0f;
@@ -509,13 +598,22 @@ public class DatabaseHelper {
 //                .whereGreaterThan("destination.lat", location.getLon() - lonRange)
     }
 
-
+    /**
+     * This method will check if there is an inactive request belongs to the rider and set the
+     * request to active, then call the updateRequest method
+     * @param riderName
+     *  rider name of query
+     * @param driver
+     *  driver of the request to be set
+     * @param listener
+     *  listener for notification
+     */
     public static void setRequestActive(final String riderName, final User driver,
                                         final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0)
-            listener.onFailure("rider name provided is a null or empty");
-        else if (driver == null)
-            listener.onFailure("driver provided is a null object");
+//        if (riderName == null || riderName.length() == 0)
+//            listener.onFailure("rider name provided is a null or empty");
+//        else if (driver == null)
+//            listener.onFailure("driver provided is a null object");
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -540,6 +638,8 @@ public class DatabaseHelper {
                                 listener.onFailure(riderName + " has more than one request");
                             } else if (query == null) {
                                 listener.onFailure(riderName + " has no request");
+                            } else if (query.getAccepted() == Boolean.TRUE) {
+                                listener.onFailure(riderName + "has an active request already");
                             } else {
                                 query.setAccepted(true);
                                 query.setDriver(driver);
@@ -554,6 +654,13 @@ public class DatabaseHelper {
                 });
     }
 
+    /**
+     * This method will check if an inactive request exists and call the delRequest method
+     * @param riderName
+     *  rider name of query
+     * @param listener
+     *  listener for notification
+     */
     public static void cancelRequest(final String riderName, final OnGetRequestDataListener listener) {
         if (riderName == null || riderName.length() == 0)
             listener.onFailure("rider name provided is a null or empty");
@@ -601,6 +708,18 @@ public class DatabaseHelper {
                 });
     }
 
+    /**
+     * This method will check if an active request exists and call delRequest method follow by
+     * addRecord method
+     * @param driverName
+     *  driver name of the query
+     * @param payment
+     *  payment of the request
+     * @param rating
+     *  rating of the request
+     * @param listener
+     *  listener for notification
+     */
     public static void completeRequest(final String driverName, final Float payment, final Float rating,
                                        final OnGetRequestDataListener listener) {
         if (driverName == null || driverName.length() == 0)
