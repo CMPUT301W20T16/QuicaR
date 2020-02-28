@@ -13,8 +13,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class extend DatabaseHelper and mainly handle requests data
+ */
 public class RequestDataHelper extends DatabaseHelper {
 
+    /**
+     * This is the constructor of RequestDataHelper
+     */
     public RequestDataHelper() {
     }
 

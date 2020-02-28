@@ -7,8 +7,15 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+
+/**
+ * This class extend DatabaseHelper and mainly handle records data
+ */
 public class RecordDataHelper extends DatabaseHelper {
 
+    /**
+     * This is the constructor of RecordDataHelper
+     */
     public RecordDataHelper() {
     }
 

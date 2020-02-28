@@ -11,8 +11,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+/**
+ * This class extend DatabaseHelper and mainly handle user data
+ */
 public class UserDataHelper extends DatabaseHelper {
 
+    /**
+     * This is the constructor of UserDataHelper
+     */
     public UserDataHelper() {
     }
 
