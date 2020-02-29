@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -17,11 +18,36 @@ import java.util.ArrayList;
  * This class extend DatabaseHelper and mainly handle requests data
  */
 public class RequestDataHelper extends DatabaseHelper {
+    private static OnGetRequestDataListener listener;
+    private static CollectionReference collectionReferenceReq;
 
     /**
      * This is the constructor of RequestDataHelper
      */
     public RequestDataHelper() {
+        super();
+        RequestDataHelper.collectionReferenceReq = super.getCollectionReferenceReq();
+    }
+
+    /**
+     * This method set up the listener for notification of active request
+     * @param listener
+     *  listener for notification
+     */
+    public static void setOnActiveListener(OnGetRequestDataListener listener) {
+        RequestDataHelper.listener = listener;
+    }
+
+    /**
+     * This method will notify the latest listener stored in this class that the request is set to
+     * active, which means there is a driver accepted the rider's request
+     * @param request
+     *  the request that is active
+     */
+    public static void notifyActive(Request request) {
+        if (listener != null) {
+            listener.onActiveNotification(request);
+        }
     }
 
     /**
@@ -59,8 +85,10 @@ public class RequestDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     public static void addNewRequest(final Request request, final OnGetRequestDataListener listener) {
-        if (request == null)
+        if (request == null || request.getRider() == null) {
             listener.onFailure("request provided is a null object");
+            return;
+        }
         final String riderName = request.getRider().getName();
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
@@ -72,10 +100,10 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  this for loop should only loop for once
                             //  user should not have more than one requests exist in the db
                             int count = 0;
-                            Request query = null;
+//                            Request query = null;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                query = document.toObject(Request.class);
+//                                query = document.toObject(Request.class);
                                 count++;
                             }
                             if (count > 0) {
@@ -194,8 +222,10 @@ public class RequestDataHelper extends DatabaseHelper {
      *  listener for notification and obtain return value
      */
     public static void queryDriverActiveRequest(final String driverName, final OnGetRequestDataListener listener) {
-        if (driverName == null || driverName.length() == 0)
+        if (driverName == null || driverName.length() == 0) {
             listener.onFailure("driver name provided is a null or empty");
+            return;
+        }
         collectionReferenceReq
                 .whereEqualTo("driver.account.userName", driverName)
                 .get()
@@ -276,10 +306,13 @@ public class RequestDataHelper extends DatabaseHelper {
      */
     public static void setRequestActive(final String riderName, final User driver,
                                         final OnGetRequestDataListener listener) {
-//        if (riderName == null || riderName.length() == 0)
-//            listener.onFailure("rider name provided is a null or empty");
-//        else if (driver == null)
-//            listener.onFailure("driver provided is a null object");
+        if (riderName == null || riderName.length() == 0) {
+            listener.onFailure("rider name provided is a null or empty");
+            return;
+        } else if (driver == null) {
+            listener.onFailure("driver provided is a null object");
+            return;
+        }
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -328,8 +361,10 @@ public class RequestDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     public static void cancelRequest(final String riderName, final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0)
+        if (riderName == null || riderName.length() == 0) {
             listener.onFailure("rider name provided is a null or empty");
+            return;
+        }
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -364,7 +399,6 @@ public class RequestDataHelper extends DatabaseHelper {
                                     RequestDataHelper.delRequest(docID);
                                     listener.onSuccessCancel();
                                 }
-
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -388,8 +422,10 @@ public class RequestDataHelper extends DatabaseHelper {
      */
     public static void completeRequest(final String driverName, final Float payment, final Float rating,
                                        final OnGetRequestDataListener listener) {
-        if (driverName == null || driverName.length() == 0)
+        if (driverName == null || driverName.length() == 0) {
             listener.onFailure("driver name provided is a null or empty");
+            return;
+        }
         collectionReferenceReq
                 .whereEqualTo("driver.account.userName", driverName)
                 .get()
@@ -424,6 +460,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                     RequestDataHelper.delRequest(docID);
                                     Record record = new Record(query, payment, rating);
                                     RecordDataHelper.addRecord(record);
+//                                    DatabaseHelper.setNotified(false);
                                     listener.onSuccessComplete();
                                 }
                             }
@@ -434,4 +471,5 @@ public class RequestDataHelper extends DatabaseHelper {
                     }
                 });
     }
+
 }

@@ -15,25 +15,34 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DatabaseHelper.setCurrentUserName("testing");
+        DatabaseHelper.setCurrentMode("rider");
+
         //  database test cases
         new DatabaseHelper();
-//        User newUser = new User();
-//        newUser.setName("testing");
-//        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
-//        Record record = new Record(request, 10.0f, 5.0f);
-//        //System.out.println(record.getDateTime());
-//        DatabaseHelper.addNewRequest(request, this);
-//        DatabaseHelper.queryRiderOpenRequest("testing", this);
-//        DatabaseHelper.queryAllOpenRequests(new Location(),this);
-//        User newDriver = new User();
-//        newDriver.setName("new Driver");
-//        DatabaseHelper.setRequestActive("testing", newDriver, this);
-//        //DatabaseHelper.cancelRequest("testing", this);
-//        DatabaseHelper.queryDriverActiveRequest(newDriver.getName(), this);
+        new RequestDataHelper();
+        new RecordDataHelper();
+        new UserDataHelper();
+
+        RequestDataHelper.setOnActiveListener(this);
+
+        User newUser = new User();
+        newUser.setName("testing1");
+        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
+        Record record = new Record(request, 10.0f, 5.0f);
+        RequestDataHelper.addNewRequest(request, this);
+//        RequestDataHelper.queryRiderOpenRequest("testing", this);
+//        RequestDataHelper.queryAllOpenRequests(new Location(),this);
+        User newDriver = new User();
+        newDriver.setName("new Driver");
+//        RequestDataHelper.setRequestActive("testing", newDriver, this);
+//        RequestDataHelper.cancelRequest("testing", this);
+        RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
 
         //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
         System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+
 
     }
 
@@ -61,15 +70,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         if (request != null) {
             //  always check if the return value is valid
             System.out.println("---------------" + request.getDriver().getName() + "---------------");
-            DatabaseHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
+            RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
         }
     }
 
     @Override
     public void onSuccessSetActive() {
         System.out.println("------------ request is set to active -----------");
-        DatabaseHelper.queryAllOpenRequests(new Location(), this);
-        DatabaseHelper.queryDriverActiveRequest("new Driver", this);
+        RequestDataHelper.queryAllOpenRequests(new Location(), this);
+        RequestDataHelper.queryDriverActiveRequest("new Driver", this);
 
     }
 
@@ -90,8 +99,13 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
+    public void onActiveNotification(Request request) {
+        System.out.println("------------- rider request updated to active -----------------");
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
-
     }
+
 }

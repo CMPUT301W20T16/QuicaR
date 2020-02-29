@@ -12,6 +12,9 @@ public interface OnGetUserDataListener {
     //  notify listener that user profile is updated successfully
     void onSuccessUpdateUser();
 
+    //  notify listener that user is obtained successfully
+    void onSuccessGetUser(User user);
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

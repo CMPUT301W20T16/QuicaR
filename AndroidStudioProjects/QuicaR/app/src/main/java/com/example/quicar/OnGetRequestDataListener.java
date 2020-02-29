@@ -32,6 +32,9 @@ public interface OnGetRequestDataListener {
     //  notify listener that request is completed, request deleted and new record created
     void onSuccessComplete();
 
+    //  notify when a request is set to active (only when the user is in rider mode)
+    void onActiveNotification(Request request);
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

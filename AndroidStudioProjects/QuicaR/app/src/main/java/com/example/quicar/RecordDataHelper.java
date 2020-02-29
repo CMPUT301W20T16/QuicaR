@@ -6,17 +6,21 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 
 
 /**
  * This class extend DatabaseHelper and mainly handle records data
  */
 public class RecordDataHelper extends DatabaseHelper {
+    private static CollectionReference collectionReferenceRec;
 
     /**
      * This is the constructor of RecordDataHelper
      */
     public RecordDataHelper() {
+        super();
+        RecordDataHelper.collectionReferenceRec = super.getCollectionReferenceRec();
     }
 
     /**
