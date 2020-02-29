@@ -1,8 +1,7 @@
 package com.example.quicar;
 
-import com.google.firebase.firestore.PropertyName;
-
 import java.util.Date;
+import com.google.firebase.firestore.PropertyName;
 
 public class BankAccount {
 

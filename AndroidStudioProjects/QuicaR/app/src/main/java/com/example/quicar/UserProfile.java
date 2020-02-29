@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,7 @@ public class UserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_general_user_profile);
         this.email = findViewById(R.id.profile_email);
         this.phone = findViewById(R.id.profile_phone);
-        this.username = findViewById(R.id.profile_username;
+        this.username = findViewById(R.id.profile_username);
         this.firstname = findViewById(R.id.profile_lastname);
         this.lastname = findViewById(R.id.profile_birthdate);
         this.gender = findViewById(R.id.profile_gender);
@@ -56,17 +55,17 @@ public class UserProfile extends AppCompatActivity {
 
                 // need to be change here
 
-                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+//                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            Toast.makeText(UserProfile.this, "Login successful", Toast.LENGTH_SHORT).show();
+//                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                        } else {
+//                            Toast.makeText(UserProfile.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
             }
         });
 
@@ -102,9 +101,5 @@ public class UserProfile extends AppCompatActivity {
             return true;
         }
 
-
-
-
-
-
+    }
 }
