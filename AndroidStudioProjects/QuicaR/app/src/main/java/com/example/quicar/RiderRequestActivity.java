@@ -1,4 +1,4 @@
-package com.example.quicar_mapview.Activity.RiderActivity;
+package com.example.quicar;
 
 import android.content.Intent;
 import android.location.Geocoder;
@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.quicar_mapview.Activity.BaseActivity;
-import com.example.quicar_mapview.Class.Request;
-import com.example.quicar_mapview.OnGetDataListener;
 import com.example.quicar_mapview.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.type.LatLng;
@@ -20,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class RiderRequestActivity extends BaseActivity implements OnGetDataListener {
+public class RiderRequestActivity extends BaseActivity {
 
     private EditText startLocation;
     private EditText stopLocation;
@@ -101,7 +98,7 @@ public class RiderRequestActivity extends BaseActivity implements OnGetDataListe
 
     /**
      *     database method
-     */
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -152,5 +149,5 @@ public class RiderRequestActivity extends BaseActivity implements OnGetDataListe
         System.out.println("-----------" + errorMessage + "-----------");
 
     }
-
+     */
 }

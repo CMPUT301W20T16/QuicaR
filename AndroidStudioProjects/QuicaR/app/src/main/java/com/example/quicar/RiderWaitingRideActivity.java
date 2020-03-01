@@ -1,4 +1,4 @@
-package com.example.quicar_mapview.Activity.RiderActivity;
+package com.example.quicar;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.example.quicar_mapview.Activity.BaseActivity;
 import com.example.quicar_mapview.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 

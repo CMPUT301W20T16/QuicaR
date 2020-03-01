@@ -1,4 +1,4 @@
-package com.example.quicar_mapview.Activity.RiderActivity;
+package com.example.quicar;
 
 import android.content.Intent;
 import android.os.Bundle;

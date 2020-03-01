@@ -24,7 +24,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key"/>
 
-        <activity android:name=".Activity.MainActivity"
+        <activity android:name="com.example.quicar.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,21 +32,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.UserProfileActivity"
-            android:parentActivityName=".Activity.RiderActivity.RiderRequestActivity">
+        <activity android:name="com.example.quicar.UserProfileActivity"
+            android:parentActivityName="com.example.quicar.RiderRequestActivity">
         </activity>
 
-        <activity android:name=".Activity.RiderActivity.RiderRequestActivity"
-            android:parentActivityName=".Activity.MainActivity"
+        <activity android:name="com.example.quicar.RiderRequestActivity"
+            android:parentActivityName="com.example.quicar.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".Activity.RiderActivity.RiderSelectLocationActivity" />
-        <activity android:name=".Activity.BaseActivity"
+        <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
+        <activity android:name="com.example.quicar.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activity.RiderActivity.RiderConfirmRiderActivity"
+        <activity android:name="com.example.quicar.RiderConfirmRiderActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activity.Driver.DriverBrowseActivity" />
-        <activity android:name=".Activity.RiderActivity.RiderWaitingRideActivity"
+        <activity android:name="com.example.quicar.RiderWaitingRideActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

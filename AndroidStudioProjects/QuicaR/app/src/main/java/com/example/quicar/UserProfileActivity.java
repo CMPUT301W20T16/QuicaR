@@ -1,4 +1,4 @@
-package com.example.quicar_mapview.Activity;
+package com.example.quicar;
 
 import android.os.Bundle;
 
