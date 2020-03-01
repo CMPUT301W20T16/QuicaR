@@ -9,8 +9,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 
 /**
@@ -18,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
  */
 public class UserDataHelper extends DatabaseHelper {
     private static CollectionReference collectionReferenceUser;
+    private static FirebaseFirestore db;
 
     /**
      * This is the constructor of UserDataHelper
@@ -25,6 +31,7 @@ public class UserDataHelper extends DatabaseHelper {
     public UserDataHelper() {
         super();
         UserDataHelper.collectionReferenceUser = super.getCollectionReferenceUser();
+        UserDataHelper.db = super.getDb();
     }
 
     /**
@@ -86,21 +93,36 @@ public class UserDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .document(userID)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG,  "User update successful");
-                        listener.onSuccessUpdateUser();
-                    }
-                })
+
+        final DocumentReference reqDocRef = collectionReferenceUser.document(userID);
+
+        db.runTransaction(new Transaction.Function<String>() {
+            @Override
+            public String apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(reqDocRef);
+                System.out.println("docSnapshot---------" + snapshot);
+                Request requestTmp = snapshot.toObject(Request.class);
+                System.out.println( "request temp---------" + requestTmp);
+                if (!requestTmp.getAccepted()) {
+                    transaction.set(reqDocRef, user);
+                    return userID;
+                } else {
+                    throw new FirebaseFirestoreException("Request has already been accepted",
+                            FirebaseFirestoreException.Code.ABORTED);
+                }
+            }
+        }).addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String userID) {
+                Log.d(TAG, "Transaction success: " + userID);
+                listener.onSuccessUpdateUser();
+            }
+        })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,  "User update failed" + e.toString());
-                        listener.onFailure("User update failed" + e.toString());
+                        Log.w(TAG, "Transaction failure.", e);
+                        listener.onFailure("Transaction failure. " + e);
                     }
                 });
     }

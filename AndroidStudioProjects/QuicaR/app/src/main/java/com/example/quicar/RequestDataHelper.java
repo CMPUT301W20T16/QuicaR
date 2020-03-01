@@ -9,8 +9,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 
@@ -20,6 +25,7 @@ import java.util.ArrayList;
 public class RequestDataHelper extends DatabaseHelper {
     private static OnGetRequestDataListener listener;
     private static CollectionReference collectionReferenceReq;
+    private static FirebaseFirestore db;
 
     /**
      * This is the constructor of RequestDataHelper
@@ -27,6 +33,7 @@ public class RequestDataHelper extends DatabaseHelper {
     public RequestDataHelper() {
         super();
         RequestDataHelper.collectionReferenceReq = super.getCollectionReferenceReq();
+        RequestDataHelper.db = super.getDb();
     }
 
     /**
@@ -154,23 +161,38 @@ public class RequestDataHelper extends DatabaseHelper {
      */
     private static void updateRequest(final String docID, final Request request,
                                       final OnGetRequestDataListener listener) {
-        collectionReferenceReq
-                .document(docID)
-                .set(request)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG,  " Request update successful");
-                        listener.onSuccessSetActive();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,  "Request update failed" + e.toString());
-                        listener.onFailure("Request update failed" + e.toString());
-                    }
-                });
+
+        final DocumentReference reqDocRef = collectionReferenceReq.document(docID);
+
+        db.runTransaction(new Transaction.Function<String>() {
+          @Override
+          public String apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(reqDocRef);
+                System.out.println("docSnapshot---------" + snapshot);
+                Request requestTmp = snapshot.toObject(Request.class);
+                System.out.println( "request temp---------" + requestTmp);
+                if (!requestTmp.getAccepted()) {
+                    transaction.set(reqDocRef, request);
+                    return docID;
+                } else {
+                    throw new FirebaseFirestoreException("Request has already been accepted",
+                            FirebaseFirestoreException.Code.ABORTED);
+                }
+            }
+        }).addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String docID) {
+                Log.d(TAG, "Transaction success: " + docID);
+                listener.onSuccessSetActive();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Transaction failure.", e);
+                listener.onFailure("Transaction failure. " + e);
+            }
+        });
     }
 
     /**
@@ -313,6 +335,7 @@ public class RequestDataHelper extends DatabaseHelper {
             listener.onFailure("driver provided is a null object");
             return;
         }
+
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()

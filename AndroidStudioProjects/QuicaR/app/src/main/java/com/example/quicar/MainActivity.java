@@ -1,11 +1,24 @@
 package com.example.quicar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.ArrayList;
+
+import static com.example.quicar.DatabaseHelper.TAG;
 
 
 public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
@@ -30,19 +43,45 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         newUser.setName("testing1");
         Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
         Record record = new Record(request, 10.0f, 5.0f);
-        RequestDataHelper.addNewRequest(request, this);
+//        RequestDataHelper.addNewRequest(request, this);
 //        RequestDataHelper.queryRiderOpenRequest("testing", this);
 //        RequestDataHelper.queryAllOpenRequests(new Location(),this);
         User newDriver = new User();
         newDriver.setName("new Driver");
-//        RequestDataHelper.setRequestActive("testing", newDriver, this);
+//        RequestDataHelper.setRequestActive("testing1", newDriver, this);
 //        RequestDataHelper.cancelRequest("testing", this);
         RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
 
         //  test adding new user in register page
-        startActivity(new Intent(getApplicationContext(), Login.class));
-        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+//        startActivity(new Intent(getApplicationContext(), Login.class));
+//        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+        Button logTokenButton = findViewById(R.id.logTokenButton);
+        logTokenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get token
+                // [START retrieve_current_token]
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "getInstanceId failed", task.getException());
+                                    return;
+                                }
 
+                                // Get new Instance ID token
+                                String token = task.getResult().getToken();
+
+                                // Log and toast
+                                String msg = getString(R.string.msg_token_fmt, token);
+                                Log.d(TAG, msg);
+                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                // [END retrieve_current_token]
+            }
+        });
 
     }
 

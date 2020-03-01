@@ -215,6 +215,15 @@ public class DatabaseHelper {
         return collectionReferenceUser;
     }
 
+    /**
+     * This method return the firebase firestore db variable
+     * @return
+     *  firebase firestore db variable
+     */
+    protected FirebaseFirestore getDb() {
+        return db;
+    }
+
 //    /**
 //     * This method is the setter that reset the status of activeChanged
 //     * @param status
