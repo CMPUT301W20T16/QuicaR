@@ -1,11 +1,7 @@
 package com.example.quicar;
 
 
-import android.app.Application;
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -39,6 +35,7 @@ public class DatabaseHelper {
     private static final String USER_KEY = "user_account";
 
     protected static final String TAG = "quicarDB";
+    private static String oldServerKey;
 
     private static FirebaseFirestore db;
     private static CollectionReference collectionReferenceRec;
@@ -53,6 +50,7 @@ public class DatabaseHelper {
     private static String currentMode;
     private static String token;
     private static Boolean notified = Boolean.FALSE;
+
 
     /**
      * This is the constructor of database helper which initialize the firebase instance
@@ -281,6 +279,14 @@ public class DatabaseHelper {
         new Notify().execute(data);
     }
 
+    public static String getOldServerKey() {
+        return oldServerKey;
+    }
+
+    public static void setOldServerKey(String oldServerKey) {
+        DatabaseHelper.oldServerKey = oldServerKey;
+    }
+
     private static class Notify extends AsyncTask<String, Void, Void> {
         // https://www.youtube.com/watch?v=v29x4dKNBJw
         // https://stackoverflow.com/questions/9671546/asynctask-android-example
@@ -297,8 +303,8 @@ public class DatabaseHelper {
 
                 conn.setRequestMethod("POST");
 
-                String old_server_key = DatabaseHelper.getContext().getString(R.string.OLD_SERVER_KEY);
-                conn.setRequestProperty("Authorization", "key=" + old_server_key );
+
+                conn.setRequestProperty("Authorization", "key=" + DatabaseHelper.getOldServerKey() );
                 conn.setRequestProperty("Content-Type", "application/json");
 
                 JSONObject json = new JSONObject();
@@ -324,23 +330,4 @@ public class DatabaseHelper {
         }
     }
 
-    public static Context getContext() {
-        App newApp = new App();
-        return newApp.getContext();
-    }
-
-    private static class App extends Application {
-
-        private Context mContext;
-
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            mContext = this;
-        }
-
-        public Context getContext(){
-            return mContext;
-        }
-    }
 }
