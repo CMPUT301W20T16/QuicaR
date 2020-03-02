@@ -1,6 +1,9 @@
 package com.example.quicar;
 
 
+import android.app.Application;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -293,7 +296,9 @@ public class DatabaseHelper {
                 conn.setDoOutput(true);
 
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Authorization", "key=AIzaSyDKHMO4xM-b9y2-TMGR5KvPTvlT9jqGbYs");
+
+                String old_server_key = DatabaseHelper.getContext().getString(R.string.OLD_SERVER_KEY);
+                conn.setRequestProperty("Authorization", "key=" + old_server_key );
                 conn.setRequestProperty("Content-Type", "application/json");
 
                 JSONObject json = new JSONObject();
@@ -316,6 +321,26 @@ public class DatabaseHelper {
                 Log.d("Error",""+e);
             }
             return null;
+        }
+    }
+
+    public static Context getContext() {
+        App newApp = new App();
+        return newApp.getContext();
+    }
+
+    private static class App extends Application {
+
+        private Context mContext;
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            mContext = this;
+        }
+
+        public Context getContext(){
+            return mContext;
         }
     }
 }
