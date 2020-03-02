@@ -1,13 +1,12 @@
 package com.example.quicar;
 
 
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,6 +16,11 @@ import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONObject;
+
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -44,7 +48,8 @@ public class DatabaseHelper {
 
     private static String currentUserName;
     private static String currentMode;
-    private static Boolean notified = false;
+    private static String token;
+    private static Boolean notified = Boolean.FALSE;
 
     /**
      * This is the constructor of database helper which initialize the firebase instance
@@ -97,6 +102,11 @@ public class DatabaseHelper {
 //                        delRecord(recordID);
                         Record record = doc.toObject(Record.class);
                         DatabaseHelper.records.add(record);
+                        if (record.getRequest().getRider().getName().equals(DatabaseHelper.currentUserName)
+                                && DatabaseHelper.currentMode.equals("rider") && notified) {
+                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
+                            notified = Boolean.FALSE;
+                        }
                     }
                 }
             }
@@ -126,12 +136,9 @@ public class DatabaseHelper {
                                 && DatabaseHelper.currentMode.equals("rider")) {
                             if (request.getAccepted() && !notified) {
                                 RequestDataHelper.notifyActive(request);
-                                notified = true;
-                            } else if (!request.getAccepted()) {
-                                notified = false;
+                                DatabaseHelper.sendNotification(DatabaseHelper.getToken());
+                                notified = Boolean.TRUE;
                             }
-//                            System.out.println(requestID + "******");
-                            notified = true;
                         }
 
                         DatabaseHelper.requests.add(request);
@@ -224,14 +231,6 @@ public class DatabaseHelper {
         return db;
     }
 
-//    /**
-//     * This method is the setter that reset the status of activeChanged
-//     * @param status
-//     *  new sstatus (true or false)
-//     */
-//    protected static void setNotified(boolean status) {
-//        notified = status;
-//    }
 
     /**
      * This is the method that return the current user name stored locally
@@ -265,5 +264,58 @@ public class DatabaseHelper {
      */
     public static void setCurrentMode(String currentMode) {
         DatabaseHelper.currentMode = currentMode;
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String token) {
+        DatabaseHelper.token = token;
+    }
+
+    public static void sendNotification(String data) {
+        new Notify().execute(data);
+    }
+
+    private static class Notify extends AsyncTask<String, Void, Void> {
+        // https://www.youtube.com/watch?v=v29x4dKNBJw
+        // https://stackoverflow.com/questions/9671546/asynctask-android-example
+        @Override
+        protected Void doInBackground(String... data) {
+            try {
+
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setUseCaches(false);
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Authorization", "key=AIzaSyDKHMO4xM-b9y2-TMGR5KvPTvlT9jqGbYs");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+                JSONObject json = new JSONObject();
+
+                json.put("to", DatabaseHelper.getToken());
+
+                String body = data[0];
+                JSONObject info = new JSONObject();
+                info.put("title", "TechnoWeb");   // Notification title
+                info.put("body", body); // Notification body
+
+                json.put("notification", info);
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(json.toString());
+                wr.flush();
+                conn.getInputStream();
+
+            } catch (Exception e) {
+                Log.d("Error",""+e);
+            }
+            return null;
+        }
     }
 }

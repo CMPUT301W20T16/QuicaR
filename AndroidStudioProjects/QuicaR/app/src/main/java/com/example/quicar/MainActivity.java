@@ -3,18 +3,18 @@ package com.example.quicar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.ArrayList;
 
@@ -23,6 +23,7 @@ import static com.example.quicar.DatabaseHelper.TAG;
 
 public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
 
+    private OnGetRequestDataListener listener = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,22 +40,24 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         RequestDataHelper.setOnActiveListener(this);
 
-        User newUser = new User();
-        newUser.setName("testing1");
-        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
-        Record record = new Record(request, 10.0f, 5.0f);
+//        User newUser = new User();
+//        newUser.setName("testing1");
+//        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
+//        Record record = new Record(request, 10.0f, 5.0f);
 //        RequestDataHelper.addNewRequest(request, this);
 //        RequestDataHelper.queryRiderOpenRequest("testing", this);
 //        RequestDataHelper.queryAllOpenRequests(new Location(),this);
-        User newDriver = new User();
-        newDriver.setName("new Driver");
+//        User newDriver = new User();
+//        newDriver.setName("new Driver");
 //        RequestDataHelper.setRequestActive("testing1", newDriver, this);
 //        RequestDataHelper.cancelRequest("testing", this);
-        RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
+//        RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
 
         //  test adding new user in register page
 //        startActivity(new Intent(getApplicationContext(), Login.class));
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+
+
         Button logTokenButton = findViewById(R.id.logTokenButton);
         logTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
                                 // Get new Instance ID token
                                 String token = task.getResult().getToken();
-
+                                DatabaseHelper.setToken(token);
                                 // Log and toast
                                 String msg = getString(R.string.msg_token_fmt, token);
                                 Log.d(TAG, msg);
@@ -80,6 +83,40 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                             }
                         });
                 // [END retrieve_current_token]
+            }
+        });
+
+
+        Button notityButton = findViewById(R.id.setActive);
+//        notityButton.setVisibility(View.INVISIBLE);
+        notityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User newDriver = new User();
+                newDriver.setName("new Driver");
+                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, listener);
+                DatabaseHelper.sendNotification("hello");
+            }
+        });
+
+        Button requestButton = findViewById(R.id.request);
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText input = findViewById(R.id.editText);
+                DatabaseHelper.setCurrentUserName(input.getText().toString());
+                User newUser = new User();
+                newUser.setName(DatabaseHelper.getCurrentUserName());
+                Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
+                RequestDataHelper.addNewRequest(request, listener);
+            }
+        });
+
+        Button completeButton = findViewById(R.id.complete);
+        completeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, listener);
             }
         });
 
@@ -109,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         if (request != null) {
             //  always check if the return value is valid
             System.out.println("---------------" + request.getDriver().getName() + "---------------");
-            RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
+//            RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
         }
     }
 
@@ -134,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     @Override
     public void onSuccessAddRequest() {
-
+//        Button notityButton = findViewById(R.id.setActive);
+//        notityButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -146,5 +184,6 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
     }
-
 }
+
+
