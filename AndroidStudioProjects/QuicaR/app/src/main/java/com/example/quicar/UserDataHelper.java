@@ -169,17 +169,17 @@ public class UserDataHelper extends DatabaseHelper {
 
     /**
      * This method will check if the user already exists and call addUser method
-     * @param user
+     * @param newUser
      *  new user to be added
      * @param listener
      *  listener for notification
      */
-    public static void addNewUser(final User user, final OnGetUserDataListener listener) {
-        if (user == null) {
+    public static void addNewUser(final User newUser, final OnGetUserDataListener listener) {
+        if (newUser == null) {
             listener.onFailure("user provided is a null object");
             return;
         }
-        final String userName = user.getName();
+        final String userName = newUser.getName();
         collectionReferenceUser
                 .whereEqualTo("account.userName", userName)
                 .get()
@@ -200,7 +200,7 @@ public class UserDataHelper extends DatabaseHelper {
                                 System.out.println("*****  user \" " + userName + " \" has an existing account");
                                 listener.onFailure(userName + " has anexisting account");
                             } else {
-                                UserDataHelper.addUser(user, listener);
+                                UserDataHelper.addUser(newUser, listener);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

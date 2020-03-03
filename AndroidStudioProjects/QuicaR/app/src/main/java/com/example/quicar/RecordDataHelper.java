@@ -25,13 +25,13 @@ public class RecordDataHelper extends DatabaseHelper {
 
     /**
      * This is the method that add a record
-     * @param record
+     * @param newRecord
      *  record to be added
      */
-    protected static void addRecord(final Record record) {
+    public static void addRecord(final Record newRecord) {
         collectionReferenceRec
                 .document()
-                .set(record)
+                .set(newRecord)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

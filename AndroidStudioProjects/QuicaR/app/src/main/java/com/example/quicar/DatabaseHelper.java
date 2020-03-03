@@ -30,10 +30,6 @@ public class DatabaseHelper {
     private static final String REQ_COLL_NAME = "Requests";
     private static final String USER_COLL_NAME = "Users";
 
-    private static final String RECORD_KEY = "record_data";
-    private static final String REQUEST_KEY = "request_data";
-    private static final String USER_KEY = "user_account";
-
     protected static final String TAG = "quicarDB";
     private static String oldServerKey;
 
@@ -46,10 +42,7 @@ public class DatabaseHelper {
     private static ArrayList<Request> requests = new ArrayList<>();
     private static ArrayList<User> users = new ArrayList<>();
 
-    private static String currentUserName;
-    private static String currentMode;
-    private static String token;
-    private static Boolean notified = Boolean.FALSE;
+    private static UserState userState = new UserState();
 
 
     /**
@@ -58,7 +51,7 @@ public class DatabaseHelper {
      */
     public DatabaseHelper() {
 
-        if (currentMode == null || currentUserName == null)
+        if (userState.getCurrentMode() == null || userState.getCurrentUserName() == null)
             throw new IllegalStateException("\n\t\tAttributes currentUserName and currentMode in " +
                     "DatabaseHelper class cannot be null," +
                     "please use the setter method to initialize those value");
@@ -103,10 +96,11 @@ public class DatabaseHelper {
 //                        delRecord(recordID);
                         Record record = doc.toObject(Record.class);
                         DatabaseHelper.records.add(record);
-                        if (record.getRequest().getRider().getName().equals(DatabaseHelper.currentUserName)
-                                && DatabaseHelper.currentMode.equals("rider") && notified) {
+                        if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
+                                && DatabaseHelper.getCurrentMode().equals("rider") && DatabaseHelper.Notified()) {
                             DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-                            notified = Boolean.FALSE;
+                            DatabaseHelper.setNotified(Boolean.FALSE);
+                            System.out.println("-------- Notification sent --------");
                         }
                     }
                 }
@@ -133,13 +127,18 @@ public class DatabaseHelper {
                         Request request = doc.toObject(Request.class);
 
                         //  check if there is a change in the request status of current user
-                        if (request.getRider().getName().equals(DatabaseHelper.currentUserName)
-                                && DatabaseHelper.currentMode.equals("rider")) {
-                            if (request.getAccepted() && !notified) {
+                        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())
+                                && DatabaseHelper.getCurrentMode().equals("rider")) {
+                            if (request.getAccepted() && !DatabaseHelper.Notified()) {
                                 RequestDataHelper.notifyActive(request);
                                 DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-                                notified = Boolean.TRUE;
+                                DatabaseHelper.setNotified(Boolean.TRUE);
+                                System.out.println("-------- Notification sent --------");
                             }
+                            RequestDataHelper.notifyActive(request);
+                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
+                            DatabaseHelper.setNotified(Boolean.TRUE);
+                            System.out.println("-------- Notification sent --------");
                         }
 
                         DatabaseHelper.requests.add(request);
@@ -239,7 +238,7 @@ public class DatabaseHelper {
      *  current user name
      */
     public static String getCurrentUserName() {
-        return currentUserName;
+        return userState.getCurrentUserName();
     }
 
     /**
@@ -248,7 +247,7 @@ public class DatabaseHelper {
      *  user name
      */
     public static void setCurrentUserName(String currentUserName) {
-        DatabaseHelper.currentUserName = currentUserName;
+        userState.setCurrentUserName(currentUserName);
     }
 
     /**
@@ -256,7 +255,7 @@ public class DatabaseHelper {
      * @return
      */
     public static String getCurrentMode() {
-        return currentMode;
+        return userState.getCurrentMode();
     }
 
     /**
@@ -264,19 +263,23 @@ public class DatabaseHelper {
      * @param currentMode
      */
     public static void setCurrentMode(String currentMode) {
-        DatabaseHelper.currentMode = currentMode;
+        userState.setCurrentMode(currentMode);
     }
 
     public static String getToken() {
-        return token;
+        return userState.getToken();
     }
 
     public static void setToken(String token) {
-        DatabaseHelper.token = token;
+        userState.setToken(token);
     }
 
-    public static void sendNotification(String data) {
-        new Notify().execute(data);
+    public static Boolean Notified() {
+        return userState.getNotified();
+    }
+
+    public static void setNotified(Boolean state) {
+        userState.setNotified(state);
     }
 
     public static String getOldServerKey() {
@@ -285,6 +288,10 @@ public class DatabaseHelper {
 
     public static void setOldServerKey(String oldServerKey) {
         DatabaseHelper.oldServerKey = oldServerKey;
+    }
+
+    public static void sendNotification(String msg) {
+        new Notify().execute(msg);
     }
 
     private static class Notify extends AsyncTask<String, Void, Void> {

@@ -26,6 +26,9 @@ public interface OnGetRequestDataListener {
     //  notify listener that request is successfully updated to active
     void onSuccessSetActive();
 
+    //  notify listener that request is successfully updated to picked up
+    void onSuccessSetPickedUp();
+
     //  notify listener that request is successfully deleted
     void onSuccessCancel();
 

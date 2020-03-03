@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         DatabaseHelper.setCurrentUserName("testing");
         DatabaseHelper.setCurrentMode("rider");
+        DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
         //  database test cases
         new DatabaseHelper();
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             public void onClick(View v) {
                 User newDriver = new User();
                 newDriver.setName("new Driver");
-                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, listener);
+                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, 666.f, listener);
                 DatabaseHelper.sendNotification("hello");
             }
         });
@@ -157,34 +158,44 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         System.out.println("------------ request is set to active -----------");
         RequestDataHelper.queryAllOpenRequests(new Location(), this);
         RequestDataHelper.queryDriverActiveRequest("new Driver", this);
+        Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onSuccessSetPickedUp() {
+        Toast.makeText(MainActivity.this, "rider is picked up successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSuccessCancel() {
         System.out.println("------------ request is deleted -----------");
+        Toast.makeText(MainActivity.this, "rider request deleted successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSuccessComplete() {
         System.out.println("------------ request is completed & deleted -----------");
         System.out.println("------------ new record is created -----------");
+        Toast.makeText(MainActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSuccessAddRequest() {
 //        Button notityButton = findViewById(R.id.setActive);
 //        notityButton.setVisibility(View.VISIBLE);
+        Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
+        Toast.makeText(MainActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
+        Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
 

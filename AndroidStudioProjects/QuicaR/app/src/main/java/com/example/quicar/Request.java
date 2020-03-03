@@ -10,15 +10,11 @@ import com.google.firebase.firestore.PropertyName;
 public class Request {
 
     private Location start;
-
     private Location destination;
-
     private User rider;
-
     private User driver;
-
     private Boolean isAccepted;
-
+    private Boolean isPickedUp;
     private Float estimatedCost;
 
     /**
@@ -45,6 +41,7 @@ public class Request {
         this.rider = rider;
         this.driver = driver;
         this.isAccepted = false;
+        this.isPickedUp = false;
         this.estimatedCost = estimatedCost;
     }
 
@@ -121,7 +118,7 @@ public class Request {
     }
 
     /**
-     * This method return the status of the request
+     * This method return the accepted status of the request
      * @return
      *  status of the request (True or False)
      */
@@ -131,13 +128,31 @@ public class Request {
     }
 
     /**
-     * This method set the status of the request
+     * This method set the accepted status of the request
      * @param accepted
-     *  status of the request
+     *  accepted status of the request
      */
     @PropertyName("isAccepted")
     public void setAccepted(Boolean accepted) {
         isAccepted = accepted;
+    }
+
+    /**
+     * This method get the picked up status of request
+     * @return
+     *  picked up status of the request
+     */
+    public Boolean getPickedUp() {
+        return isPickedUp;
+    }
+
+    /**
+     * This method set the picked up status of request
+     * @param pickedUp
+     *  picked up status of request
+     */
+    public void setPickedUp(Boolean pickedUp) {
+        isPickedUp = pickedUp;
     }
 
     /**
