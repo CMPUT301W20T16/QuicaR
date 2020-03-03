@@ -1,16 +1,38 @@
 package com.example.quicar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.quicar_mapview.R;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public class RiderSelectLocationActivity extends AppCompatActivity {
     private EditText pickUp;
@@ -20,6 +42,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
     String address,locality,subLocality,state,postalCode,country,knownname,phone;
     TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
+
+    private GoogleMap mMap;
+
+    Marker marker;
+    PlacesClient placesClient;
 
 
     @Override
@@ -34,8 +61,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
 
 
         //get data from intent, i.e., current address
-        Intent intent = getIntent();
-        String current_address = (String) intent.getSerializableExtra("current pos");
+//        Intent intent = getIntent();
+//        String current_address = (String) intent.getSerializableExtra("current pos");
 //
 //        pickUp = findViewById(R.id.pick_up);
 //        destination = findViewById(R.id.destination);
@@ -45,8 +72,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
 //        final String destination_location_input = destination.getText().toString();
 
 
-        /**
-         * autocompletion
 
         txtaddress = findViewById(R.id.address);
         txtlocality = findViewById(R.id.locality);
@@ -58,8 +83,19 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
         txtphone = findViewById(R.id.phone);
 
 
+        String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
+        if (!Places.isInitialized()){
+            Places.initialize(getApplicationContext(),apiKey);
+        }
+
+        placesClient = Places.createClient(this);
+
+
         final AutocompleteSupportFragment autocompleteSupportFragment =
                 (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+
+        //autocompleteSupportFragment.setText("where to");
 
 
         autocompleteSupportFragment.setPlaceFields(
@@ -82,13 +118,13 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
 
-//                        if ( marker != null){
-//                            marker.remove();
-//                        }
-//
-//                        mMap.clear();
-//                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-//                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16.5f ),null);
+                        if ( marker != null){
+                            marker.remove();
+                        }
+
+                        mMap.clear();
+                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16.5f ),null);
 
 
                         Geocoder gcd =  new Geocoder(getBaseContext(), Locale.getDefault());
@@ -134,7 +170,12 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
                     }
                 }
         );
-         */
+
+    }
+
+
+
+
 
 
 
@@ -159,4 +200,4 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
 
 
     }
-}
+

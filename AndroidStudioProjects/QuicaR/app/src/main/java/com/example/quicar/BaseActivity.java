@@ -52,6 +52,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
+    protected NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // set up the left navigation  drawer
         drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         drawer.requestDisallowInterceptTouchEvent(true);
 
@@ -276,6 +277,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
+
+            case R.id.nav_driver_mode:
+                Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
+                startActivity(intent2);
+                break;
+
+
         }
 
         drawer.closeDrawer(GravityCompat.START);

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/QuicaR.iml" filepath="$PROJECT_DIR$/QuicaR.iml" group="QuicaR" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Downloads-QuicaR.iml" filepath="$PROJECT_DIR$/.idea/modules/Downloads-QuicaR.iml" group="QuicaR" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/QuicaR.iml" filepath="$PROJECT_DIR$/.idea/QuicaR.iml" />
     </modules>
   </component>
 </project>

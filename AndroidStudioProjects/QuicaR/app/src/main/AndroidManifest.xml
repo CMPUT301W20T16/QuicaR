@@ -47,6 +47,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name="com.example.quicar.RiderWaitingRideActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="com.example.quicar.DriverBrowsingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

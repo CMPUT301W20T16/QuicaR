@@ -15,9 +15,9 @@
 
     <item android:title="Another func">
         <menu>
-            <item android:id="@+id/nav_another_func"
+            <item android:id="@+id/nav_driver_mode"
                 android:icon="@drawable/ic_money"
-                android:title="another func"/>
+                android:title="Driver Mode"/>
         </menu>
     </item>
 </menu>
