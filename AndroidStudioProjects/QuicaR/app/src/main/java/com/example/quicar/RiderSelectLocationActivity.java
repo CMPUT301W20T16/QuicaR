@@ -34,14 +34,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class RiderSelectLocationActivity extends AppCompatActivity {
-    private EditText pickUp;
-    private EditText destination;
+public class RiderSelectLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Button confirmButton;
 
     String address,locality,subLocality,state,postalCode,country,knownname,phone;
     TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
-    private double currentLat,currentLng;
+    private double destinationLat,destinationLng;
+    private com.example.quicar.Location destination_location, pick_up_location;
 
     private GoogleMap mMap;
 
@@ -61,26 +60,19 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
 
 
         //get data from intent, i.e., current address
-//        Intent intent = getIntent();
-//        String current_address = (String) intent.getSerializableExtra("current pos");
+        Intent intent = getIntent();
+        String current_address = (String) intent.getSerializableExtra("current address name");
+        pick_up_location = (Location) intent.getSerializableExtra("current location") ;
 //
-//        pickUp = findViewById(R.id.pick_up);
-//        destination = findViewById(R.id.destination);
-//
-//        pickUp.setText(current_address, TextView.BufferType.EDITABLE);
 //
 //        final String destination_location_input = destination.getText().toString();
 
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        txtaddress = findViewById(R.id.address);
-        txtlocality = findViewById(R.id.locality);
-        txtsubLocality = findViewById(R.id.subLocality);
-        txtstate = findViewById(R.id.state);
-        txtpostalCode = findViewById(R.id.postalCode);
-        txtcountry = findViewById(R.id.country);
-        txtknownname = findViewById(R.id.knownname);
-        txtphone = findViewById(R.id.phone);
 
 
         String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
@@ -90,13 +82,46 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
 
         placesClient = Places.createClient(this);
 
+        final AutocompleteSupportFragment pickUp =
+                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.pick_up);
+        pickUp.setText(current_address);
 
-        final AutocompleteSupportFragment autocompleteSupportFragment =
-                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        com.example.quicar.Location result = onCreateAutoCompletionFragment(pickUp);
+        if (result != null) {
+            pick_up_location = result;
+        }
 
 
-        //autocompleteSupportFragment.setText("where to");
+        final AutocompleteSupportFragment destination =
+                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destination);
+        onCreateAutoCompletionFragment(destination);
 
+        result = onCreateAutoCompletionFragment(destination);
+        if (result != null) {
+            destination_location = result;
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        //mMap.setMyLocationEnabled(true);
+    }
+
+    public com.example.quicar.Location onCreateAutoCompletionFragment(AutocompleteSupportFragment autocompleteSupportFragment) {
+        float currentLat, currentLng;
 
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
@@ -112,8 +137,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
                     @Override
                     public void onPlaceSelected(@NonNull Place place) {
                         LatLng latLng = place.getLatLng();
-                        currentLat = latLng.latitude;
-                        currentLng = latLng.longitude;
+                        currentLat = (float) latLng.latitude;
+                        currentLng = (float) latLng.longitude;
 
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
@@ -142,23 +167,12 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
                                 knownname = addresses.get(0).getFeatureName();
 
 
-                                txtaddress.setText(address);
-                                txtlocality.setText(locality);
-                                txtsubLocality.setText(subLocality);
-                                txtstate.setText(state);
-                                txtcountry.setText(country);
-                                txtpostalCode.setText(postalCode);
-                                txtknownname.setText(knownname);
-                                txtphone.setText(phone);
-
-
                             }
 
 
                         }catch (IOException e){
                             e.printStackTrace();
                         }
-
 
 
 
@@ -171,13 +185,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity {
                 }
         );
 
+        return new com.example.quicar.Location(currentLat, currentLng);
     }
-
-
-
-
-
-
 
 
     /**

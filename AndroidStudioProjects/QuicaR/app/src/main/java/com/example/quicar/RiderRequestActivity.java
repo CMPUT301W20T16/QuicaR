@@ -58,12 +58,14 @@ public class RiderRequestActivity extends BaseActivity {
                 String current_address = setPickupLocationDefault();
                 if (current_address != null) {
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
-                    intent.putExtra("current pos", current_address);
-                    startActivityForResult(intent, 1);
+                    intent.putExtra("current address name", current_address);
+                    intent.putExtra("current location", mLastLocation);
+                    startActivity(intent );
                 }
                 else {
                     Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT);
                 }
+
             }
         });
 
