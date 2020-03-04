@@ -46,21 +46,10 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         RequestDataHelper.setOnActiveListener(this);
 
-//        User newUser = new User();
-//        newUser.setName("testing1");
-//        Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
-//        Record record = new Record(request, 10.0f, 5.0f);
-//        RequestDataHelper.addNewRequest(request, this);
-//        RequestDataHelper.queryRiderOpenRequest("testing", this);
-//        RequestDataHelper.queryAllOpenRequests(new Location(),this);
-//        User newDriver = new User();
-//        newDriver.setName("new Driver");
-//        RequestDataHelper.setRequestActive("testing1", newDriver, this);
-//        RequestDataHelper.cancelRequest("testing", this);
-//        RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
-
-        //  test adding new user in register page
-        //startActivity(new Intent(getApplicationContext(), Login.class));
+//        //  test adding new user in register page
+//        //startActivity(new Intent(getApplicationContext(), Login.class));
+//
+        //  test map view
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -70,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             }
         }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
-
-
+//
+//
         Button logTokenButton = findViewById(R.id.logTokenButton);
         logTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,64 +127,34 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
-    public void onSuccessRiderOpenRequest(Request request) {
-        if (request != null) {
-            //  always check if the return value is valid
+    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+        if (tag == RequestDataHelper.USER_REQ_TAG) {
             System.out.println("---------------" + request.getRider().getName() + "---------------");
+        } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
+            if (requests.size() > 0) {
+                //  always check if the return value is valid
+                System.out.println("------------ active request obtained -----------");
+            }
+            else {
+                System.out.println("------------ empty list obtained -----------");
+            }
+        } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
+            System.out.println("------------ request is set to active -----------");
+            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            RequestDataHelper.queryUserRequest("new Driver", "driver", this);
+            Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
+            Toast.makeText(MainActivity.this, "rider is picked up successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
+            System.out.println("------------ request is deleted -----------");
+            Toast.makeText(MainActivity.this, "rider request deleted successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.COMPLETE_REQ_TAG) {
+            System.out.println("------------ request is completed & deleted -----------");
+            System.out.println("------------ new record is created -----------");
+            Toast.makeText(MainActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
+            Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onSuccessAllOpenRequests(ArrayList<Request> requests) {
-        if (requests.size() > 0) {
-            //  always check if the return value is valid
-            System.out.println("------------ active request obtained -----------");
-        }
-        else {
-            System.out.println("------------ empty list obtained -----------");
-        }
-    }
-
-    @Override
-    public void onSuccessDriverActiveRequest(Request request) {
-        if (request != null) {
-            //  always check if the return value is valid
-            System.out.println("---------------" + request.getDriver().getName() + "---------------");
-//            RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
-        }
-    }
-
-    @Override
-    public void onSuccessSetActive() {
-        System.out.println("------------ request is set to active -----------");
-        RequestDataHelper.queryAllOpenRequests(new Location(), this);
-        RequestDataHelper.queryDriverActiveRequest("new Driver", this);
-        Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSuccessSetPickedUp() {
-        Toast.makeText(MainActivity.this, "rider is picked up successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSuccessCancel() {
-        System.out.println("------------ request is deleted -----------");
-        Toast.makeText(MainActivity.this, "rider request deleted successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSuccessComplete() {
-        System.out.println("------------ request is completed & deleted -----------");
-        System.out.println("------------ new record is created -----------");
-        Toast.makeText(MainActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSuccessAddRequest() {
-//        Button notityButton = findViewById(R.id.setActive);
-//        notityButton.setVisibility(View.VISIBLE);
-        Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override

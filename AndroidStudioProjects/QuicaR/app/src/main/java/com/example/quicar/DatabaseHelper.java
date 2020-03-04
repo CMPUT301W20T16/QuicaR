@@ -135,10 +135,10 @@ public class DatabaseHelper {
                                 DatabaseHelper.setNotified(Boolean.TRUE);
                                 System.out.println("-------- Notification sent --------");
                             }
-                            RequestDataHelper.notifyActive(request);
-                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-                            DatabaseHelper.setNotified(Boolean.TRUE);
-                            System.out.println("-------- Notification sent --------");
+//                            RequestDataHelper.notifyActive(request);
+//                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
+//                            DatabaseHelper.setNotified(Boolean.TRUE);
+//                            System.out.println("-------- Notification sent --------");
                         }
 
                         DatabaseHelper.requests.add(request);

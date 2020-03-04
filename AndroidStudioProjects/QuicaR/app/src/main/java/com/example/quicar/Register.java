@@ -112,18 +112,9 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     }
 
     @Override
-    public void onSuccessAddUser() {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-    }
-
-    @Override
-    public void onSuccessUpdateUser() {
-
-    }
-
-    @Override
-    public void onSuccessGetUser(User user) {
-
+    public void onSuccess(User user, String tag) {
+        if (tag == UserDataHelper.ADD_USER_TAG)
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     @Override

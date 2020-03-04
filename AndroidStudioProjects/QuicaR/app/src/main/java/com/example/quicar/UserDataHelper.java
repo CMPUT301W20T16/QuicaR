@@ -22,6 +22,10 @@ import com.google.firebase.firestore.Transaction;
  * This class extend DatabaseHelper and mainly handle user data
  */
 public class UserDataHelper extends DatabaseHelper {
+    public static String ADD_USER_TAG = "add user";
+    public static String UPDATE_USER_TAG = "update user";
+    public static String GET_USER_TAG = "get user";
+
     private static CollectionReference collectionReferenceUser;
     private static FirebaseFirestore db;
 
@@ -49,7 +53,7 @@ public class UserDataHelper extends DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  "User addition successful");
-                        listener.onSuccessAddUser();
+                        listener.onSuccess(null, ADD_USER_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -115,7 +119,7 @@ public class UserDataHelper extends DatabaseHelper {
             @Override
             public void onSuccess(String userID) {
                 Log.d(TAG, "Transaction success: " + userID);
-                listener.onSuccessUpdateUser();
+                listener.onSuccess(null, UPDATE_USER_TAG);
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -156,7 +160,7 @@ public class UserDataHelper extends DatabaseHelper {
                             } else if (user == null) {
                                 listener.onFailure(userName + " has no account");
                             } else {
-                                listener.onSuccessGetUser(user);
+                                listener.onSuccess(user, GET_USER_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

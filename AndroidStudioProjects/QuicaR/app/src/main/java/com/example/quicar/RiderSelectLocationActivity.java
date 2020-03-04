@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.example.quicar_mapview.R;
 import com.google.android.gms.common.api.Status;
@@ -218,43 +219,47 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      */
 
     @Override
-    public void onSuccessRiderOpenRequest(Request request) {};
+    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+        if (tag == RequestDataHelper.USER_REQ_TAG) {
+            System.out.println("---------------" + request.getRider().getName() + "---------------");
+        } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
+            if (requests.size() > 0) {
+                //  always check if the return value is valid
+                System.out.println("------------ active request obtained -----------");
+            }
+            else {
+                System.out.println("------------ empty list obtained -----------");
+            }
+        } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
+            System.out.println("------------ request is set to active -----------");
+            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            RequestDataHelper.queryUserRequest("new Driver", "driver", this);
+            Toast.makeText(RiderSelectLocationActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
+            Toast.makeText(RiderSelectLocationActivity.this, "rider is picked up successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
+            System.out.println("------------ request is deleted -----------");
+            Toast.makeText(RiderSelectLocationActivity.this, "rider request deleted successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.COMPLETE_REQ_TAG) {
+            System.out.println("------------ request is completed & deleted -----------");
+            System.out.println("------------ new record is created -----------");
+            Toast.makeText(RiderSelectLocationActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
+        } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
+            Toast.makeText(RiderSelectLocationActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
-    //  provide list of active request that is near to the driver location
-    public void onSuccessAllOpenRequests(ArrayList<Request> requests) {};
+    public void onActiveNotification(Request request) {
+        System.out.println("------------- rider request updated to active -----------------");
+        Toast.makeText(RiderSelectLocationActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
-    //  provide request that the driver accepted
-    public void onSuccessDriverActiveRequest(Request request) {};
-
-    @Override
-    // notify listener that new request is added successfully
-    public void onSuccessAddRequest() {};
-
-    @Override
-    //  notify listener that request is successfully updated to active
-    public void onSuccessSetActive() {};
-
-    @Override
-    //  notify listener that request is successfully updated to picked up
-    public void onSuccessSetPickedUp() {};
-
-    @Override
-    //  notify listener that request is successfully deleted
-    public void onSuccessCancel() {};
-
-    @Override
-    //  notify listener that request is completed, request deleted and new record created
-    public void onSuccessComplete() {};
-
-    @Override
-    //  notify when a request is set to active (only when the user is in rider mode)
-    public void onActiveNotification(Request request) {};
-
-    @Override
-    // whenever the query return null object or reading database failed
-    public void onFailure(String errorMessage) {};
+    public void onFailure(String errorMessage) {
+        System.out.println("-----------" + errorMessage + "-----------");
+        Toast.makeText(RiderSelectLocationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
 
 
 }

@@ -23,6 +23,15 @@ import java.util.ArrayList;
  * This class extend DatabaseHelper and mainly handle requests data
  */
 public class RequestDataHelper extends DatabaseHelper {
+
+    public static String USER_REQ_TAG = "user query request";
+    public static String ALL_REQs_TAG = "all opened request";
+    public static String ADD_REQ_TAG = "add new request";
+    public static String SET_ACTIVE_TAG = "set request active";
+    public static String SET_PICKEDUP_TAG = "set request picked up";
+    public static String CANCEL_REQ_TAG = "cancel opened request";
+    public static String COMPLETE_REQ_TAG = "complete request";
+
     private static OnGetRequestDataListener listener;
     private static CollectionReference collectionReferenceReq;
     private static FirebaseFirestore db;
@@ -72,7 +81,7 @@ public class RequestDataHelper extends DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " request addition successful");
-                        listener.onSuccessAddRequest();
+                        listener.onSuccess(null, null, ADD_REQ_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -129,7 +138,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param requestID
      *  id of request to be deleted
      */
-    private static void delRequest(final String requestID) {
+    private static void delRequest(final String requestID, OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document(requestID)
                 .delete()
@@ -137,12 +146,14 @@ public class RequestDataHelper extends DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
+                        listener.onSuccess(null, null, CANCEL_REQ_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, requestID + " deletion failed" + e.toString());
+                        listener.onFailure(requestID + " deletion failed");
                     }
                 });
     }
@@ -182,9 +193,9 @@ public class RequestDataHelper extends DatabaseHelper {
             public void onSuccess(String docID) {
                 Log.d(TAG, "Transaction success: " + docID);
                 if (setActiveMode)
-                    listener.onSuccessSetActive();
+                    listener.onSuccess(null, null, SET_ACTIVE_TAG);
                 else
-                    listener.onSuccessSetPickedUp();
+                    listener.onSuccess(null, null, SET_PICKEDUP_TAG);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -199,59 +210,27 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This method will check if the request is opened and return request data to listener
-     * @param riderName
-     *  rider name of query
+     * @param userName
+     *  user name of query
+     * @param mode
+     *  mode of the user
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryRiderOpenRequest(final String riderName, final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0)
+    public static void queryUserRequest(final String userName, final String mode,
+                                             final OnGetRequestDataListener listener) {
+        if (userName == null || userName.length() == 0) {
             listener.onFailure("rider name provided is a null or empty");
-        collectionReferenceReq
-                .whereEqualTo("rider.account.userName", riderName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            Request query = null;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                query = document.toObject(Request.class);
-                                count++;
-                            }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + riderName + " \" has more than one request");
-                                listener.onFailure(riderName + " has more than one request");
-                            } else {
-                                listener.onSuccessRiderOpenRequest(query);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method will check if there is an active request belongs to the driver and return the
-     * request data to listener
-     * @param driverName
-     *  driver name of query
-     * @param listener
-     *  listener for notification and obtain return value
-     */
-    public static void queryDriverActiveRequest(final String driverName, final OnGetRequestDataListener listener) {
-        if (driverName == null || driverName.length() == 0) {
-            listener.onFailure("driver name provided is a null or empty");
             return;
         }
+        String field;
+        if (mode == "rider")
+            field = "rider.account.userName";
+        else
+            field = "driver.account.userName";
+
         collectionReferenceReq
-                .whereEqualTo("driver.account.userName", driverName)
+                .whereEqualTo(field, userName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -267,10 +246,12 @@ public class RequestDataHelper extends DatabaseHelper {
                                 count++;
                             }
                             if (count > 1) {
-                                System.out.println("*****  user \" " + driverName + " \" has more than one request");
-                                listener.onFailure(driverName + " has more than one request");
-                            } else {
-                                listener.onSuccessDriverActiveRequest(query);
+                                System.out.println("*****  user \" " + userName + " \" has more than one request");
+                                listener.onFailure(userName + " has more than one request");
+                            } else if (query == null) {
+                                listener.onFailure(userName + " has no request");
+                            } else{
+                                listener.onSuccess(query,null, USER_REQ_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -306,7 +287,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                 if (!query.getAccepted())
                                     openRequests.add(query);
                             }
-                            listener.onSuccessAllOpenRequests(openRequests);
+                            listener.onSuccess(null, openRequests, ALL_REQs_TAG);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             listener.onFailure("Error getting documents: " + task.getException());
@@ -476,8 +457,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                             riderName + " has an ongoing request");
                                 } else {
                                     System.out.println("***** " + docID);
-                                    RequestDataHelper.delRequest(docID);
-                                    listener.onSuccessCancel();
+                                    RequestDataHelper.delRequest(docID, listener);
                                 }
                             }
                         } else {
@@ -537,11 +517,10 @@ public class RequestDataHelper extends DatabaseHelper {
                                             driverName + " has no ongoing request");
                                 } else {
                                     System.out.println("***** " + docID);
-                                    RequestDataHelper.delRequest(docID);
+                                    RequestDataHelper.delRequest(docID, listener);
                                     Record record = new Record(query, payment, rating);
                                     RecordDataHelper.addRecord(record);
-//                                    DatabaseHelper.setNotified(false);
-                                    listener.onSuccessComplete();
+                                    listener.onSuccess(null, null, COMPLETE_REQ_TAG);
                                 }
                             }
                         } else {
