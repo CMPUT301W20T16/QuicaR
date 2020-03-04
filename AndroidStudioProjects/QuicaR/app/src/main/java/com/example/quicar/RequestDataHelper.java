@@ -86,17 +86,14 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This is the method that check if the request is valid and call addRequest method
-     * @param neweRequest
+     * @param newRequest
      *  candidate request to be added
      * @param listener
      *  listener for notification
      */
-    public static void addNewRequest(final Request neweRequest, final OnGetRequestDataListener listener) {
-        if (neweRequest == null || neweRequest.getRider() == null) {
-            listener.onFailure("request provided is a null object");
-            return;
-        }
-        final String riderName = neweRequest.getRider().getName();
+    public static void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+
+        final String riderName = newRequest.getRider().getName();
         collectionReferenceReq
                 .whereEqualTo("rider.account.userName", riderName)
                 .get()
@@ -117,7 +114,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                 System.out.println("*****  user \" " + riderName + " \" already has one request");
                                 listener.onFailure(riderName + " already has one request");
                             } else {
-                                RequestDataHelper.addRequest(neweRequest, listener);
+                                RequestDataHelper.addRequest(newRequest, listener);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

@@ -290,6 +290,22 @@ public class DatabaseHelper {
         DatabaseHelper.oldServerKey = oldServerKey;
     }
 
+    public static Location getFirstLocation() {
+        return userState.getFirstSelectedLocation();
+    }
+
+    public static void setFirstLocation(Location location) {
+        userState.setFirstSelectedLocation(location);
+    }
+
+    public static Location getSecondLocation() {
+        return userState.getSecondSelectedLocation();
+    }
+
+    public static void setSecondLocation(Location location) {
+        userState.setSecondSelectedLocation(location);
+    }
+
     public static void sendNotification(String msg) {
         new Notify().execute(msg);
     }

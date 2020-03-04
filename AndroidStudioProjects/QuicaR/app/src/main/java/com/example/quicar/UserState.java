@@ -8,6 +8,8 @@ public class UserState {
     private String currentMode;
     private String token;
     private Boolean notified = Boolean.FALSE;
+    private Location firstSelectedLocation;
+    private Location secondSelectedLocation;
     private String activityState;
 
     UserState() {
@@ -43,6 +45,22 @@ public class UserState {
 
     public void setNotified(Boolean notified) {
         this.notified = notified;
+    }
+
+    public Location getFirstSelectedLocation() {
+        return firstSelectedLocation;
+    }
+
+    public void setFirstSelectedLocation(Location firstSelectedLocation) {
+        this.firstSelectedLocation = firstSelectedLocation;
+    }
+
+    public Location getSecondSelectedLocation() {
+        return secondSelectedLocation;
+    }
+
+    public void setSecondSelectedLocation(Location secondSelectedLocation) {
+        this.secondSelectedLocation = secondSelectedLocation;
     }
 
     public String getActivityState() {

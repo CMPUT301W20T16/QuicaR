@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import static com.example.quicar.DatabaseHelper.TAG;
 public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
 
     private OnGetRequestDataListener listener = this;
+    private static int SPLASH_TIME_OUT = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 //        RequestDataHelper.queryDriverActiveRequest(newDriver.getName(), this);
 
         //  test adding new user in register page
-//        startActivity(new Intent(getApplicationContext(), Login.class));
+        //startActivity(new Intent(getApplicationContext(), Login.class));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+                startActivity(homeIntent);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
 
 
@@ -122,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, listener);
             }
         });
+
 
     }
 

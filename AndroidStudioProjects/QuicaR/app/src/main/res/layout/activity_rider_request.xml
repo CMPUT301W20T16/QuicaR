@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:layout_alignBottom="@+id/map"
+    android:id="@+id/bottom_rec"
+    android:gravity="bottom"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:layout_width="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ENTER YOUR PICKUP LOCATION"
+        android:textSize="15sp"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_location"
+        android:hint="MY PICKUP LOCATION"
+        android:focusableInTouchMode="false"
+        android:editable="false"
+        android:padding="5dip" />
+
+    <!--        android:background="@drawable/rounded_courner_input"-->
+
+
+
+
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="ENTER YOUR DESTINATION"-->
+    <!--        android:textSize="15sp"/>-->
+
+    <!--    <EditText-->
+    <!--        android:layout_width="fill_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@drawable/rounded_courner_input"-->
+    <!--        android:id="@+id/stop_location"-->
+    <!--        android:hint="MY DESTINATION"-->
+    <!--        android:focusableInTouchMode="false"-->
+    <!--        android:editable="false"-->
+    <!--        android:padding="5dip" />-->
+
+
+    <!--    <Button-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Confirm Ride"-->
+    <!--        android:id="@+id/confirm_button"/>-->
+
+
+</LinearLayout>
