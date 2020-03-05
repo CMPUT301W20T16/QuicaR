@@ -24,13 +24,13 @@ import java.util.ArrayList;
  */
 public class RequestDataHelper extends DatabaseHelper {
 
-    public static String USER_REQ_TAG = "user query request";
-    public static String ALL_REQs_TAG = "all opened request";
-    public static String ADD_REQ_TAG = "add new request";
-    public static String SET_ACTIVE_TAG = "set request active";
-    public static String SET_PICKEDUP_TAG = "set request picked up";
-    public static String CANCEL_REQ_TAG = "cancel opened request";
-    public static String COMPLETE_REQ_TAG = "complete request";
+    public static final String USER_REQ_TAG = "user query request";
+    public static final String ALL_REQs_TAG = "all opened request";
+    public static final String ADD_REQ_TAG = "add new request";
+    public static final String SET_ACTIVE_TAG = "set request active";
+    public static final String SET_PICKEDUP_TAG = "set request picked up";
+    public static final String CANCEL_REQ_TAG = "cancel opened request";
+    public static final String COMPLETE_REQ_TAG = "complete request";
 
     private static OnGetRequestDataListener listener;
     private static CollectionReference collectionReferenceReq;
@@ -66,17 +66,29 @@ public class RequestDataHelper extends DatabaseHelper {
         }
     }
 
+    public static void notifyCancel() {
+        if (listener != null) {
+            listener.onCancelNotification();
+        }
+    }
+
+    public static void notifyPickedUp(Request request) {
+        if (listener != null) {
+            listener.onPickedUpNotification(request);
+        }
+    }
+
     /**
      * This is the method that add request to firebase and will notify the listener when success
-     * @param neweRequest
+     * @param newRequest
      *  request to be added
      * @param listener
      *  listener for notification
      */
-    private static void addRequest(final Request neweRequest, final OnGetRequestDataListener listener) {
+    private static void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document()
-                .set(neweRequest)
+                .set(newRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

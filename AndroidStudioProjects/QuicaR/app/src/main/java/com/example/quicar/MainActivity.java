@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseHelper.setCurrentUserName("testing");
+        DatabaseHelper.setCurrentUserName("testing1");
         DatabaseHelper.setCurrentMode("rider");
         DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
@@ -45,6 +45,28 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new UserDataHelper();
 
         RequestDataHelper.setOnActiveListener(this);
+
+        // Get token
+        // [START retrieve_current_token]
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        DatabaseHelper.setToken(token);
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // [END retrieve_current_token]
 
 //        //  test adding new user in register page
 //        //startActivity(new Intent(getApplicationContext(), Login.class));
@@ -98,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 User newDriver = new User();
                 newDriver.setName("new Driver");
                 RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, 666.f, listener);
-                DatabaseHelper.sendNotification("hello");
+                DatabaseHelper.sendPopUpNotification("hello");
             }
         });
 
@@ -161,6 +183,16 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public  void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public void onCancelNotification() {
+
     }
 
     @Override

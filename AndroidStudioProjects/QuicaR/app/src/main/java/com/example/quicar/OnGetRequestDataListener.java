@@ -24,6 +24,10 @@ public interface OnGetRequestDataListener {
 
     void onActiveNotification(Request request);
 
+    void onPickedUpNotification(Request request);
+
+    void onCancelNotification();
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

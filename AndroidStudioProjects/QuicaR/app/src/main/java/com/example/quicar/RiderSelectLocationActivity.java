@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.example.quicar_mapview.R;
+//import com.example.quicar.R;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -253,6 +253,16 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
         Toast.makeText(RiderSelectLocationActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public  void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public void onCancelNotification() {
+
     }
 
     @Override

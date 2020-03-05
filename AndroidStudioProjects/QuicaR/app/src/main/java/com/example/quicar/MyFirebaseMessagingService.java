@@ -1,5 +1,6 @@
 package com.example.quicar;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,6 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private static NotificationManager notificationManager;
+    private final String CHANNEL_NAME = "user_channel"; // They are hardcoded only for show it's just strings
+    private final String CHANNEL_ID = "user_channel_1"; // The user-visible name of the channel.
+    private final String CHANNEL_DESCR = "user_first_channel"; // The user-visible description of the channel.
     private final static AtomicInteger c = new AtomicInteger(0);
 
     /**
@@ -51,7 +56,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         String title = notification.getTitle();
         String body = notification.getBody();
-        createNotification(title, body, new Intent(this, MainActivity.class));
+        sendNotification(title, body, new Intent(this, MainActivity.class));
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -147,23 +152,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private void createNotification(String aTitle, String aMessage, Intent goToIntent) {
+    private void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
         final int NOTIFY_ID = c.incrementAndGet();
-        String name = "user_channel"; // They are hardcoded only for show it's just strings
-        String id = "user_channel_1"; // The user-visible name of the channel.
-        String description = "user_first_channel"; // The user-visible description of the channel.
 
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
 
-        NotificationManager notifManager = null;
+//        NotificationManager notifManager = null;
 
-        if (notifManager == null) {
-            notifManager =
-                    (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        }
+//        if (notifManager == null) {
+//            notifManager =
+//                    (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//        }
+        if (notificationManager == null)
+            notificationManager = getSystemService(NotificationManager.class);
 
-        builder = new NotificationCompat.Builder(this, id);
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID);
 
         goToIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, goToIntent, 0);
@@ -179,19 +183,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = notifManager.getNotificationChannel(id);
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(CHANNEL_ID);
             if (mChannel == null) {
-                mChannel = new NotificationChannel(id, name, importance);
-                mChannel.setDescription(description);
+                mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+                mChannel.setDescription(CHANNEL_DESCR);
                 mChannel.enableVibration(true);
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                notifManager.createNotificationChannel(mChannel);
+                notificationManager.createNotificationChannel(mChannel);
             }
-
         }
 
         Notification notification = builder.build();
-        notifManager.notify(NOTIFY_ID, notification);
+        notificationManager.notify(NOTIFY_ID, notification);
     }
 }
 

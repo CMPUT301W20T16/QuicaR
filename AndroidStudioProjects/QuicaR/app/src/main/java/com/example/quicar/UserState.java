@@ -7,7 +7,8 @@ public class UserState {
     private String currentUserName;
     private String currentMode;
     private String token;
-    private Boolean notified = Boolean.FALSE;
+    private Boolean active = Boolean.FALSE;
+    private Boolean onGoing = Boolean.FALSE;
     private Location firstSelectedLocation;
     private Location secondSelectedLocation;
     private String activityState;
@@ -39,12 +40,20 @@ public class UserState {
         this.token = token;
     }
 
-    public Boolean getNotified() {
-        return notified;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setNotified(Boolean notified) {
-        this.notified = notified;
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getOnGoing() {
+        return onGoing;
+    }
+
+    public void setOnGoing(Boolean onGoing) {
+        this.onGoing = onGoing;
     }
 
     public Location getFirstSelectedLocation() {

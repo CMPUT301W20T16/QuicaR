@@ -1,11 +1,15 @@
 package com.example.quicar;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,9 +42,9 @@ public class DatabaseHelper {
     private static CollectionReference collectionReferenceReq;
     private static CollectionReference collectionReferenceUser;
 
-    private static ArrayList<Record> records = new ArrayList<>();
-    private static ArrayList<Request> requests = new ArrayList<>();
-    private static ArrayList<User> users = new ArrayList<>();
+    //private static ArrayList<Record> records = new ArrayList<>();
+    //private static ArrayList<Request> requests = new ArrayList<>();
+    //private static ArrayList<User> users = new ArrayList<>();
 
     private static UserState userState = new UserState();
 
@@ -86,7 +90,7 @@ public class DatabaseHelper {
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
                             + " update for record");
 
-                    DatabaseHelper.records.clear();
+                    //DatabaseHelper.records.clear();
 
                     String recordID = "record0";
 
@@ -95,13 +99,8 @@ public class DatabaseHelper {
                         recordID = doc.getId();
 //                        delRecord(recordID);
                         Record record = doc.toObject(Record.class);
-                        DatabaseHelper.records.add(record);
-                        if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                                && DatabaseHelper.getCurrentMode().equals("rider") && DatabaseHelper.Notified()) {
-                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-                            DatabaseHelper.setNotified(Boolean.FALSE);
-                            System.out.println("-------- Notification sent --------");
-                        }
+                        //DatabaseHelper.records.add(record);
+                        checkCompleteNotification(record);
                     }
                 }
             }
@@ -116,32 +115,25 @@ public class DatabaseHelper {
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
                             + " update for request");
 
-                    DatabaseHelper.requests.clear();
+                    //DatabaseHelper.requests.clear();
+                    if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
+                        String requestID = "request0";
+                        ArrayList<Request> requests = new ArrayList<>();
 
-                    String requestID = "request0";
-
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-//                        Log.d(TAG, String.valueOf(doc.getData().get(REQUEST_KEY)));
-                        requestID = doc.getId();
-//                        delRequest(requestID);
-                        Request request = doc.toObject(Request.class);
-
-                        //  check if there is a change in the request status of current user
-                        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                                && DatabaseHelper.getCurrentMode().equals("rider")) {
-                            if (request.getAccepted() && !DatabaseHelper.Notified()) {
-                                RequestDataHelper.notifyActive(request);
-                                DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-                                DatabaseHelper.setNotified(Boolean.TRUE);
-                                System.out.println("-------- Notification sent --------");
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            //                        Log.d(TAG, String.valueOf(doc.getData().get(REQUEST_KEY)));
+                            requestID = doc.getId();
+//                            delRequest(requestID);
+                            Request request = doc.toObject(Request.class);
+                            //  check if there is a change in the request status of current user
+                            if (DatabaseHelper.getCurrentMode() == "rider") {
+                                checkActiveNotification(request);
+                                checkPickedUpNotification(request);
                             }
-//                            RequestDataHelper.notifyActive(request);
-//                            DatabaseHelper.sendNotification(DatabaseHelper.getToken());
-//                            DatabaseHelper.setNotified(Boolean.TRUE);
-//                            System.out.println("-------- Notification sent --------");
+                            requests.add(request);
                         }
-
-                        DatabaseHelper.requests.add(request);
+                        if (DatabaseHelper.getCurrentMode() == "driver")
+                            checkCancelNotification(requests);
                     }
                 }
             }
@@ -156,7 +148,7 @@ public class DatabaseHelper {
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
                             + " update for user account");
 
-                    DatabaseHelper.users.clear();
+                    //DatabaseHelper.users.clear();
 
                     String userID = "request0";
 
@@ -165,7 +157,7 @@ public class DatabaseHelper {
 //                        userID = doc.getId();
 //                        delUser(userID);
                         User user = doc.toObject(User.class);
-                        DatabaseHelper.users.add(user);
+                        //DatabaseHelper.users.add(user);
                     }
                 }
             }
@@ -191,6 +183,24 @@ public class DatabaseHelper {
 //                    @Override
 //                    public void onFailure(@NonNull Exception e) {
 //                        Log.d(TAG, requestID + " deletion failed" + e.toString());
+//                    }
+//                });
+//    }
+//
+//    private static void delRecord(final String recordID) {
+//        collectionReferenceRec
+//                .document(recordID)
+//                .delete()
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, recordID + " deletion successful");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, recordID + " deletion failed" + e.toString());
 //                    }
 //                });
 //    }
@@ -274,14 +284,6 @@ public class DatabaseHelper {
         userState.setToken(token);
     }
 
-    public static Boolean Notified() {
-        return userState.getNotified();
-    }
-
-    public static void setNotified(Boolean state) {
-        userState.setNotified(state);
-    }
-
     public static String getOldServerKey() {
         return oldServerKey;
     }
@@ -306,7 +308,61 @@ public class DatabaseHelper {
         userState.setSecondSelectedLocation(location);
     }
 
-    public static void sendNotification(String msg) {
+    private void checkActiveNotification(Request request) {
+        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
+            if (request.getAccepted() && !userState.getActive()) {
+                RequestDataHelper.notifyActive(request);
+                sendPopUpNotification("request is accepted");
+                userState.setActive(Boolean.TRUE);
+                System.out.println("-------- Accept Notification sent --------");
+            }
+        }
+    }
+
+    private void checkPickedUpNotification(Request request) {
+        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
+            if (request.getAccepted() &&  request.getPickedUp()
+                    && userState.getActive() && !userState.getOnGoing()) {
+                RequestDataHelper.notifyPickedUp(request);
+                sendPopUpNotification("rider is picked up");
+                userState.setOnGoing(Boolean.TRUE);
+                System.out.println("-------- Picked up Notification sent --------");
+            }
+        }
+    }
+
+    private void checkCancelNotification(ArrayList<Request> requests) {
+        if (!userState.getOnGoing())
+            return;
+
+        boolean found = false;
+        for (Request request: requests) {
+            if (request.getDriver().getName().equals(DatabaseHelper.getCurrentUserName())) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            sendPopUpNotification("Request is canceled");
+            RequestDataHelper.notifyCancel();
+            userState.setOnGoing(Boolean.FALSE);
+            System.out.println("-------- Cancel Notification sent --------");
+        }
+
+    }
+
+    private void checkCompleteNotification(Record record) {
+        if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
+                && DatabaseHelper.getCurrentMode().equals("rider") && userState.getOnGoing()
+                && userState.getOnGoing()) {
+            sendPopUpNotification("ride is completed");
+            userState.setActive(Boolean.FALSE);
+            userState.setOnGoing(Boolean.FALSE);
+            System.out.println("-------- Notification sent --------");
+        }
+    }
+
+    public static void sendPopUpNotification(String msg) {
         new Notify().execute(msg);
     }
 
