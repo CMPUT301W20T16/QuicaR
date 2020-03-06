@@ -1,9 +1,9 @@
 package com.example.quicar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -61,15 +61,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         if (request != null) {
             //  always check if the return value is valid
             System.out.println("---------------" + request.getDriver().getName() + "---------------");
-            DatabaseHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
+            RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, this);
         }
     }
 
     @Override
     public void onSuccessSetActive() {
         System.out.println("------------ request is set to active -----------");
-        DatabaseHelper.queryAllOpenRequests(new Location(), this);
-        DatabaseHelper.queryDriverActiveRequest("new Driver", this);
+        RequestDataHelper.queryAllOpenRequests(new Location(), this);
+        RequestDataHelper.queryDriverActiveRequest("new Driver", this);
 
     }
 

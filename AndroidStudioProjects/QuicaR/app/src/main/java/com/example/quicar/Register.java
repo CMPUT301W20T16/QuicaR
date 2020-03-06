@@ -107,8 +107,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-    private void addUser(User newUser) {
-        DatabaseHelper.addNewUser(newUser, this);
+    private void addUser(User newUser) {UserDataHelper.addNewUser(newUser, this);
     }
 
     @Override
