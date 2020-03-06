@@ -150,7 +150,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param requestID
      *  id of request to be deleted
      */
-    private static void delRequest(final String requestID, OnGetRequestDataListener listener) {
+    private static void delRequest(final String requestID, final OnGetRequestDataListener listener) {
         collectionReferenceReq
                 .document(requestID)
                 .delete()
