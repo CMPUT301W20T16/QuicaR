@@ -50,7 +50,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void setOnActiveListener(OnGetRequestDataListener listener) {
+    public static void setOnNotifyListener(OnGetRequestDataListener listener) {
         RequestDataHelper.listener = listener;
     }
 
@@ -76,6 +76,11 @@ public class RequestDataHelper extends DatabaseHelper {
         if (listener != null) {
             listener.onPickedUpNotification(request);
         }
+    }
+
+    public static void notifyComplete() {
+        if (listener != null)
+            listener.onCompleteNotification();
     }
 
     /**

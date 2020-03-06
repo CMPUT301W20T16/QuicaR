@@ -28,6 +28,8 @@ public interface OnGetRequestDataListener {
 
     void onCancelNotification();
 
+    void onCompleteNotification();
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

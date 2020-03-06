@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new RecordDataHelper();
         new UserDataHelper();
 
-        RequestDataHelper.setOnActiveListener(this);
+        RequestDataHelper.setOnNotifyListener(this);
 
         // Get token
         // [START retrieve_current_token]
@@ -63,23 +63,23 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
-//        //startActivity(new Intent(getApplicationContext(), Login.class));
+        startActivity(new Intent(getApplicationContext(), Login.class));
 //
         //  test map view
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
-                startActivity(homeIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+//                startActivity(homeIntent);
+//                finish();
+//            }
+//        }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
 //
 //
@@ -192,6 +192,11 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     @Override
     public void onCancelNotification() {
+
+    }
+
+    @Override
+    public void onCompleteNotification() {
 
     }
 
