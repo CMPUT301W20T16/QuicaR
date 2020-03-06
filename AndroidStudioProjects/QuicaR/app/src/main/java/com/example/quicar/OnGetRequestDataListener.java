@@ -12,25 +12,21 @@ import java.util.ArrayList;
  */
 public interface OnGetRequestDataListener {
     //  provide request that is open by the user
-    void onSuccessRiderOpenRequest(Request request);
-
     //  provide list of active request that is near to the driver location
-    void onSuccessAllOpenRequests(ArrayList<Request> requests);
-
-    //  provide request that the driver accepted
-    void onSuccessDriverActiveRequest(Request request);
-
-    // notify listener that new request is added successfully
-    void onSuccessAddRequest();
-
+    //  notify listener that new request is added successfully
+    //  notify listener that new request is added successfully
     //  notify listener that request is successfully updated to active
-    void onSuccessSetActive();
-
+    //  notify listener that request is successfully updated to picked up
     //  notify listener that request is successfully deleted
-    void onSuccessCancel();
-
     //  notify listener that request is completed, request deleted and new record created
-    void onSuccessComplete();
+    //  notify when a request is set to active (only when the user is in rider mode)
+    void onSuccess(Request request, ArrayList<Request> requests, String tag);
+
+    void onActiveNotification(Request request);
+
+    void onPickedUpNotification(Request request);
+
+    void onCancelNotification();
 
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);

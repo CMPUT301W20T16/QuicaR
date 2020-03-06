@@ -8,19 +8,34 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 
 /**
  * This class extend DatabaseHelper and mainly handle user data
  */
 public class UserDataHelper extends DatabaseHelper {
+    public static String ADD_USER_TAG = "add user";
+    public static String UPDATE_USER_TAG = "update user";
+    public static String GET_USER_TAG = "get user";
+
+    private static CollectionReference collectionReferenceUser;
+    private static FirebaseFirestore db;
 
     /**
      * This is the constructor of UserDataHelper
      */
     public UserDataHelper() {
+        super();
+        UserDataHelper.collectionReferenceUser = super.getCollectionReferenceUser();
+        UserDataHelper.db = super.getDb();
     }
 
     /**
@@ -38,7 +53,7 @@ public class UserDataHelper extends DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  "User addition successful");
-                        listener.onSuccessAddUser();
+                        listener.onSuccess(null, ADD_USER_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -82,76 +97,45 @@ public class UserDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .document(userID)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG,  "User update successful");
-                        listener.onSuccessUpdateUser();
-                    }
-                })
+
+        final DocumentReference reqDocRef = collectionReferenceUser.document(userID);
+
+        db.runTransaction(new Transaction.Function<String>() {
+            @Override
+            public String apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(reqDocRef);
+                System.out.println("docSnapshot---------" + snapshot);
+                Request requestTmp = snapshot.toObject(Request.class);
+                System.out.println( "request temp---------" + requestTmp);
+                if (!requestTmp.getAccepted()) {
+                    transaction.set(reqDocRef, user);
+                    return userID;
+                } else {
+                    throw new FirebaseFirestoreException("Request has already been accepted",
+                            FirebaseFirestoreException.Code.ABORTED);
+                }
+            }
+        }).addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String userID) {
+                Log.d(TAG, "Transaction success: " + userID);
+                listener.onSuccess(null, UPDATE_USER_TAG);
+            }
+        })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,  "User update failed" + e.toString());
-                        listener.onFailure("User update failed" + e.toString());
+                        Log.w(TAG, "Transaction failure.", e);
+                        listener.onFailure("Transaction failure. " + e);
                     }
                 });
     }
 
-    /**
-     * This method will check if the user already exists and call addUser method
-     * @param user
-     *  new user to be added
-     * @param listener
-     *  listener for notification
-     */
-    public static void addNewUser(final User user, final OnGetUserDataListener listener) {
-        if (user == null)
+    public static void getUser(final String userName, final OnGetUserDataListener listener) {
+        if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
-        final String userName = user.getName();
-        collectionReferenceUser
-                .whereEqualTo("account.userName", userName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            User user = null;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                user = document.toObject(User.class);
-                                count++;
-                            }
-                            if (count > 0) {
-                                System.out.println("*****  user \" " + userName + " \" has an existing account");
-                                listener.onFailure(userName + " has anexisting request");
-                            } else {
-                                UserDataHelper.addUser(user, listener);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method will check if the user exists and call updateUser method
-     * @param userName
-     *  user name of the user to be updated
-     * @param listener
-     *  listener for notification
-     */
-    public static void updateUserProfile(final String userName, final OnGetUserDataListener listener) {
-        if (userName == null || userName.length() == 0)
-            listener.onFailure("user name provided is a null or empty");
+            return;
+        }
         collectionReferenceUser
                 .whereEqualTo("account.userName", userName)
                 .get()
@@ -167,6 +151,97 @@ public class UserDataHelper extends DatabaseHelper {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 user = document.toObject(User.class);
+                                userID = document.getId();
+                                count++;
+                            }
+                            if (count > 1) {
+                                System.out.println("*****  user \" " + userName + " \" has more than one account");
+                                listener.onFailure(userName + " has more than one account");
+                            } else if (user == null) {
+                                listener.onFailure(userName + " has no account");
+                            } else {
+                                listener.onSuccess(user, GET_USER_TAG);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+
+    }
+
+    /**
+     * This method will check if the user already exists and call addUser method
+     * @param newUser
+     *  new user to be added
+     * @param listener
+     *  listener for notification
+     */
+    public static void addNewUser(final User newUser, final OnGetUserDataListener listener) {
+        if (newUser == null) {
+            listener.onFailure("user provided is a null object");
+            return;
+        }
+        final String userName = newUser.getName();
+        collectionReferenceUser
+                .whereEqualTo("account.userName", userName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+//                            User user = null;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                user = document.toObject(User.class);
+                                count++;
+                            }
+                            if (count > 0) {
+                                System.out.println("*****  user \" " + userName + " \" has an existing account");
+                                listener.onFailure(userName + " has anexisting account");
+                            } else {
+                                UserDataHelper.addUser(newUser, listener);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This method will check if the user exists and call updateUser method
+     * @param user
+     *  user object to be updated
+     * @param listener
+     *  listener for notification
+     */
+    public static void updateUserProfile(final User user, final OnGetUserDataListener listener) {
+        if (user == null || user.getName() == null || user.getName().length() == 0) {
+            listener.onFailure("user name provided is a null or empty");
+            return;
+        }
+        final String userName = user.getName();
+        collectionReferenceUser
+                .whereEqualTo("account.userName", userName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+//                            User user = null;
+                            String userID = "";
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                user = document.toObject(User.class);
                                 userID = document.getId();
                                 count++;
                             }

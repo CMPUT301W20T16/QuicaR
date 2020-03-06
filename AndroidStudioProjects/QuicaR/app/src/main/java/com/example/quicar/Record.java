@@ -123,7 +123,8 @@ public class Record {
      */
     public String getDateTimeString() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.CANADA);
-//        Date resultdate = new Date(dateTime);
+        if (dateTime == null)
+            throw new IllegalArgumentException();
         return sdf.format(dateTime);
     }
 }

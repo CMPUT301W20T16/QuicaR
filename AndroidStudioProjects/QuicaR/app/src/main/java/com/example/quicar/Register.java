@@ -107,17 +107,14 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-    private void addUser(User newUser) {UserDataHelper.addNewUser(newUser, this);
+    private void addUser(User newUser) {
+        UserDataHelper.addNewUser(newUser, this);
     }
 
     @Override
-    public void onSuccessAddUser() {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-    }
-
-    @Override
-    public void onSuccessUpdateUser() {
-
+    public void onSuccess(User user, String tag) {
+        if (tag == UserDataHelper.ADD_USER_TAG)
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     @Override

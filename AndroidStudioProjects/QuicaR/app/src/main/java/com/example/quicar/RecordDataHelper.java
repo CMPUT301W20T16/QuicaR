@@ -6,28 +6,32 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 
 
 /**
  * This class extend DatabaseHelper and mainly handle records data
  */
 public class RecordDataHelper extends DatabaseHelper {
+    private static CollectionReference collectionReferenceRec;
 
     /**
      * This is the constructor of RecordDataHelper
      */
     public RecordDataHelper() {
+        super();
+        RecordDataHelper.collectionReferenceRec = super.getCollectionReferenceRec();
     }
 
     /**
      * This is the method that add a record
-     * @param record
+     * @param newRecord
      *  record to be added
      */
-    protected static void addRecord(final Record record) {
+    public static void addRecord(final Record newRecord) {
         collectionReferenceRec
                 .document()
-                .set(record)
+                .set(newRecord)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
