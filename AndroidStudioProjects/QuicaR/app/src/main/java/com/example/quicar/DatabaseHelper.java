@@ -427,6 +427,13 @@ public class DatabaseHelper {
             userState.setOnGoing(Boolean.FALSE);
             System.out.println("-------- Notification sent --------");
         }
+        if (record.getRequest().getDriver().getName().equals(DatabaseHelper.getCurrentUserName())
+                && DatabaseHelper.getCurrentMode().equals("driver") && userState.getOnGoing()) {
+            sendPopUpNotification("ride is completed");
+            userState.setActive(Boolean.FALSE);
+            userState.setOnGoing(Boolean.FALSE);
+            System.out.println("-------- Notification sent --------");
+        }
     }
 
     /**
