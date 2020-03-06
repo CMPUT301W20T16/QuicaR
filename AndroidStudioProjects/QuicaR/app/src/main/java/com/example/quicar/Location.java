@@ -3,32 +3,32 @@ package com.example.quicar;
 import java.io.Serializable;
 
 public class Location implements Serializable {
-    Float lat;
-    Float lon;
+    Double lat;
+    Double lon;
 
     public Location() {
-        lat = new Float(0);
-        lon = new Float(0);
+        lat = new Double(0);
+        lon = new Double(0);
     }
 
-    public Location(float lat, float lon) {
+    public Location(Double lat, Double lon) {
         this.lat = lat;
         this.lon = lon;
     }
 
-    public float getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(float lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public float getLon() {
+    public Double getLon() {
         return lon;
     }
 
-    public void setLon(float lon) {
+    public void setLon(Double lon) {
         this.lon = lon;
     }
 }

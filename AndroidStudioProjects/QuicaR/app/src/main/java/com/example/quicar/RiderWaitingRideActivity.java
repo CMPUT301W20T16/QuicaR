@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.quicar_mapview.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import static com.example.quicar.App.CHANNEL_1_ID;
