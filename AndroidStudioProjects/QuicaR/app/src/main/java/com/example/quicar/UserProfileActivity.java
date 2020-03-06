@@ -30,7 +30,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //    }
 
 
-    private TextInputLayout email, phone, username, firstname, lastname, birthdate, gender;
+    private TextInputLayout email, phone, username, firstname, lastname, birthdate, gender,password;
     private Button savebutton;
     private int getUser = 0;
     FirebaseAuth mAuth;
@@ -42,7 +42,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_user_profile);
         this.email = findViewById(R.id.profile_email);
@@ -52,6 +52,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.lastname = findViewById(R.id.profile_birthdate);
         this.gender = findViewById(R.id.profile_gender);
         this.birthdate=findViewById(R.id.profile_birthdate);
+        this.password = findViewById(R.id.profile_password);
         savebutton = findViewById(R.id.save_button);
 
         mAuth = FirebaseAuth.getInstance();
@@ -72,10 +73,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 final String myFirstname = firstname.getEditText().getText().toString();
                 final String myLastname = lastname.getEditText().getText().toString();
                 final String myGender = gender.getEditText().getText().toString();
+                final String myPassword = password.getEditText().getText().toString();
 
 
 
-                if (!validateEmail(myEmail) | !validatePhone(myPhone) | !validatePhone( myPhone ) | !validateUsername( myUsername )) {
+                if (!validateEmail(myEmail) | !validatePhone(myPhone) | !validatePhone( myPhone ) | !validateUsername( myUsername )|!validatePassWord(myPassword)) {
                     return;
                 }
 
@@ -139,6 +141,24 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             this.email.setError(null);
             return true;
         }
+    }
+    
+    /**
+     * for check valid user input password
+     */
+    public boolean validatePassWord(String confirmPassword) {
+
+        if (TextUtils.isEmpty(confirmPassword)) {
+            this.password.setError("Field can't be empty");
+            return false ;
+
+        }else {
+            this.password.setError(null);
+            return true;
+        }
+
+
+
     }
 
     /**
