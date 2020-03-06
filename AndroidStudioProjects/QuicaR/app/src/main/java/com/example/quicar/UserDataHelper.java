@@ -131,6 +131,13 @@ public class UserDataHelper extends DatabaseHelper {
                 });
     }
 
+    /**
+     * This method return the user object that match user name
+     * @param userName
+     *  candidate user name
+     * @param listener
+     *  listener for notification (onSuccess, onFailure)
+     */
     public static void getUser(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
