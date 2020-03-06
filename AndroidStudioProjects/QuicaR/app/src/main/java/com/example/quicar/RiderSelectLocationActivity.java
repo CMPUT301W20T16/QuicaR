@@ -266,6 +266,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
     @Override
+    public void onCompleteNotification() {}
+
+    @Override
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(RiderSelectLocationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
