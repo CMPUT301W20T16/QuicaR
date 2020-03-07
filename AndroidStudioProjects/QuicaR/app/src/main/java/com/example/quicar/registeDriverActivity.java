@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class registeDriverActivity extends AppCompatActivity implements OnGetUserDataListener {
-    private TextInputLayout licenseNumberLayout, birthdateLayout, plate_numberLayout;
+    private TextInputLayout licenseNumberLayout, birthDateLayout, plate_numberLayout;
     private Button validateButton;
     FirebaseAuth auth;
 
@@ -23,7 +23,7 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_driver);
         licenseNumberLayout = findViewById(R.id.profile_driver_license_number);
-        birthdateLayout = findViewById(R.id.profile_birthdate);
+        birthDateLayout = findViewById(R.id.profile_birthDate);
         plate_numberLayout = findViewById(R.id.profile_validate_plate_number);
         validateButton = findViewById(R.id.validate_button);
         auth = FirebaseAuth.getInstance();
@@ -53,10 +53,10 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
         String birthDate = licenseNumberLayout.getEditText().getText().toString();
 
         if (TextUtils.isEmpty(birthDate)) {
-            this.birthdateLayout.setError("Field can't be empty");
+            this.birthDateLayout.setError("Field can't be empty");
             return false;
         } else {
-            this.birthdateLayout.setError(null);
+            this.birthDateLayout.setError(null);
             return true;
         }
     }
@@ -95,6 +95,11 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
 
     @Override
     public void onFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public  void  onUserExists(Boolean exists, String tag){
 
     }
 

@@ -276,4 +276,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         System.out.println("your implementation worong");
 
     }
+
+    @Override
+    public  void  onUserExists(Boolean exists, String tag){
+
+    }
 }

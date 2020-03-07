@@ -35,6 +35,16 @@
     <string name="save_button">save</string>
     <!-- [end] -->
 
+    <!-- [START design for register driver  -->
+    <string name="register_page">Sign up as a Driver</string>
+    <string name="register_reminder">please enter your associated email and password to proceed</string>
+    <string name="profile_driver_license_number">driver license number</string>
+    <string name="profile_Driver_birthDate">birth date</string>
+    <string name="profile_validate_plate_number">validate plate number</string>
+    <string name="validate_button">Validate</string>
+
+    <!-- [end] -->
+
 
 
 
