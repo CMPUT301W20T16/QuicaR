@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">QuicaR</string>
+    <string name="qr_description">this is a qr code</string>
+    <string name="refresh_description">this is a refresh button</string>
 </resources>
