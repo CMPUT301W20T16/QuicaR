@@ -84,6 +84,7 @@ public class RiderWaitingRideActivity extends BaseActivity {
 
         /**
          * if successfully matched, call sendOnChannel1
+         * While driver is browsing for open requests
          */
 
     }

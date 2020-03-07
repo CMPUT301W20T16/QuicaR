@@ -39,7 +39,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
@@ -62,7 +64,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         //initialize view
 
         // set up google map
-        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
@@ -87,6 +89,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
     /**
      * google map methods
      */
@@ -96,7 +99,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,  this);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
         }
     }
@@ -118,8 +121,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //Request Location Permission
                 checkLocationPermission();
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
@@ -127,7 +129,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    protected synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -165,7 +167,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         //place a new marker for current location
-        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
@@ -178,6 +180,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     protected void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -198,7 +201,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 //Prompt the user once explanation has been shown
                                 ActivityCompat.requestPermissions(BaseActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION );
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
                             }
                         })
                         .create()
@@ -209,7 +212,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION );
+                        MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
@@ -255,12 +258,14 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+
+
     /**
      * drawer method
      */
     // enable user to close the navigation drawer
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -289,4 +294,6 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

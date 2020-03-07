@@ -29,6 +29,11 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".RiderRequestActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverBrowsingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".UserProfile" />
+        <activity android:name=".RiderWaitingRideActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".MyFirebaseMessagingService"

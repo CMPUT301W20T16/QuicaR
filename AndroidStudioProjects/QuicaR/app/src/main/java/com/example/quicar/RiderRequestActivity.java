@@ -16,6 +16,7 @@ import java.util.Locale;
 public class RiderRequestActivity extends BaseActivity {
 
     private EditText startLocation;
+
 //    private EditText stopLocation;
 //    private Button confirmButton;
 
@@ -39,7 +40,7 @@ public class RiderRequestActivity extends BaseActivity {
         startLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String current_address = setPickupLocationDefault();
+                String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 if (current_address != null) {
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
                     intent.putExtra("current pos", current_address);
@@ -55,32 +56,29 @@ public class RiderRequestActivity extends BaseActivity {
 
     }
 
-
-
-    /**
-     *  request method
-     */
-
-    public String setPickupLocationDefault() {
+    // get address name in String from lat and long
+    public String findAddress(double lat, double lng) {
         // set pick up location automatically as customer's current location
-        geocoder = new Geocoder(RiderRequestActivity.this, Locale.getDefault());
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
-        if (mLastLocation != null) {
+        if (lat != 0 && lng != 0) {
             try {
-                addresses = geocoder.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             if (address.length() != 0) {
-//                pickUp.setText(address, TextView.BufferType.EDITABLE);
                 return address;
             }
         }
         return null;
 
     }
+
+
+
 
     /**
      *     database method

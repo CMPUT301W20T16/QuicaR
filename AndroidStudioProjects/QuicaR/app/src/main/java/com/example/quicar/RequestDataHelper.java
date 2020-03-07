@@ -275,12 +275,10 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This method will query all open request and return a list of request to listener
-     * @param location
-     *  location of the driver
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryAllOpenRequests(final Location location, final OnGetRequestDataListener listener) {
+    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
         //listener.onStart();
         Float latRange = 10.0f;
         Float lonRange = 10.0f;

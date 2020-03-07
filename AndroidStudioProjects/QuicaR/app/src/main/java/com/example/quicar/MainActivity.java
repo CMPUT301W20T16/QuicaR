@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+                Intent homeIntent = new Intent(MainActivity.this, DriverBrowsingActivity.class);
                 startActivity(homeIntent);
                 finish();
             }
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            RequestDataHelper.queryAllOpenRequests(this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {

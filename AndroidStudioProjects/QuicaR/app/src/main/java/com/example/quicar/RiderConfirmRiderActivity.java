@@ -27,7 +27,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RiderConfirmRiderActivity extends BaseActivity implements TaskLoadedCallback {
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
+
+    private OnGetRequestDataListener listener = this;
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
@@ -83,20 +85,46 @@ public class RiderConfirmRiderActivity extends BaseActivity implements TaskLoade
                 .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
 
         /**
+         * estimate cost function
+         */
+        // if user selected confirm button
+        // add new request to database
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Request request = new Request;
-                request.setStart(current_location);
-                request.setDestination(stop_location);
 
-                DatabaseHelper.addRequest(request);
+                /**
+                 *   instantiate a new User class for current user
+                  */
+                User newUser = new User();
+                newUser.setName(DatabaseHelper.getCurrentUserName());
 
-                linearLayout = (LinearLayout)findViewById(R.id.bottom_sheet_loading);
-                bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+                /**
+                 *    new request's cost is hard coded for now
+                  */
+                Request request = new Request(start_location, end_location, newUser, new User(), 20.0f);
+
+                RequestDataHelper.addNewRequest(request, listener);
+
+//                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), new User(), 666.f, listener);
+
+                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+                startActivity(intent);
+
             }
         });
-*/
+
+
+        // if user selected cancel button
+        // return to previous activity RiderSelectLocation
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
     }
     @Override
@@ -146,6 +174,37 @@ public class RiderConfirmRiderActivity extends BaseActivity implements TaskLoade
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
 
+
+    }
+
+    @Override
+    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+        if (tag == RequestDataHelper.ADD_REQ_TAG) {
+            Toast.makeText(RiderConfirmRiderActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActiveNotification(Request request) {
+        System.out.println("------------- rider request updated to active -----------------");
+        Toast.makeText(RiderConfirmRiderActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public void onCancelNotification() {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        System.out.println("-----------" + errorMessage + "-----------");
+        Toast.makeText(RiderConfirmRiderActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
 
     }
 }

@@ -182,7 +182,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
     /**
      * listview包含近10(?)个rider去过的location
-     * 传两个location（pickup和destination）去rider_confirm_request.activity
 */
 
 //    check if any autocompletion fragment is left empty
@@ -207,11 +206,10 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         switch (item.getItemId()) {
             case R.id.confirm_button:
                 // check if inputs are left blank
-//                if (isEmpty(pickUpAutoCompletion) || isEmpty(destinationAutoCompletion))
-//                        || calendar == null) {
-//                    Toast.makeText(this, "One or more fields is empty!", Toast.LENGTH_SHORT).show();
-//                    return false;
-//                }
+                if (start_location == null || end_location == null){
+                    Toast.makeText(this, "One or more fields is empty!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 Intent intent = new Intent(RiderSelectLocationActivity.this, RiderConfirmRiderActivity.class);
                 intent.putExtra("start location", start_location);
                 intent.putExtra("end location", end_location);
