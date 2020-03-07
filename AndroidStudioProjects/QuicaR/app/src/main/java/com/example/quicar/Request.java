@@ -9,6 +9,7 @@ import com.google.firebase.firestore.PropertyName;
  */
 public class Request {
 
+    private String rid;
     private Location start;
     private Location destination;
     private User rider;
@@ -43,6 +44,25 @@ public class Request {
         this.isAccepted = false;
         this.isPickedUp = false;
         this.estimatedCost = estimatedCost;
+    }
+
+    /**
+     * This method return the id of the request
+     * @return
+     */
+    @PropertyName("requestID")
+    public String getRid() {
+        return rid;
+    }
+
+    /**
+     * This method set the value of request's id
+     * @param rid
+     *  id of the request
+     */
+    @PropertyName("requestID")
+    public void setRid(String rid) {
+        this.rid = rid;
     }
 
     /**

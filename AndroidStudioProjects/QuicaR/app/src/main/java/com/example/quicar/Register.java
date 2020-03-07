@@ -118,6 +118,11 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     }
 
     @Override
+    public void onUserExists(Boolean exists, String tag) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
 
     }

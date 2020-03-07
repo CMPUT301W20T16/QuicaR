@@ -219,9 +219,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      */
 
     @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.USER_REQ_TAG) {
-            System.out.println("---------------" + request.getRider().getName() + "---------------");
+
         } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
@@ -269,7 +269,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     public void onCompleteNotification() {}
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onFailure(String errorMessage, String tag) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(RiderSelectLocationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
