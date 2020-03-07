@@ -303,7 +303,7 @@ public class UserDataHelper extends DatabaseHelper {
                             if (count > 0) {
                                 listener.onUserExists(true, "userName");
                             } else {
-                                checkEmailExists(false, email, listener);
+                                checkEmailExists(email, listener);
                             }
                         } else {
                             listener.onUserExists(null, "Error getting document");
@@ -315,12 +315,12 @@ public class UserDataHelper extends DatabaseHelper {
     /**
      * This method is called from checkUserExists() method when user name does not exists
      * It will notify the listener if the email exists
-     * @param nameExists
-     *
      * @param email
+     *  candidate email
      * @param listener
+     *  listener for notification
      */
-    private static void checkEmailExists(boolean nameExists, String email, OnGetUserDataListener listener) {
+    private static void checkEmailExists(String email, OnGetUserDataListener listener) {
         collectionReferenceUser
                 .whereEqualTo("account.email", email)
                 .get()
