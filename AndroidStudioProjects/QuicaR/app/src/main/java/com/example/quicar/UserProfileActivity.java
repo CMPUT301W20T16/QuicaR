@@ -31,7 +31,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
     private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstnameLayout, lastnameLayout, birthdateLayout, genderLayout,passwordLayout;
-    private Button savebutton;
+
     private int getUser = 0;
     FirebaseAuth mAuth;
 
@@ -42,18 +42,18 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Button saveButton;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_user_profile);
         this.emailLayout = findViewById(R.id.profile_email);
         this.phoneLayout = findViewById(R.id.profile_phone);
         this.usernameLayout = findViewById(R.id.profile_username);
-        this.firstnameLayout = findViewById(R.id.profile_firstname);
-        this.lastnameLayout = findViewById(R.id.profile_lastname);
+        this.firstnameLayout = findViewById(R.id.profile_firstName);
+        this.lastnameLayout = findViewById(R.id.profile_lastName);
         this.genderLayout = findViewById(R.id.profile_gender);
-        this.birthdateLayout = findViewById(R.id.profile_birthdate);
+        this.birthdateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
-        savebutton = findViewById(R.id.save_button);
+        saveButton = findViewById(R.id.save_button);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -64,7 +64,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
         this.setDefault();
 
-        savebutton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean validateFlag = checkValidate();
@@ -150,7 +150,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             this.lastnameLayout.getEditText().setText(user.getAccountInfo().getLastName());
             this.birthdateLayout.getEditText().setText(sdf.format(user.getAccountInfo().getBirthDate()));
             this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
-
             System.out.println("setting default");
         }
 
@@ -223,10 +222,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     private boolean validateFirstName() {
         String firstName = firstnameLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(firstName)) {
-            this.usernameLayout.setError("Field can't be empty");
+            this.firstnameLayout.setError("Field can't be empty");
             return false ;
         } else {
-            this.usernameLayout.setError(null);
+            this.firstnameLayout.setError(null);
             return true;
         }
     }
@@ -237,10 +236,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     private boolean validateLastName() {
         String lastTime = lastnameLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(lastTime)) {
-            this.usernameLayout.setError("Field can't be empty");
+            this.lastnameLayout.setError("Field can't be empty");
             return false ;
         } else {
-            this.usernameLayout.setError(null);
+            this.lastnameLayout.setError(null);
             return true;
         }
     }
