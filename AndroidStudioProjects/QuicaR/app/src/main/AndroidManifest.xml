@@ -45,12 +45,12 @@
         <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
         <activity android:name="com.example.quicar.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <!--        <activity android:name="com.example.quicar.RiderConfirmRiderActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
-        <!--        <activity android:name="com.example.quicar.RiderWaitingRideActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
-        <!--        <activity android:name="com.example.quicar.DriverBrowsingActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+<!--        <activity android:name="com.example.quicar.RiderConfirmRiderActivity"-->
+<!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+<!--        <activity android:name="com.example.quicar.RiderWaitingRideActivity"-->
+<!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+<!--        <activity android:name="com.example.quicar.DriverBrowsingActivity"-->
+<!--            android:theme="@style/AppTheme.NoActionBar"/>-->
 
 
 

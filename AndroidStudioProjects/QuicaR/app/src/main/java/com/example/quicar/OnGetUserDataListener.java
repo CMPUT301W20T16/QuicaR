@@ -11,6 +11,8 @@ public interface OnGetUserDataListener {
     //  notify listener that user is obtained successfully
     void onSuccess(User user, String tag);
 
+    void onUserExists(Boolean exists, String tag);
+
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);
 }

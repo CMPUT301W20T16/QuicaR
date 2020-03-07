@@ -237,6 +237,42 @@ public class DatabaseHelper {
         return db;
     }
 
+    /**
+     * This is the method that return the Firebase token of this device
+     * @return
+     *  Firebase token of this device
+     */
+    public static String getToken() {
+        return userState.getToken();
+    }
+
+    /**
+     * This is the method that set the value of token in DatabaseHelper
+     * @param token
+     *  the value of token in DatabaseHelper
+     */
+    public static void setToken(String token) {
+        userState.setToken(token);
+    }
+
+    /**
+     * This is the method that return the old server key of quicar firebase
+     * @return
+     *  the old server key of quicar firebase
+     */
+    public static String getOldServerKey() {
+        return oldServerKey;
+    }
+
+    /**
+     * This is the method that set the value of old server key in DatabaseHelper
+     * @param oldServerKey
+     *  value of old server key in DatabaseHelper
+     */
+    public static void setOldServerKey(String oldServerKey) {
+        DatabaseHelper.oldServerKey = oldServerKey;
+    }
+
 
     /**
      * This is the method that return the current user name stored locally
@@ -259,6 +295,7 @@ public class DatabaseHelper {
     /**
      * This is the method that set the current mode of the user, either rider or driver mode
      * @return
+     *  the current mode of the user
      */
     public static String getCurrentMode() {
         return userState.getCurrentMode();
@@ -267,42 +304,57 @@ public class DatabaseHelper {
     /**
      * This is the method that return the current mode of the user, either rider or driver mode
      * @param currentMode
+     *  the current mode of the user
      */
     public static void setCurrentMode(String currentMode) {
+        if (currentMode != "rider" && currentMode != "driver")
+            throw new IllegalArgumentException("user mode can only be rider or driver, but an alternative obtained!");
+
         userState.setCurrentMode(currentMode);
     }
 
-    public static String getToken() {
-        return userState.getToken();
-    }
-
-    public static void setToken(String token) {
-        userState.setToken(token);
-    }
-
-    public static String getOldServerKey() {
-        return oldServerKey;
-    }
-
-    public static void setOldServerKey(String oldServerKey) {
-        DatabaseHelper.oldServerKey = oldServerKey;
-    }
-
+    /**
+     * This is the method that return the first location selected by rider
+     * @return
+     *  first location selected by rider
+     */
     public static Location getFirstLocation() {
         return userState.getFirstSelectedLocation();
     }
 
+    /**
+     * This is the method that set the value of first location selected by rider
+     * @param location
+     *  first location selected by rider
+     */
     public static void setFirstLocation(Location location) {
         userState.setFirstSelectedLocation(location);
     }
+
+    /**
+     * This is the method that return the second location selected by rider
+     * @return
+     *  second location selected by rider
+     */
     public static Location getSecondLocation() {
         return userState.getSecondSelectedLocation();
     }
 
+    /**
+     * This is the method that set the value of second location in DatabaseHelper
+     * @param location
+     *  value of second location in DatabaseHelper
+     */
     public static void setSecondLocation(Location location) {
         userState.setSecondSelectedLocation(location);
     }
 
+    /**
+     * This is the method that check if there is a notification needed to be sent to the rider
+     * that there is a request set to active (a driver accepted the rider's request)
+     * @param request
+     *  candidate request
+     */
     private void checkActiveNotification(Request request) {
         if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
@@ -314,6 +366,12 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * This is the method that check if there is a notification needed to be sent to the rider
+     * that there is a request picked up by a driver
+     * @param request
+     *  candidate request
+     */
     private void checkPickedUpNotification(Request request) {
         if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
             if (request.getAccepted() &&  request.getPickedUp()
@@ -326,6 +384,12 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * This method check if there is a notification needed to be sent to the driver
+     * that the request working on is canceled by the rider
+     * @param requests
+     *  candidate request
+     */
     private void checkCancelNotification(ArrayList<Request> requests) {
         if (!userState.getOnGoing())
             return;
@@ -346,10 +410,21 @@ public class DatabaseHelper {
 
     }
 
+    /**
+     * This method check if there is a notification needed to be sent to the rider
+     * that the rider's request is completed
+     * @param record
+     */
     private void checkCompleteNotification(Record record) {
         if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                && DatabaseHelper.getCurrentMode().equals("rider") && userState.getOnGoing()
-                && userState.getOnGoing()) {
+                && DatabaseHelper.getCurrentMode().equals("rider") && userState.getOnGoing()) {
+            sendPopUpNotification("ride is completed");
+            userState.setActive(Boolean.FALSE);
+            userState.setOnGoing(Boolean.FALSE);
+            System.out.println("-------- Notification sent --------");
+        }
+        if (record.getRequest().getDriver().getName().equals(DatabaseHelper.getCurrentUserName())
+                && DatabaseHelper.getCurrentMode().equals("driver") && userState.getOnGoing()) {
             sendPopUpNotification("ride is completed");
             userState.setActive(Boolean.FALSE);
             userState.setOnGoing(Boolean.FALSE);
@@ -357,10 +432,18 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * This method send a pop up notification to this device
+     * @param msg
+     *  message body in the notification
+     */
     public static void sendPopUpNotification(String msg) {
         new Notify().execute(msg);
     }
 
+    /**
+     * This is the class that generate a notification
+     */
     private static class Notify extends AsyncTask<String, Void, Void> {
         // https://www.youtube.com/watch?v=v29x4dKNBJw
         // https://stackoverflow.com/questions/9671546/asynctask-android-example
