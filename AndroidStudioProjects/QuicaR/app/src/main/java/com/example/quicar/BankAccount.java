@@ -1,13 +1,25 @@
 package com.example.quicar;
 
 import java.util.Date;
+import com.google.firebase.firestore.PropertyName;
 
 public class BankAccount {
 
     // no more accNo
+    @PropertyName("cardNo")
     private String cardnumber;
+
+    @PropertyName("expireDate")
     private Date expireDate;
+
+    @PropertyName("ccvCode")
     private String ccvCode;
+
+    public BankAccount() {
+        this.cardnumber = "";
+        this.expireDate = new Date();
+        this.ccvCode = "";
+    }
 
     public void setExpireDate(Date expireDate) {
         this.expireDate = expireDate;

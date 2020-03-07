@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.quicar">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -8,16 +11,59 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".Register" />
-        <activity android:name=".Login">
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key"/>
+
+
+
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Register" />
+        <activity android:name=".Login" /> <!-- [START firebase_service] -->
+
+        <activity android:name="com.example.quicar.UserProfileActivity"
+            android:parentActivityName="com.example.quicar.RiderRequestActivity">
+        </activity>
+
+        <activity android:name="com.example.quicar.RiderRequestActivity"
+            android:parentActivityName="com.example.quicar.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
+        <activity android:name="com.example.quicar.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--        <activity android:name="com.example.quicar.RiderConfirmRiderActivity"-->
+        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+        <!--        <activity android:name="com.example.quicar.RiderWaitingRideActivity"-->
+        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+        <!--        <activity android:name="com.example.quicar.DriverBrowsingActivity"-->
+        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+
+
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
