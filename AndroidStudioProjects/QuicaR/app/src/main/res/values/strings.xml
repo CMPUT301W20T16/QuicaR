@@ -4,6 +4,7 @@
     <string name="sign_up_button">Sign up</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="fcm_message">FCM Message</string>
+    <string name="button_validate">Validate</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <!--
         This is the name that users will see when interacting with this channel.

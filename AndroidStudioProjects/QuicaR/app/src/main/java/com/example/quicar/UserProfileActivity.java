@@ -30,7 +30,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //    }
 
 
-    private TextInputLayout email, phone, username, firstname, lastname, birthdate, gender,password;
+    private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstnameLayout, lastnameLayout, birthdateLayout, genderLayout,passwordLayout;
     private Button savebutton;
     private int getUser = 0;
     FirebaseAuth mAuth;
@@ -45,14 +45,14 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_user_profile);
-        this.email = findViewById(R.id.profile_email);
-        this.phone = findViewById(R.id.profile_phone);
-        this.username = findViewById(R.id.profile_username);
-        this.firstname = findViewById(R.id.profile_lastname);
-        this.lastname = findViewById(R.id.profile_birthdate);
-        this.gender = findViewById(R.id.profile_gender);
-        this.birthdate=findViewById(R.id.profile_birthdate);
-        this.password = findViewById(R.id.profile_password);
+        this.emailLayout = findViewById(R.id.profile_email);
+        this.phoneLayout = findViewById(R.id.profile_phone);
+        this.usernameLayout = findViewById(R.id.profile_username);
+        this.firstnameLayout = findViewById(R.id.profile_firstname);
+        this.lastnameLayout = findViewById(R.id.profile_lastname);
+        this.genderLayout = findViewById(R.id.profile_gender);
+        this.birthdateLayout = findViewById(R.id.profile_birthdate);
+        this.passwordLayout = findViewById(R.id.profile_password);
         savebutton = findViewById(R.id.save_button);
 
         mAuth = FirebaseAuth.getInstance();
@@ -67,40 +67,34 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         savebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String myEmail = email.getEditText().getText().toString().trim();
-                final String myPhone = phone.getEditText().getText().toString();
-                final String myUsername = username.getEditText().getText().toString();
-                final String myFirstname = firstname.getEditText().getText().toString();
-                final String myLastname = lastname.getEditText().getText().toString();
-                final String myGender = gender.getEditText().getText().toString();
-                final String myPassword = password.getEditText().getText().toString();
+                boolean validateFlag = checkValidate();
+//                boolean validateFlag = new UserProfileActivity().checkValidate();
 
-
-
-                if (!validateEmail(myEmail) | !validatePhone(myPhone) | !validatePhone( myPhone ) | !validateUsername( myUsername )|!validatePassWord(myPassword)) {
-                    return;
-                }
-
-                //!!!!!@ update correct user here
-
-
-
+//                if(validateFlag == false) {
 //
-//                UserDataHelper.updateUserProfile(user,listener);
+//
+//                }
 
-                // need to be change here
-
-//                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(UserProfile.this, "Login successful", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                        } else {
-//                            Toast.makeText(UserProfile.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+//                //!!!!!@ update correct user here
+//
+//
+//
+////
+////                UserDataHelper.updateUserProfile(user,listener);
+//
+//                // need to be change here
+//
+////                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+////                    @Override
+////                    public void onComplete(@NonNull Task<AuthResult> task) {
+////                        if (task.isSuccessful()) {
+////                            Toast.makeText(UserProfile.this, "Login successful", Toast.LENGTH_SHORT).show();
+////                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+////                        } else {
+////                            Toast.makeText(UserProfile.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+////                        }
+////                    }
+////                });
 
 
             }
@@ -109,6 +103,39 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     }
 
+
+    private boolean checkValidate() {
+        boolean flag = true;
+        if (!validateEmail()) {
+            flag = false;
+        }
+        if(!validatePassWord()) {
+            flag = false;
+        }
+        if(!validateFirstName()){
+            System.out.println(flag);
+            flag = false;
+        }
+        if (!validateLastName()) {
+            flag = false;
+        }
+        if(!validateGender()) {
+            flag = false;
+        }
+        if(!validateBirthDate()) {
+            flag = false;
+        }
+        if(!validatePhone()) {
+            flag = false;
+        }
+        if(!validateUsername()){
+            flag = false;
+        }
+        return  flag;
+    }
+
+
+
     /**
      * defined for set default information to help user to update info
      */
@@ -116,13 +143,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(this.getUser == 1) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //set default user info
-            this.email.getEditText().setText(user.getAccountInfo().getEmail());
-            this.username.getEditText().setText(user.getAccountInfo().getUserName());
-            this.phone.getEditText().setText(user.getAccountInfo().getPhone());
-            this.firstname.getEditText().setText(user.getAccountInfo().getFirstName());
-            this.lastname.getEditText().setText(user.getAccountInfo().getLastName());
-            this.birthdate.getEditText().setText(sdf.format(user.getAccountInfo().getBirthDate()));
-            this.gender.getEditText().setText(user.getAccountInfo().getGender());
+            this.emailLayout.getEditText().setText(user.getAccountInfo().getEmail());
+            this.usernameLayout.getEditText().setText(user.getAccountInfo().getUserName());
+            this.phoneLayout.getEditText().setText(user.getAccountInfo().getPhone());
+            this.firstnameLayout.getEditText().setText(user.getAccountInfo().getFirstName());
+            this.lastnameLayout.getEditText().setText(user.getAccountInfo().getLastName());
+            this.birthdateLayout.getEditText().setText(sdf.format(user.getAccountInfo().getBirthDate()));
+            this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
 
             System.out.println("setting default");
         }
@@ -133,12 +160,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid user input email
      */
-    public boolean validateEmail(String email) {
+    public boolean validateEmail() {
+        String email = emailLayout.getEditText().getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
-            this.email.setError("Field can't be empty");
+            this.emailLayout.setError("Field can't be empty");
             return false ;
         } else {
-            this.email.setError(null);
+            this.emailLayout.setError(null);
             return true;
         }
     }
@@ -146,14 +174,14 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid user input password
      */
-    public boolean validatePassWord(String confirmPassword) {
-
+    public boolean validatePassWord() {
+        String confirmPassword = passwordLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(confirmPassword)) {
-            this.password.setError("Field can't be empty");
-            return false ;
+            this.passwordLayout.setError("Field can't be empty");
+            return false;
 
         }else {
-            this.password.setError(null);
+            this.passwordLayout.setError(null);
             return true;
         }
 
@@ -164,12 +192,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid user input phoneNumber
      */
-    private boolean validatePhone(String phone) {
+    private boolean validatePhone() {
+        String phone = phoneLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(phone)) {
-            this.phone.setError("Field can't be empty");
-            return false ;
+            this.phoneLayout.setError("Field can't be empty");
+            return false;
         } else {
-            this.phone.setError(null);
+            this.phoneLayout.setError(null);
             return true;
         }
     }
@@ -177,15 +206,60 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid user input userName
      */
-    private boolean validateUsername(String password) {
-        if (TextUtils.isEmpty(password)) {
-            this.username.setError("Field can't be empty");
-            return false ;
+    private boolean validateUsername() {
+        String username = usernameLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            this.usernameLayout.setError("Field can't be empty");
+            return false;
         } else {
-            this.username.setError(null);
+            this.usernameLayout.setError(null);
             return true;
         }
     }
+
+    /**
+     * for check valid user input FirstName
+     */
+    private boolean validateFirstName() {
+        String firstName = firstnameLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(firstName)) {
+            this.usernameLayout.setError("Field can't be empty");
+            return false ;
+        } else {
+            this.usernameLayout.setError(null);
+            return true;
+        }
+    }
+
+    /**
+     * for check valid user input LastName
+     */
+    private boolean validateLastName() {
+        String lastTime = lastnameLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(lastTime)) {
+            this.usernameLayout.setError("Field can't be empty");
+            return false ;
+        } else {
+            this.usernameLayout.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * for check valid user input gender
+     */
+    private boolean validateGender() {
+        return true;
+    }
+
+    /**
+     * for check valid user input birthdate
+     */
+    private boolean validateBirthDate() {
+        return true;
+    }
+
 
     /**
      *
