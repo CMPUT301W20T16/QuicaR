@@ -2,19 +2,89 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69d7c6dc-0ee4-4deb-b650-1f4d3d05c03b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/QuicaR.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/QRCodeGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/QRPaymentActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/anim/rotate.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/refresh.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/androidTest/java/com/example/quicar/UserProfileActivityTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/ic_launcher-web.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/BaseActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/DatabaseHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/DriverBrowsingActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/LocalMemoryHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Login.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/MyFirebaseMessagingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/OnGetRequestDataListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/OnGetUserDataListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Record.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/RecordDataHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Register.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/RequestDataHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/RiderRequestActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/RiderSelectLocationActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/UserDataHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/UserProfileActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/UserState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/registeDriverActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable-v24/ic_stat_ic_notification.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_cancel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_checked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_history.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_money.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_person.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_view_header.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/rounded_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/rounded_courner_input.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/splash.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/welcome_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/white_border.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_base.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_general_user_profile.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_register.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_register_driver.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_rider_request.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_rider_select_location.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_user_profile.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/nav_header.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/menu/drawer_menu_driver.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/menu/drawer_menu_rider.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/test/java/com/example/quicar/LocationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/test/java/com/example/quicar/RecordTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/test/java/com/example/quicar/RequestTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/.idea/AndroidStudioProjects.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/.idea/AndroidStudioProjects.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/AccountInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/AccountInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/BankAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/BankAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/DriverInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/DriverInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Location.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/rider_qr.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/rider_qr.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/RiderDialog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/ScanActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/java/com/example/quicar/Wallet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/colors.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/colors.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="114">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -41,8 +111,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+            <state relative-caret-position="204">
+              <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -50,8 +120,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="703">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
+            <state relative-caret-position="608">
+              <caret line="52" column="1" selection-start-line="52" selection-start-column="1" selection-end-line="52" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -81,10 +151,11 @@
     <option name="files">
       <list>
         <option value="$PROJECT_DIR$/.idea/codeStyles/Project.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="51" />
     <option name="y" value="21" />
     <option name="width" value="1053" />
@@ -96,7 +167,108 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="quicar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QuicaR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="AndroidStudioProjects" type="462c0819:PsiDirectoryNode" />
+              <item name="QuicaR" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope" />
     </panes>
   </component>
@@ -126,10 +298,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="34" y="14" width="702" height="504" extended-state="1" />
+    <frame x="-7" y="-7" width="1455" height="935" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.32882884" />
+      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.15433404" />
       <window_info id="Structure" side_tool="true" />
       <window_info id="Image Layers" />
       <window_info id="Designer" />
@@ -150,7 +322,7 @@
     <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
@@ -159,8 +331,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="608">
+          <caret line="52" column="1" selection-start-line="52" selection-start-column="1" selection-end-line="52" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -173,8 +345,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidStudioProjects/QuicaR/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        <state relative-caret-position="204">
+          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
         </state>
       </provider>
     </entry>

@@ -1,12 +1,19 @@
 package com.example.quicar;
 
 import java.util.ArrayList;
+import com.google.firebase.firestore.PropertyName;
 import java.util.Date;
 
 public class Wallet {
+
+    @PropertyName("qrGenerator")
     private QR qrGenrator;
+
+    @PropertyName("balance")
     private Float balance;
-    private ArrayList<BankAccount> bankAccountarrayList;
+
+    @PropertyName("bankAccountList")
+    private ArrayList<BankAccount> bankAccountArrayList;
 
 
 // no more these 3 attributes
@@ -14,21 +21,28 @@ public class Wallet {
 //    private Date expireDate;
 //    private String ccvCode;
 
-    // may change it to add
-    public void setBankAccountarrayList(ArrayList<BankAccount> bankAccountarrayList) {
-        this.bankAccountarrayList = bankAccountarrayList;
+
+    public Wallet() {
+        this.qrGenrator = new QR();
+        this.balance = 0.f;
+        this.bankAccountArrayList = new ArrayList<>();
     }
+
+    // may change it to add
+//    public void setBankAccountArrayList(ArrayList<BankAccount> bankAccountarrayList) {
+//        this.bankAccountArrayList = bankAccountarrayList;
+//    }
 
     // add new bankaccount
     public void addBackAccount (BankAccount bankAccount) {
-        this.bankAccountarrayList.add(bankAccount);
+        this.bankAccountArrayList.add(bankAccount);
     }
 
 
     // remove
     public void removeBankAccount(BankAccount bankAccount) {
-        int pos = this.bankAccountarrayList.indexOf(bankAccount);
-        this.bankAccountarrayList.remove(pos);
+        int pos = this.bankAccountArrayList.indexOf(bankAccount);
+        this.bankAccountArrayList.remove(pos);
     }
 
     public void setBalance(Float balance) {
@@ -41,8 +55,17 @@ public class Wallet {
         this.qrGenrator = qrGenrator;
     }
 
-    public ArrayList<BankAccount> getBankAccountarrayList() {
-        return bankAccountarrayList;
+//    public ArrayList<BankAccount> getBankAccountarrayList() {
+//        return bankAccountArrayList;
+//    }
+
+
+    public ArrayList<BankAccount> getBankAccountArrayList() {
+        return bankAccountArrayList;
+    }
+
+    public void setBankAccountArrayList(ArrayList<BankAccount> bankAccountArrayList) {
+        this.bankAccountArrayList = bankAccountArrayList;
     }
 
     public Float getBalance() {
