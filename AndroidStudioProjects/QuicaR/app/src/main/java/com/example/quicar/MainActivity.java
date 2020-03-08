@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 //        startActivity(new Intent(getApplicationContext(), Login.class));
 //
         //  test map view
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
-//                startActivity(homeIntent);
-//                finish();
-//            }
-//        }, SPLASH_TIME_OUT);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+                startActivity(homeIntent);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
 //
 //

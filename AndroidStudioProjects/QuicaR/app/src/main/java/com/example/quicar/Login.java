@@ -17,44 +17,69 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity {
-    private TextInputLayout email, pwd;
+    private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
     FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference ref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        this.email = findViewById(R.id.sign_in_email);
+        this.userID = findViewById(R.id.sign_in_email);
         this.pwd = findViewById(R.id.sign_in_password);
         loginButton = findViewById(R.id.sign_in_button);
         signUpButton = findViewById(R.id.signUpText);
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String myEmail = email.getEditText().getText().toString().trim();
-                final String mypwd = pwd.getEditText().getText().toString();
-                if (!validateEmail(myEmail) | !validatePassword(mypwd)) {
+                String myID = userID.getEditText().getText().toString().trim();
+                String mypwd = pwd.getEditText().getText().toString();
+                if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
-                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
-                            DatabaseHelper.setCurrentUserName("new User");
-                            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                if (!checkUserNameOrEmail(myID)){
+                    String getEmail = retrieveEmail();
+                    mAuth.signInWithEmailAndPassword(getEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                DatabaseHelper.setCurrentUserName(myID);
+                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+
+                    mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                DatabaseHelper.setCurrentUserName("new user");
+                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -69,10 +94,10 @@ public class Login extends AppCompatActivity {
 
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
-            this.email.setError("Field can't be empty");
+            this.userID.setError("Field can't be empty");
             return false ;
         } else {
-            this.email.setError(null);
+            this.userID.setError(null);
             return true;
         }
     }
@@ -86,4 +111,17 @@ public class Login extends AppCompatActivity {
             return true;
         }
     }
+
+    public boolean checkUserNameOrEmail(String id) {
+        if (id.contains("@")) {
+            return true;
+        }
+        return false;
+    }
+
+    public String retrieveEmail() {
+        String email = mAuth.getInstance().getCurrentUser().getEmail().toString();
+        return email;
+    }
+
 }

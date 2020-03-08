@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.quicar.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -274,7 +273,9 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
+                // change here
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 
