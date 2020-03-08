@@ -6,8 +6,8 @@ import java.util.Date;
 
 public class Wallet {
 
-    @PropertyName("qrGenerator")
-    private QR qrGenrator;
+    //@PropertyName("qrGenerator")
+    //private QR qrGenrator;
 
     @PropertyName("balance")
     private Float balance;
@@ -23,7 +23,6 @@ public class Wallet {
 
 
     public Wallet() {
-        this.qrGenrator = new QR();
         this.balance = 0.f;
         this.bankAccountArrayList = new ArrayList<>();
     }
@@ -51,9 +50,9 @@ public class Wallet {
 
 
 
-    public void setQrGenrator(QR qrGenrator) {
-        this.qrGenrator = qrGenrator;
-    }
+//    public void setQrGenrator(QR qrGenrator) {
+//        this.qrGenrator = qrGenrator;
+//    }
 
 //    public ArrayList<BankAccount> getBankAccountarrayList() {
 //        return bankAccountArrayList;
@@ -72,8 +71,8 @@ public class Wallet {
         return balance;
     }
 
-    public QR getQrGenrator() {
-        return qrGenrator;
-    }
+//    public QR getQrGenrator() {
+//        return qrGenrator;
+//    }
 
 }

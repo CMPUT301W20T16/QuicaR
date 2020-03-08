@@ -55,9 +55,9 @@ public class QRPaymentActivity extends AppCompatActivity {
                 int y = point.y;
                 int icon = x < y ? x : y;
                 icon = icon * 3 / 4;
-                QRCodeGenerator qrCodeEncoder = new QRCodeGenerator(test + "\n" + time, BarcodeFormat.QR_CODE.toString(), icon);
+                QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(test + "\n" + time, BarcodeFormat.QR_CODE.toString(), icon);
                 try {
-                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                    Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
                     imageView.setImageBitmap(bitmap);
                 } catch (WriterException e) {
                     e.printStackTrace();

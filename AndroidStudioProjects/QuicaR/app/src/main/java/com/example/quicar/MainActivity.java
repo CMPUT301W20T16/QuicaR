@@ -69,20 +69,20 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
-        startActivity(new Intent(getApplicationContext(), Login.class));
+        //startActivity(new Intent(getApplicationContext(), Login.class));
 //
-        //  test map view
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
-//                startActivity(homeIntent);
-//                finish();
-//            }
-//        }, SPLASH_TIME_OUT);
-//        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
-//
-//
+        //test map view
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+                startActivity(homeIntent);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
+        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+
+
         Button logTokenButton = findViewById(R.id.logTokenButton);
         logTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
