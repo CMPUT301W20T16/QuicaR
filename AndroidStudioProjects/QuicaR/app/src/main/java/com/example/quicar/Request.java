@@ -48,6 +48,7 @@ public class Request {
 
     /**
      * This method return the id of the request
+     * This id is assigned using Firebase
      * @return
      */
     @PropertyName("requestID")
@@ -57,6 +58,7 @@ public class Request {
 
     /**
      * This method set the value of request's id
+     * This id is obtained from Firebase so that it is guarantee to be unique
      * @param rid
      *  id of the request
      */

@@ -270,10 +270,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryAllOpenRequests(final Location location, final OnGetRequestDataListener listener) {
-        //listener.onStart();
-        Float latRange = 10.0f;
-        Float lonRange = 10.0f;
+    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
 
         collectionReferenceReq
                 .whereEqualTo("isAccepted", false)
@@ -297,11 +294,6 @@ public class RequestDataHelper extends DatabaseHelper {
                         }
                     }
                 });
-
-//        .whereLessThan("start.lat", location.getLat() + latRange)
-//                .whereGreaterThan("start.lat", location.getLat() - latRange)
-//                .whereLessThan("destination.lat", location.getLon() + lonRange)
-//                .whereGreaterThan("destination.lat", location.getLon() - lonRange)
     }
 
     /**

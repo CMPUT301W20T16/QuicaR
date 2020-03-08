@@ -29,12 +29,14 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     private OnGetRequestDataListener listener = this;
     private static int SPLASH_TIME_OUT = 0;
 
+    private String requestID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseHelper.setCurrentUserName("testing1");
+        DatabaseHelper.setCurrentUserName("Name");
         DatabaseHelper.setCurrentMode("rider");
         DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
-        startActivity(new Intent(getApplicationContext(), Login.class));
+//        startActivity(new Intent(getApplicationContext(), Login.class));
 //
         //  test map view
 //        new Handler().postDelayed(new Runnable() {
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             public void onClick(View v) {
                 User newDriver = new User();
                 newDriver.setName("new Driver");
-                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, 666.f, listener);
+                RequestDataHelper.setRequestActive(requestID, newDriver, 666.f, listener);
                 DatabaseHelper.sendPopUpNotification("hello");
             }
         });
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, listener);
+                RequestDataHelper.completeRequest(requestID, 30.0f, 5.0f, listener);
             }
         });
 
@@ -149,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.USER_REQ_TAG) {
-            System.out.println("---------------" + request.getRider().getName() + "---------------");
+
         } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            RequestDataHelper.queryAllOpenRequests( this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             Toast.makeText(MainActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+            requestID = requests.get(0).getRid();
         }
     }
 
@@ -201,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onFailure(String errorMessage, String tag) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
