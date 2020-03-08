@@ -1,7 +1,9 @@
 package com.example.quicar;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +18,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 public class Register extends AppCompatActivity implements OnGetUserDataListener {
     private TextInputLayout userName, email, pwd, confirm_pwd;
@@ -27,6 +41,9 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     FirebaseAuth auth;
     DatabaseReference databaseReference;
     FirebaseDatabase database;
+    private String fetchUserName;
+    boolean validateUsername;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +56,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         signUpButton = findViewById(R.id.sign_up_button);
         signInText = findViewById(R.id.signInButtonText);
         auth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("User");
-
-
-
+        // databaseReference = FirebaseDatabase.getInstance().getReference("User");
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +67,44 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                 String mConfirm_pwd = confirm_pwd.getEditText().getText().toString();
 
 
-                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd)) {
+
+                databaseReference = FirebaseDatabase.getInstance().getReference();
+                Query query = databaseReference.child("User");
+                //ValueEventListener eventListener = new ValueEventListener() {
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                      for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
+                            String uid = dataSnapshot1.getKey();
+                            DatabaseReference uidRef = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
+                            uidRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
+                                        fetchUserName = dataSnapshot2.child("userName").getValue(String.class);
+                                        if (fetchUserName != null && fetchUserName.equals(mUserName)) {
+                                            userName.setError("Duplicate username");
+                                            Toast.makeText(Register.this, "Duplicate username", Toast.LENGTH_SHORT).show();
+                                            validateUsername = false;
+                                        } else {
+                                            validateUsername = true;
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                      }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateUserName(mUserName)) {
                     return;
                 }
 //                auth.createUserWithEmailAndPassword(mEmail, mPwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -83,11 +134,14 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(Register.this, "sign up successful", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Register.this, "sign up success", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        } else {
+                            Toast.makeText(Register.this, "sign up failed", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 });
             }
         });
@@ -97,6 +151,19 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
+    }
+
+    public boolean validateUserName(String username) {
+
+        if (TextUtils.isEmpty(username)) {
+            this.userName.setError("Field can't be empty");
+            return false;
+        } else if (validateUsername == false) {
+            return false;
+        } else {
+            this.userName.setError(null);
+            return true;
+        }
     }
 
     public boolean validateEmail(String email) {
@@ -112,7 +179,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
-            return false ;
+            return false;
         } else {
             this.pwd.setError(null);
             return true;
@@ -132,6 +199,22 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
+
+//    public void checkUniqueUsername(String username) {
+//        databaseReference = FirebaseDatabase.getInstance().getReference("User");
+//        Query query = databaseReference.child(auth.getInstance().getUid()).child("accountInfo").orderByChild("userName").equalTo(username).
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                    String key = snapshot.getKey();
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
+//    }
 
 
     @Override
