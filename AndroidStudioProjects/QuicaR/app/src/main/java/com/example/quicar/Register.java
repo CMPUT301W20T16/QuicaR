@@ -42,7 +42,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     DatabaseReference databaseReference;
     FirebaseDatabase database;
     private String fetchUserName;
-    boolean validateUsername;
+    boolean validateName;
 
 
     @Override
@@ -85,9 +85,9 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                         if (fetchUserName != null && fetchUserName.equals(mUserName)) {
                                             userName.setError("Duplicate username");
                                             Toast.makeText(Register.this, "Duplicate username", Toast.LENGTH_SHORT).show();
-                                            validateUsername = false;
+                                            validateName = false;
                                         } else {
-                                            validateUsername = true;
+                                            validateName = true;
                                         }
                                     }
                                 }
@@ -158,7 +158,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         if (TextUtils.isEmpty(username)) {
             this.userName.setError("Field can't be empty");
             return false;
-        } else if (validateUsername == false) {
+        } else if (!validateName) {
             return false;
         } else {
             this.userName.setError(null);
