@@ -179,12 +179,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String email,username,phone,firstName,lastName,gender,password,accNo;
         Wallet wallet = null;
         accNo = email = username = phone = firstName = lastName = gender = password = null;
-        Date birthDate = null;
+        String birthDate = null;
 
         if(this.user != null){
             System.out.println("gu");
             if (this.birthDateLayout.getEditText().getText() != null) {
-                String sDate1 = this.birthDateLayout.getEditText().getText().toString();
+                birthDate  = this.birthDateLayout.getEditText().getText().toString();
 //                birthDate =new SimpleDateFormat("MMM dd,yyyy").parse(sDate1);
             }
 
@@ -245,8 +245,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(!validateGender()) {
             flag = false;
         }
-
-
+        
         if(!validateBirthDate()) {
             flag = false;
         }

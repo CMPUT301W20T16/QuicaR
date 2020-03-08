@@ -283,32 +283,32 @@ public class UserDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     public static void checkUserExist(final String userName, final String email,
-                                      OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .whereEqualTo("account.username", userName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            String userID = "";
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                userID = document.getId();
-                                count++;
-                            }
-                            if (count > 0) {
-                                listener.onUserExists(true, "userName");
-                            } else {
-                                checkEmailExists(email, listener);
-                            }
-                        } else {
-                            listener.onUserExists(null, "Error getting document");
-                        }
-                    }
+                                                       OnGetUserDataListener listener) {
+                        collectionReferenceUser
+                                .whereEqualTo("account.username", userName)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            //  this for loop should only loop for once
+                                            //  user should not have more than one requests exist in the db
+                                            int count = 0;
+                                            String userID = "";
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                userID = document.getId();
+                                                count++;
+                                            }
+                                            if (count > 0) {
+                                                listener.onUserExists(true, "userName");
+                                            } else {
+                                                checkEmailExists(email, listener);
+                                            }
+                                        } else {
+                                            listener.onUserExists(null, "Error getting document");
+                                        }
+                                    }
                 });
     }
 
