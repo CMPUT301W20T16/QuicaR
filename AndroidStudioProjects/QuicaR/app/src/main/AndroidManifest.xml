@@ -58,6 +58,8 @@
         <activity android:name=".ScanActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
 
         <service
             android:name=".MyFirebaseMessagingService"

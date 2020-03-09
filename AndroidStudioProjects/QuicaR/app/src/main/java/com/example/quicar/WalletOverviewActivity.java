@@ -22,6 +22,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
     Button change_pay;
     Button card_pay;
     Button camera_scan;
+    Button card_info;
     ImageView qr_code;
     Handler handler = new Handler();
 
@@ -40,10 +41,11 @@ public class WalletOverviewActivity extends AppCompatActivity {
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_overview);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         change_pay = (Button)findViewById(R.id.change_pay);
         card_pay = (Button)findViewById(R.id.card_pay);
         camera_scan = (Button)findViewById(R.id.camera_scan);
+        card_info = (Button)findViewById(R.id.card_information);
         qr_code = (ImageView) findViewById(R.id.qr_code);
 
         handler.postDelayed(runnable, 1000 * 30);
@@ -54,6 +56,13 @@ public class WalletOverviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ScanActivity.class));
+            }
+        });
+
+        card_info.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
             }
         });
     }
