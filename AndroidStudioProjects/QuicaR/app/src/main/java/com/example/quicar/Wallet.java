@@ -6,9 +6,6 @@ import java.util.Date;
 
 public class Wallet {
 
-    //@PropertyName("qrGenerator")
-    //private QR qrGenrator;
-
     @PropertyName("balance")
     private Float balance;
 

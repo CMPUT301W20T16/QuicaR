@@ -34,17 +34,17 @@
         <Button
             android:id="@+id/change_pay"
             android:layout_width="392dp"
-            android:layout_height="75dp"
+            android:layout_height="73dp"
             android:layout_marginStart="9dp"
-            android:layout_marginTop="475dp"
+            android:layout_marginTop="477dp"
             android:background="@drawable/pay_button" />
 
         <Button
             android:id="@+id/card_pay"
             android:layout_width="392dp"
-            android:layout_height="80dp"
+            android:layout_height="73dp"
             android:layout_marginStart="9dp"
-            android:layout_marginTop="470dp"
+            android:layout_marginTop="47dp"
             android:background="@drawable/pay_button2"
             android:visibility="invisible"/>
 

@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorCuteError">#FFC0CB</color>
     <color name="paymentBackground">#2e8b57</color>
+    <color name="addCardBackground">#e1e1e1</color>
 </resources>
