@@ -56,8 +56,6 @@ public class WalletOverviewActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), ScanActivity.class));
             }
         });
-
-
     }
 
     @Override
