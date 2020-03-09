@@ -55,9 +55,9 @@
 <!--        <activity android:name="com.example.quicar.DriverBrowsingActivity"-->
 <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
 <!--        wen kai >-->
-        <activity android:name=".ScanActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ScanActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".QRPaymentActivity" />
-        <activity android:name=".WalletOverviewActivity"/>
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
 
         <service
             android:name=".MyFirebaseMessagingService"
