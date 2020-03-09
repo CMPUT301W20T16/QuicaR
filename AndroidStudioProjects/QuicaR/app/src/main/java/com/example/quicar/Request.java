@@ -2,17 +2,20 @@ package com.example.quicar;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
+
 
 /**
  * This is the class that store start location, destination, rider, driver, status of reequest and
  * the estimated cost of the request / order.
  */
-public class Request {
+public class Request implements Serializable {
 
-    private Location start;
-    private Location destination;
-    private User rider;
-    private User driver;
+    private String rid;
+    private  Location start;
+    private  Location destination;
+    private  User rider;
+    private  User driver;
     private Boolean isAccepted;
     private Boolean isPickedUp;
     private Float estimatedCost;
@@ -43,6 +46,25 @@ public class Request {
         this.isAccepted = false;
         this.isPickedUp = false;
         this.estimatedCost = estimatedCost;
+    }
+
+    /**
+     * This method return the id of the request
+     * @return
+     */
+    @PropertyName("requestID")
+    public String getRid() {
+        return rid;
+    }
+
+    /**
+     * This method set the value of request's id
+     * @param rid
+     *  id of the request
+     */
+    @PropertyName("requestID")
+    public void setRid(String rid) {
+        this.rid = rid;
     }
 
     /**

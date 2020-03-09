@@ -1,9 +1,6 @@
 package com.example.quicar;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,12 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
+public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
 
     private OnGetRequestDataListener listener = this;
 
@@ -38,12 +33,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     Button confirmButton;
     Button cancelButton;
 
-    Location start_location, end_location;
+//    Location start_location, end_location;
 
 
-    private MarkerOptions start, destination;
-    private Polyline currentPolyline;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+//    private MarkerOptions start, destination;
+//    private Polyline currentPolyline;
+//    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     @Override
@@ -70,15 +65,8 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
 
-//        start = new MarkerOptions().position(new LatLng(27.658143,85.3199503)).title("origin");
-//        destination = new MarkerOptions().position(new LatLng(53.5187379,-113.50291)).title("destination");
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
-
-//        System.out.println("end location:" + end_location.getLat());
-//        System.out.println(end_location.getLon());
-//        System.out.println("start location:" + start_location.getLat());
-//        System.out.println(start_location.getLon());
 
 
         new FetchURL(RiderConfirmRiderActivity.this)
@@ -106,7 +94,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                 RequestDataHelper.addNewRequest(request, listener);
 
-//                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), new User(), 666.f, listener);
+
 
                 Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
                 startActivity(intent);
@@ -127,61 +115,78 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
     }
+
+//    /**
+//     * Draw route methods
+//     */
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        mMap = googleMap;
+//        mMap.addMarker(start);
+//        mMap.addMarker(destination);
+//        showAllMarkers();
+//    }
+//
+//    public void showAllMarkers() {
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//
+//        for (MarkerOptions m : markerOptionsList) {
+//            builder.include(m.getPosition());
+//
+//        }
+//        LatLngBounds bounds = builder.build();
+//        int width = getResources().getDisplayMetrics().widthPixels;
+//        int height = getResources().getDisplayMetrics().heightPixels;
+//        int padding = (int) (width * 0.30);
+//
+//        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+//        mMap.animateCamera(cu);
+//
+//    }
+//
+//    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        String mode = "mode=" + directionMode;
+//        String parameter = str_origin + "&" + str_dest + "&" + mode;
+//        String format = "json";
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+//
+//
+//        return url;    }
+
+//
+//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        String mode = "mode=" + directionMode;
+//        String parameter = str_origin + "&" + str_dest + "&" + mode;
+//        String format = "json";
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+//
+//
+//        return url;
+//
+//    }
+//
+//
+//    @Override
+//    public void onTaskDone(Object... values) {
+//        if (currentPolyline != null)
+//            currentPolyline.remove();
+//
+//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+//    }
+
+
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.addMarker(start);
-        mMap.addMarker(destination);
-        showAllMarkers();
-    }
-
-    private void showAllMarkers() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (MarkerOptions m : markerOptionsList) {
-            builder.include(m.getPosition());
-
-        }
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-
-    }
-
-    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-
-
-        return url;
-
-    }
-
-
-    @Override
-    public void onTaskDone(Object... values) {
-        if (currentPolyline != null)
-            currentPolyline.remove();
-
-        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-
-
-    }
-
-    @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(RiderConfirmRiderActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -202,9 +207,16 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     }
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onCompleteNotification() {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage, String tag) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(RiderConfirmRiderActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
 
+
     }
+
 }

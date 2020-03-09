@@ -20,7 +20,7 @@ public interface OnGetRequestDataListener {
     //  notify listener that request is successfully deleted
     //  notify listener that request is completed, request deleted and new record created
     //  notify when a request is set to active (only when the user is in rider mode)
-    void onSuccess(Request request, ArrayList<Request> requests, String tag);
+    void onSuccess(ArrayList<Request> requests, String tag);
 
     void onActiveNotification(Request request);
 
@@ -28,6 +28,8 @@ public interface OnGetRequestDataListener {
 
     void onCancelNotification();
 
+    void onCompleteNotification();
+
     // whenever the query return null object or reading database failed
-    void onFailure(String errorMessage);
+    void onFailure(String errorMessage, String tag);
 }

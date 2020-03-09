@@ -37,13 +37,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRequestDataListener {
+public class RiderSelectLocationActivity extends AppCompatActivity{
     private EditText pickUp;
     private EditText destination;
     private Button confirmButton;
 
-    // added for request database helper
-    public OnGetRequestDataListener listener = this;
 
     String address,locality,subLocality,state,postalCode,country,knownname,phone;
 //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
@@ -184,10 +182,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      * listview包含近10(?)个rider去过的location
 */
 
-//    check if any autocompletion fragment is left empty
-//    private boolean isEmpty(TextInputEditText tietText) {
-//        return (tietText.getText().toString().matches(""));
-//    }
 
     // Used to add check bar on top right of the app bar.
     @Override
@@ -222,32 +216,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
-
-    }
-
-    @Override
-    //  notify when a request is set to active (only when the user is in rider mode)
-    public void onActiveNotification(Request request) {}
-
-    @Override
-    public void onPickedUpNotification(Request request) {
-
-    }
-
-    @Override
-    public void onCancelNotification() {
-
-    }
-
-    ;
-
-    @Override
-    // whenever the query return null object or reading database failed
-    public void onFailure(String errorMessage) {};
 
 
 }

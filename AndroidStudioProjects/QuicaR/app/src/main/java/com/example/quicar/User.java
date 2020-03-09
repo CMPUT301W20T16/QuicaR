@@ -1,11 +1,12 @@
 package com.example.quicar;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.google.firebase.firestore.PropertyName;
 
-public class User {
+public class User implements Serializable {
 
     private AccountInfo accountInfo;
 

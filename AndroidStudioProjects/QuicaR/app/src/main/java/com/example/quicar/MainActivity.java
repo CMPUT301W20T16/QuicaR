@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new RecordDataHelper();
         new UserDataHelper();
 
-        RequestDataHelper.setOnActiveListener(this);
+        RequestDataHelper.setOnNotifyListener(this);
 
         // Get token
         // [START retrieve_current_token]
@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, DriverBrowsingActivity.class);
+//                Intent homeIntent = new Intent(MainActivity.this, DriverBrowsingActivity.class);
+                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+
                 startActivity(homeIntent);
                 finish();
             }
@@ -152,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     }
 
+
+
     @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
-        if (tag == RequestDataHelper.USER_REQ_TAG) {
-            System.out.println("---------------" + request.getRider().getName() + "---------------");
-        } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
                 System.out.println("------------ active request obtained -----------");
@@ -181,8 +183,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
         }
-    }
 
+    }
 
     @Override
     public void onActiveNotification(Request request) {
@@ -201,8 +203,16 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onCompleteNotification() {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage, String tag) {
+
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
     }
+
 }

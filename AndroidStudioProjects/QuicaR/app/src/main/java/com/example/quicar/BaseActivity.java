@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;

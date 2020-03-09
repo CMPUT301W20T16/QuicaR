@@ -34,6 +34,13 @@
         <activity android:name=".UserProfile" />
         <activity android:name=".RiderWaitingRideActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverPickUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderOnGoingRequest"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderMatchingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverOnGoingActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"
