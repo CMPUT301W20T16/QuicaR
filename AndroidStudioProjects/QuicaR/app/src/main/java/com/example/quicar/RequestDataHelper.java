@@ -32,7 +32,7 @@ public class RequestDataHelper extends DatabaseHelper {
     public static final String CANCEL_REQ_TAG = "cancel opened request";
     public static final String COMPLETE_REQ_TAG = "complete request";
 
-    private static OnGetRequestDataListener listener;
+    private static OnGetRequestDataListener notifyListener;
     private static CollectionReference collectionReferenceReq;
     private static FirebaseFirestore db;
 
@@ -51,7 +51,7 @@ public class RequestDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     public static void setOnNotifyListener(OnGetRequestDataListener listener) {
-        RequestDataHelper.listener = listener;
+        notifyListener = listener;
     }
 
     /**
@@ -61,26 +61,26 @@ public class RequestDataHelper extends DatabaseHelper {
      *  the request that is active
      */
     public static void notifyActive(Request request) {
-        if (listener != null) {
-            listener.onActiveNotification(request);
+        if (notifyListener != null) {
+            notifyListener.onActiveNotification(request);
         }
     }
 
     public static void notifyCancel() {
-        if (listener != null) {
-            listener.onCancelNotification();
+        if (notifyListener != null) {
+            notifyListener.onCancelNotification();
         }
     }
 
     public static void notifyPickedUp(Request request) {
-        if (listener != null) {
-            listener.onPickedUpNotification(request);
+        if (notifyListener != null) {
+            notifyListener.onPickedUpNotification(request);
         }
     }
 
     public static void notifyComplete() {
-        if (listener != null)
-            listener.onCompleteNotification();
+        if (notifyListener != null)
+            notifyListener.onCompleteNotification();
     }
 
     /**

@@ -284,7 +284,6 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent2);
                 break;
 
-
         }
 
         drawer.closeDrawer(GravityCompat.START);
