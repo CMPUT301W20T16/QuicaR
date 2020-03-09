@@ -245,7 +245,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(!validateGender()) {
             flag = false;
         }
-        
+
         if(!validateBirthDate()) {
             flag = false;
         }
