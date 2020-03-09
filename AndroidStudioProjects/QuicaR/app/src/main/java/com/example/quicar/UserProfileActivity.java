@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -130,6 +131,8 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 if(!validateFlag) {
                     ;
                     System.out.println("not validate");
+                    Toast.makeText(UserProfileActivity.this,
+                            "Invalid input", Toast.LENGTH_SHORT).show();
                 } else {
                     ;
                     setDefault();
@@ -189,11 +192,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
 
             if (this.emailLayout.getEditText().getText() != null) {
-                email = this.emailLayout.getEditText().toString();
+                email = this.emailLayout.getEditText().getText().toString();
             }
 
             if (this.usernameLayout.getEditText().getText() != null) {
-                username = this.usernameLayout.getEditText().toString();
+                username = this.usernameLayout.getEditText().getText().toString();
             }
 
             if(this.phoneLayout.getEditText().getText()!= null){

@@ -98,20 +98,21 @@ public class UserDataHelper extends DatabaseHelper {
      */
     private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
 
-        final DocumentReference reqDocRef = collectionReferenceUser.document(userID);
+        final DocumentReference userDocRef = collectionReferenceUser.document(userID);
 
         db.runTransaction(new Transaction.Function<String>() {
             @Override
             public String apply(Transaction transaction) throws FirebaseFirestoreException {
-                DocumentSnapshot snapshot = transaction.get(reqDocRef);
+                DocumentSnapshot snapshot = transaction.get(userDocRef);
                 System.out.println("docSnapshot---------" + snapshot);
-                Request requestTmp = snapshot.toObject(Request.class);
-                System.out.println( "request temp---------" + requestTmp);
-                if (!requestTmp.getAccepted()) {
-                    transaction.set(reqDocRef, user);
+                User userTmp = snapshot.toObject(User.class);
+                System.out.println( "request temp---------" + userTmp);
+                if (true) {
+                    //  might need to check for any validation (eg. username is unique)
+                    transaction.set(userDocRef, user);
                     return userID;
                 } else {
-                    throw new FirebaseFirestoreException("Request has already been accepted",
+                    throw new FirebaseFirestoreException("User update error",
                             FirebaseFirestoreException.Code.ABORTED);
                 }
             }

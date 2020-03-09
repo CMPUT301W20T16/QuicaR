@@ -219,9 +219,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      */
 
     @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.USER_REQ_TAG) {
-            System.out.println("---------------" + request.getRider().getName() + "---------------");
+
         } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
@@ -232,7 +232,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            RequestDataHelper.queryAllOpenRequests( this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(RiderSelectLocationActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
@@ -269,7 +269,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     public void onCompleteNotification() {}
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onFailure(String errorMessage, String tag) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(RiderSelectLocationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
