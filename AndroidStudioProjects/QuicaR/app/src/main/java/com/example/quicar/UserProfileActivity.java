@@ -198,7 +198,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             if (this.birthDateLayout.getEditText().getText() != null) {
                 sbirthDate  = this.birthDateLayout.getEditText().getText().toString();
                 try {
-                    birthDate = (Date) new SimpleDateFormat("MMM dd,yyyy").parse(sbirthDate);
+                    birthDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(sbirthDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                     birthDate = null;
@@ -479,7 +479,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     // design to show update format
     private void updateLabel() {
-        String myFormat = "MMM dd,yyyy"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         birthDateLayout.getEditText().setText(sdf.format(myCalendar.getTime()));
