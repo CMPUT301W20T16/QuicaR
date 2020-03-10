@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.Query;
+import com.google.protobuf.DescriptorProtos;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,10 +40,14 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     // private String mEmail, mpwd, mConfirm_pwd;
     private TextView signInText;
     FirebaseAuth auth;
-    DatabaseReference databaseReference;
+    //DatabaseReference databaseReference;
     FirebaseDatabase database;
     private String fetchUserName;
-    boolean validateName;
+    boolean validateName = true;
+
+    public interface SimpleCallback {
+        void callback(boolean data);
+    }
 
 
     @Override
@@ -66,64 +71,60 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                 final String mPwd = pwd.getEditText().getText().toString();
                 String mConfirm_pwd = confirm_pwd.getEditText().getText().toString();
 
-
-
-                databaseReference = FirebaseDatabase.getInstance().getReference();
-                Query query = databaseReference.child("User");
-                //ValueEventListener eventListener = new ValueEventListener() {
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                      for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
-                            String uid = dataSnapshot1.getKey();
-                            DatabaseReference uidRef = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
-                            uidRef.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
-                                        fetchUserName = dataSnapshot2.child("userName").getValue(String.class);
-                                        if (fetchUserName != null && fetchUserName.equals(mUserName)) {
-                                            userName.setError("Duplicate username");
-                                            Toast.makeText(Register.this, "Duplicate username", Toast.LENGTH_SHORT).show();
-                                            validateName = false;
-                                        } else {
-                                            validateName = true;
-                                        }
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                      }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateUserName(mUserName)) {
-                    return;
-                }
-//                auth.createUserWithEmailAndPassword(mEmail, mPwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                // databaseReference = FirebaseDatabase.getInstance().getReference();
+//                Query query = databaseReference.child("User");
+//                //ValueEventListener eventListener = new ValueEventListener() {
+//                query.addValueEventListener(new ValueEventListener() {
 //                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(Register.this, "sign up successful", Toast.LENGTH_SHORT).show();
-//                            User newUser = new User();
-//                            newUser.setBasic(mUserName, mEmail, mPwd);
-//                            DatabaseHelper.setCurrentUserName(newUser.getName());
-//                            addUser(newUser);
+//                          for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
 //
-//                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                        } else {
-//                            Toast.makeText(Register.this, "Error"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
+//                                String uid = dataSnapshot1.getKey();
+//                                DatabaseReference uidRef = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
+//                                uidRef.addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                        for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
+//                                            fetchUserName = dataSnapshot2.child("userName").getValue(String.class);
+//                                            if (fetchUserName != null && fetchUserName.equals(mUserName)) {
+//                                                validateName = false;
+//                                                userName.setError("Duplicate username");
+//                                                Toast.makeText(Register.this, "Duplicate username", Toast.LENGTH_SHORT).show();
+////
+//                                            }
+//                                        }
+//                                    }
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+//                          }
+//
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
 //                    }
 //                });
+                checkUniqueUserName(new SimpleCallback() {
+                    @Override
+                    public void callback(boolean data) {
+                        if (!data) {
+                            validateName = true;
+                            userName.setError("Duplicate users");
+                        } else if (data) {
+                            validateName = false;
+                        }
+                    }
+                },mUserName);
+//
+
+                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateName) {
+                    return;
+                }
+
                 auth.createUserWithEmailAndPassword(mEmail, mPwd).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -158,9 +159,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         if (TextUtils.isEmpty(username)) {
             this.userName.setError("Field can't be empty");
             return false;
-        } else if (!validateName) {
-            return false;
-        } else {
+        }  else {
             this.userName.setError(null);
             return true;
         }
@@ -199,22 +198,59 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
+    private void checkUniqueUserName(SimpleCallback finishedCallBack, String myUserName) {
 
-//    public void checkUniqueUsername(String username) {
-//        databaseReference = FirebaseDatabase.getInstance().getReference("User");
-//        Query query = databaseReference.child(auth.getInstance().getUid()).child("accountInfo").orderByChild("userName").equalTo(username).
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                    String key = snapshot.getKey();
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
-//    }
+         DatabaseReference rootRef= FirebaseDatabase.getInstance().getReference().child("User");
+//          DatabaseReference userNameRef = rootRef.child("User").child("accountInfo").child(myUserName);
+//         ValueEventListener eventListener = new ValueEventListener() {
+//             @Override
+//             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                 if (dataSnapshot.exists())
+//                     finishedCallBack.callback(false);
+//             }
+//
+//             @Override
+//             public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//             }
+//         };
+//        userNameRef.addListenerForSingleValueEvent(eventListener);
+        rootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+                    String uid = dataSnapshot1.getKey();
+                    Query query = rootRef.child(uid).child("accountInfo").orderByChild("userName").equalTo(myUserName);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Toast.makeText(Register.this, "query exist", Toast.LENGTH_SHORT).show();
+                                finishedCallBack.callback(false);
+                            }  else {
+                                Toast.makeText(Register.this, "query not found", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
 
 
     @Override
