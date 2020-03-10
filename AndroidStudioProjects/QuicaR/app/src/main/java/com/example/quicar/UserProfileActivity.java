@@ -107,6 +107,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         // get current user
         UserDataHelper.getUser(userName,this);
 
+//        // get current user
+//        UserDataHelper.getCurrentUser();
+
 //        long startTime = System.currentTimeMillis();
 //        long endTime;
 //        while (true){
@@ -135,11 +138,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                             "Invalid input", Toast.LENGTH_SHORT).show();
                 } else {
                     ;
-                    setDefault();
+//                    setDefault();
 //                    System.out.println("Good");
                     updateUser();
 
 //                    System.out.println(user.getAccountInfo().getPhone());
+                    System.out.println(user.getAccountInfo().getLastName());
                     UserDataHelper.updateUserProfile(user,listener);
 
                 }
@@ -196,13 +200,15 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                     birthDate = null;
                 }
             }
-
+            //change later
             if (this.emailLayout.getEditText().getText() != null) {
-                email = this.emailLayout.getEditText().getText().toString();
+//                email = this.emailLayout.getEditText().getText().toString();
+                ;
             }
 
             if (this.usernameLayout.getEditText().getText() != null) {
-                username = this.usernameLayout.getEditText().getText().toString();
+//                username = this.usernameLayout.getEditText().getText().toString();
+                ;
             }
 
             if(this.phoneLayout.getEditText().getText()!= null){
@@ -216,6 +222,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
             if(this.lastNameLayout.getEditText().getText()!= null){
                 lastName = this.lastNameLayout.getEditText().getText().toString();
+                System.out.println(lastName);
             }
             if (this.genderLayout.getEditText().getText()!= null){
                 gender = this.genderLayout.getEditText().getText().toString();
@@ -224,7 +231,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 password = this.passwordLayout.getEditText().getText().toString();
             }
         }
-        
+
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
         ;
 
