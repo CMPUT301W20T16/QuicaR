@@ -283,8 +283,8 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void checkUserExist(final String userName, final String email,
-                                      OnGetUserDataListener listener) {
+    public static void checkUserExist(final String userName, final String email, final String phone,
+                                      final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .whereEqualTo("account.username", userName)
                 .get()
@@ -304,7 +304,7 @@ public class UserDataHelper extends DatabaseHelper {
                             if (count > 0) {
                                 listener.onUserExists(true, "userName");
                             } else {
-                                checkEmailExists(email, listener);
+                                checkEmailExists(email, phone, listener);
                             }
                         } else {
                             listener.onUserExists(null, "Error getting document");
@@ -321,7 +321,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void checkEmailExists(String email, OnGetUserDataListener listener) {
+    private static void checkEmailExists(final String email, final String phone, final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .whereEqualTo("account.email", email)
                 .get()
@@ -340,6 +340,36 @@ public class UserDataHelper extends DatabaseHelper {
                             }
                             if (count > 0) {
                                 listener.onUserExists(true, "email");
+                            } else {
+                                checkPhoneExists(phone, listener);
+                            }
+                        } else {
+                            listener.onUserExists(null, "Error getting document");
+                        }
+                    }
+                });
+
+    }
+
+    private static void checkPhoneExists(final String phone, final OnGetUserDataListener listener) {
+        collectionReferenceUser
+                .whereEqualTo("account.phone", phone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            String userID = "";
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                userID = document.getId();
+                                count++;
+                            }
+                            if (count > 0) {
+                                listener.onUserExists(true, "phone");
                             } else {
                                 listener.onUserExists(false, null);
                             }
