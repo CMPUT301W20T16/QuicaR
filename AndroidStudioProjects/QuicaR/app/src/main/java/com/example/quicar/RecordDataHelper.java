@@ -90,31 +90,39 @@ public class RecordDataHelper extends DatabaseHelper {
                 .orderBy("dateTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    Record query = null;
-                                    ArrayList<Location> locations = new ArrayList<>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                        query = document.toObject(Record.class);
-                                        //  add start locations in the record of rider name is current user name
-                                        if (query.getRequest().getRider().getName().equals(userName))
-                                            locations.add(query.getRequest().getStart());
-                                        //System.out.println(query.getDateTime());
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Record query = null;
+                                ArrayList<Location> locations = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    query = document.toObject(Record.class);
+                                    //  add start locations in the record of rider name is current user name
+                                    Location start_location = query.getRequest().getStart();
+                                    Location destination = query.getRequest().getDestination();
+                                    if (query.getRequest().getRider().getName().equals(userName)) {
+                                        if (!locations.contains(start_location)) {
+                                            locations.add(start_location);
+                                        }
+                                        if (!locations.contains(destination)) {
+                                            locations.add(destination);
+                                        }
                                     }
-                                    if (query == null) {
-                                        listener.onFailure(userName + " has no history");
-                                    } else {
-                                        listener.onSuccess(locations);
-                                    }
-
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                    listener.onFailure("Error getting documents: " + task.getException());
+                                    //System.out.println(query.getDateTime());
                                 }
+                                if (query == null) {
+                                    listener.onFailure(userName + " has no history");
+                                } else {
+                                    listener.onSuccess(locations);
+                                }
+
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                listener.onFailure("Error getting documents: " + task.getException());
                             }
                         }
+                    }
                 );
     }
 }
