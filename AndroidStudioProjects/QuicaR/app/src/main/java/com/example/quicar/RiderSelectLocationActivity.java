@@ -232,7 +232,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests( this);
+            //RequestDataHelper.queryAllOpenRequests( this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(RiderSelectLocationActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
