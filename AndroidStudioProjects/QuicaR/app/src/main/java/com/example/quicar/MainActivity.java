@@ -3,6 +3,8 @@ package com.example.quicar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -18,13 +20,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
 import static com.example.quicar.DatabaseHelper.TAG;
 
 
-public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
+public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener {
 
     private OnGetRequestDataListener listener = this;
     private static int SPLASH_TIME_OUT = 0;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DatabaseHelper.setCurrentUser(new User());
         DatabaseHelper.setCurrentUserName("Name");
         DatabaseHelper.setCurrentMode("rider");
         DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new UserDataHelper();
 
         RequestDataHelper.setOnNotifyListener(this);
+
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         // Get token
         // [START retrieve_current_token]
@@ -74,14 +80,14 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 //        startActivity(new Intent(getApplicationContext(), Login.class));
 //
         //  test map view
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
-                startActivity(homeIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+//                startActivity(homeIntent);
+//                finish();
+//            }
+//        }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
 //
 //
@@ -122,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 User newDriver = new User();
                 newDriver.setName("new Driver");
                 RequestDataHelper.setRequestActive(requestID, newDriver, 666.f, listener);
-                DatabaseHelper.sendPopUpNotification("hello");
             }
         });
 
@@ -158,13 +163,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             if (requests.size() > 0) {
                 //  always check if the return value is valid
                 System.out.println("------------ active request obtained -----------");
+                for (Request request: requests)
+                    System.out.println(request);
             }
             else {
                 System.out.println("------------ empty list obtained -----------");
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests( this);
+            //RequestDataHelper.queryAllOpenRequests( this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
@@ -179,12 +186,18 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
             requestID = requests.get(0).getRid();
+            System.out.println(requestID+"---------requestID");
         }
     }
+
+    /*
+    This is part for OnGetRequestDataListener
+     */
 
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
+        DatabaseHelper.sendPopUpNotification("Notification test", "hello");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
     }
 
@@ -200,11 +213,28 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     @Override
     public void onCompleteNotification() {
-
+        RecordDataHelper.queryHistoryLocation(DatabaseHelper.getCurrentUserName(), null,this);
+        System.out.println("here ------");
     }
 
     @Override
     public void onFailure(String errorMessage, String tag) {
+        System.out.println("-----------" + errorMessage + "-----------");
+        Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+    This is part for OnGetRecordDataListener
+     */
+
+    @Override
+    public void onSuccess(ArrayList<Location> history) {
+        for (Location loc: history)
+            System.out.println(loc.getLat() + " " + loc.getLon() + " --------- history here");
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }

@@ -23,9 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     private static NotificationManager notificationManager;
-    private final String CHANNEL_NAME = "user_channel"; // They are hardcoded only for show it's just strings
-    private final String CHANNEL_ID = "user_channel_1"; // The user-visible name of the channel.
-    private final String CHANNEL_DESCR = "user_first_channel"; // The user-visible description of the channel.
     private final static AtomicInteger c = new AtomicInteger(0);
 
     /**
@@ -56,7 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         String title = notification.getTitle();
         String body = notification.getBody();
-        sendNotification(title, body, new Intent(this, MainActivity.class));
+
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -81,6 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+        sendNotification(title, body, new Intent(this, MainActivity.class));
     }
     // [END receive_message]
 
@@ -136,9 +134,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1410 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = getString(R.string.default_notification_channel_id);
+        String CHANNEL_ID = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId )
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID )
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("FCM Message")
                 .setAutoCancel(true)
@@ -154,6 +152,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
         final int NOTIFY_ID = c.incrementAndGet();
+        String CHANNEL_ID = getString(R.string.default_notification_channel_id);
+        String CHANNEL_NAME = "user_channel"; // They are hardcoded only for show it's just strings
+        String CHANNEL_DESCR = "user_first_channel"; // The user-visible description of the channel.
 
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
@@ -175,6 +176,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setContentTitle(aTitle)  // required
                 .setContentText(aMessage)  // required
                 .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

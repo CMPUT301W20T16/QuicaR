@@ -84,6 +84,16 @@ public class RequestDataHelper extends DatabaseHelper {
     }
 
     /**
+     * This method will obtain all open request when a request is updated
+     * and return a list of request as a parameter to listener by calling
+     *
+     */
+    public static void notifyAllOpenRequests(ArrayList<Request> openRequests) {
+        if (notifyListener != null)
+            notifyListener.onSuccess(openRequests, ALL_REQs_TAG);
+    }
+
+    /**
      * This is the method that add request to firebase and will notify the listener when success
      * @param newRequest
      *  request to be added
@@ -258,37 +268,6 @@ public class RequestDataHelper extends DatabaseHelper {
                             listener.onFailure(
                                     "Error getting documents: " + task.getException(),
                                     USER_REQ_TAG);
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method will query all open request and return a list of request to listener
-     * @param listener
-     *  listener for notification and obtain return value
-     */
-    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
-
-        collectionReferenceReq
-                .whereEqualTo("isAccepted", false)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<Request> openRequests = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Request query = document.toObject(Request.class);
-                                openRequests.add(query);
-                            }
-                            listener.onSuccess(openRequests, ALL_REQs_TAG);
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure(
-                                    "Error getting documents: " + task.getException(),
-                                    ALL_REQs_TAG);
                         }
                     }
                 });

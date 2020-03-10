@@ -65,6 +65,8 @@ public class DatabaseHelper {
                     "DatabaseHelper class cannot be null," +
                     "please use the setter method to initialize those value");
 
+        if (db != null)
+            return;
         FirebaseFirestore.getInstance().clearPersistence();
         db = FirebaseFirestore.getInstance();
 
@@ -73,9 +75,9 @@ public class DatabaseHelper {
         // for a different threshold (minimum 1 MB) or set to "CACHE_SIZE_UNLIMITED"
         // to disable clean-up.
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
                 .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
                 .build();
+
         db.setFirestoreSettings(settings);
 
         collectionReferenceRec = db.collection(REC_COLL_NAME);
@@ -95,18 +97,17 @@ public class DatabaseHelper {
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
                             + " update for record");
 
-                    //DatabaseHelper.records.clear();
-
                     String recordID = "record0";
+                    ArrayList<Record> records = new ArrayList<>();
 
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
 //                        Log.d(TAG, String.valueOf(doc.getData().get(RECORD_KEY)));
                         recordID = doc.getId();
 //                        delRecord(recordID);
                         Record record = doc.toObject(Record.class);
-                        //DatabaseHelper.records.add(record);
-                        checkCompleteNotification(record);
+                        records.add(record);
                     }
+                    checkCompleteNotification(records);
                 }
             }
         });
@@ -124,6 +125,7 @@ public class DatabaseHelper {
                     if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
                         String requestID = "request0";
                         ArrayList<Request> requests = new ArrayList<>();
+                        ArrayList<Request> openRequests = new ArrayList<>();
 
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             //                        Log.d(TAG, String.valueOf(doc.getData().get(REQUEST_KEY)));
@@ -136,7 +138,10 @@ public class DatabaseHelper {
                                 checkPickedUpNotification(request);
                             }
                             requests.add(request);
+                            if (!request.getAccepted())
+                                openRequests.add(request);
                         }
+                        RequestDataHelper.notifyAllOpenRequests(openRequests);
                         if (DatabaseHelper.getCurrentMode() == "driver")
                             checkCancelNotification(requests);
                     }
@@ -418,8 +423,10 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkCancelNotification(ArrayList<Request> requests) {
-        if (!userState.getOnGoing())
+        if (!userState.getOnGoing()) {
+            System.out.println("user is not in on going state, unable to get cancel notification!");
             return;
+        }
 
         boolean found = false;
         for (Request request: requests) {
@@ -442,21 +449,28 @@ public class DatabaseHelper {
      * that the rider's request is completed
      * @param record
      */
-    private void checkCompleteNotification(Record record) {
-        if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                && DatabaseHelper.getCurrentMode().equals("rider") && userState.getOnGoing()) {
-            //sendPopUpNotification("Notification test", "ride is completed", this);
-            userState.setActive(Boolean.FALSE);
-            userState.setOnGoing(Boolean.FALSE);
-            System.out.println("-------- Notification sent --------");
+    private void checkCompleteNotification(ArrayList<Record> records) {
+        for (Record record: records) {
+            if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
+                    && DatabaseHelper.getCurrentMode().equals("rider")) {
+                // might want to check if userstate.getOngoing is updated
+                //sendPopUpNotification("Notification test", "ride is completed", this);
+                userState.setActive(Boolean.FALSE);
+                userState.setOnGoing(Boolean.FALSE);
+                RequestDataHelper.notifyComplete();
+                System.out.println("-------- Notification sent --------");
+                break;
+            }
+//            if (record.getRequest().getDriver().getName().equals(DatabaseHelper.getCurrentUserName())
+//                    && DatabaseHelper.getCurrentMode().equals("driver") && userState.getOnGoing()) {
+//                //sendPopUpNotification("Notification test", "ride is completed", this);
+//                userState.setActive(Boolean.FALSE);
+//                userState.setOnGoing(Boolean.FALSE);
+//                RequestDataHelper.notifyComplete();
+//                System.out.println("-------- Notification sent --------");
+//            }
         }
-        if (record.getRequest().getDriver().getName().equals(DatabaseHelper.getCurrentUserName())
-                && DatabaseHelper.getCurrentMode().equals("driver") && userState.getOnGoing()) {
-            //sendPopUpNotification("Notification test", "ride is completed", this);
-            userState.setActive(Boolean.FALSE);
-            userState.setOnGoing(Boolean.FALSE);
-            System.out.println("-------- Notification sent --------");
-        }
+
     }
 
 
@@ -467,7 +481,8 @@ public class DatabaseHelper {
      */
     public static void sendPopUpNotification(String title, String msg) {
         System.out.println("_---------------- notify please");
-        new Notify().execute(msg);
+        new Notify().execute(title, msg);
+
     }
 
 
@@ -499,9 +514,11 @@ public class DatabaseHelper {
 
                 json.put("to", DatabaseHelper.getToken());
 
-                String body = data[0];
+                String title = data[0];
+                String body = data[1];
+
                 JSONObject info = new JSONObject();
-                info.put("title", "TechnoWeb");   // Notification title
+                info.put("title", title);   // Notification title
                 info.put("body", body); // Notification body
 
                 json.put("notification", info);
