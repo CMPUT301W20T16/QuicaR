@@ -237,6 +237,7 @@ public class UserDataHelper extends DatabaseHelper {
             listener.onFailure("user name provided is a null or empty");
             return;
         }
+        System.out.println(user.getAccountInfo().getPhone());
         final String userName = user.getName();
         collectionReferenceUser
                 .whereEqualTo("account.userName", userName)

@@ -66,7 +66,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.birthDateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
         saveButton = findViewById(R.id.save_button);
-
+        //?? set cannot edit
+        this.emailLayout.setEnabled(false);
+        this.usernameLayout.setEnabled(false);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -143,7 +145,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                     updateUser();
 
 //                    System.out.println(user.getAccountInfo().getPhone());
-                    System.out.println(user.getAccountInfo().getLastName());
+//                    System.out.println(user.getAccountInfo().getPhone());
                     UserDataHelper.updateUserProfile(user,listener);
 
                 }
@@ -214,7 +216,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             if(this.phoneLayout.getEditText().getText()!= null){
                 phone = this.phoneLayout.getEditText().getText().toString();
 //                System.out.println("here");
-                System.out.println(phone);
+//                System.out.println(phone);
 
             }
             if(this.firstNameLayout.getEditText().getText() != null){
@@ -233,6 +235,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         }
 
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
+        System.out.println(user.getAccountInfo().getPhone());
         ;
 
     }
