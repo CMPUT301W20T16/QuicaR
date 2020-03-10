@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,6 +49,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     private  User user ;
     private OnGetUserDataListener listener = this;
     final Calendar myCalendar = Calendar.getInstance();
+
 
 
 
@@ -482,5 +483,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         birthDateLayout.getEditText().setText(sdf.format(myCalendar.getTime()));
+
     };
 }
