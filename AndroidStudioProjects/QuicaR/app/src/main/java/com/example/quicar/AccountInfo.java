@@ -24,7 +24,7 @@ public class AccountInfo {
 
     private String lastName;
 
-    private String birthDate;
+    private Date birthDate;
 
     private String gender;
 
@@ -40,7 +40,7 @@ public class AccountInfo {
         this.userName = null;
         this.firstName = null;
         this.lastName = null;
-        this.birthDate = null;
+        this.birthDate = new Date();
         this.gender = null;
     }
 
@@ -119,11 +119,11 @@ public class AccountInfo {
         this.password = password;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 

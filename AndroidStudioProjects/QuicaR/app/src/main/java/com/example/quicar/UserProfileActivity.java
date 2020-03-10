@@ -14,10 +14,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -182,13 +182,19 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String email,username,phone,firstName,lastName,gender,password,accNo;
         Wallet wallet = null;
         accNo = email = username = phone = firstName = lastName = gender = password = null;
-        String birthDate = null;
-
+        String sbirthDate = null;
+        Date birthDate;
+        birthDate = null;
         if(this.user != null){
             System.out.println("gu");
             if (this.birthDateLayout.getEditText().getText() != null) {
-                birthDate  = this.birthDateLayout.getEditText().getText().toString();
-//                birthDate =new SimpleDateFormat("MMM dd,yyyy").parse(sDate1);
+                sbirthDate  = this.birthDateLayout.getEditText().getText().toString();
+                try {
+                    birthDate = (Date) new SimpleDateFormat("MMM dd,yyyy").parse(sbirthDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    birthDate = null;
+                }
             }
 
             if (this.emailLayout.getEditText().getText() != null) {
@@ -218,8 +224,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 password = this.passwordLayout.getEditText().getText().toString();
             }
         }
-
-
+        
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
         ;
 
