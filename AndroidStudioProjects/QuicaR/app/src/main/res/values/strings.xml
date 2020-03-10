@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">QuicaR</string>
+    <string name="app_name">QuicaR_mapView</string>
+    <string name="navigation_draw_open">Open navigation draw</string>
+    <string name="navigation_draw_close">Close navigation draw</string>
 </resources>

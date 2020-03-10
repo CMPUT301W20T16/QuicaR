@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">QuicaR</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="fcm_message">FCM Message</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <!-- [START fcm_default_icon_string] -->
+    <string name="default_notification_channel_name" translatable="true">Request</string>
+    <!-- [END fcm_default_icon_string] -->
+    <string name="OLD_SERVER_KEY"> AIzaSyDKHMO4xM-b9y2-TMGR5KvPTvlT9jqGbYs </string>
+
+    <string name="map_key" translatable="false">
+    AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk
+
+    </string>
+
+    <string name="navigation_draw_open">Open navigation draw</string>
+    <string name="navigation_draw_close">Close navigation draw</string>
+</resources>

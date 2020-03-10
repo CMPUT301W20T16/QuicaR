@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:weightSum="2"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border_shadow"
+        android:paddingTop="18dp"
+        android:layout_weight="1.5">
+
+        <fragment
+            android:id="@+id/pick_up"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp" />
+
+        <fragment
+            android:id="@+id/destination"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/pick_up"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginRight="50dp" />
+
+
+    </RelativeLayout>
+
+
+
+
+<!--    <fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        xmlns:map="http://schemas.android.com/apk/res-auto"-->
+<!--        xmlns:tools="http://schemas.android.com/tools"-->
+<!--        android:id="@+id/map"-->
+<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:context=".MapsActivity" />-->
+
+
+
+</LinearLayout>
