@@ -283,7 +283,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void checkUserExist(final String userName, final String email, final String phone,
+    public static void checkUserExists(final String userName, final String email, final String phone,
                                       final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .whereEqualTo("account.username", userName)
