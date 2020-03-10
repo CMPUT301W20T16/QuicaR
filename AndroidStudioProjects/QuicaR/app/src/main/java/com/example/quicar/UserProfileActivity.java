@@ -147,6 +147,8 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //                    System.out.println(user.getAccountInfo().getPhone());
 //                    System.out.println(user.getAccountInfo().getPhone());
                     UserDataHelper.updateUserProfile(user,listener);
+                    Toast.makeText(UserProfileActivity.this,
+                            "Saved successfully", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -192,7 +194,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         Date birthDate;
         birthDate = null;
         if(this.user != null){
-            System.out.println("gu");
             if (this.birthDateLayout.getEditText().getText() != null) {
                 sbirthDate  = this.birthDateLayout.getEditText().getText().toString();
                 try {
@@ -200,16 +201,18 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 } catch (ParseException e) {
                     e.printStackTrace();
                     birthDate = null;
+                    System.out.println("Teemo");
+                    System.out.println(birthDate);
                 }
             }
             //change later
             if (this.emailLayout.getEditText().getText() != null) {
-//                email = this.emailLayout.getEditText().getText().toString();
+                email = this.emailLayout.getEditText().getText().toString();
                 ;
             }
 
             if (this.usernameLayout.getEditText().getText() != null) {
-//                username = this.usernameLayout.getEditText().getText().toString();
+                username = this.usernameLayout.getEditText().getText().toString();
                 ;
             }
 
@@ -233,9 +236,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 password = this.passwordLayout.getEditText().getText().toString();
             }
         }
-
+        // ???
+        System.out.println(birthDate);
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
-        System.out.println(user.getAccountInfo().getPhone());
+        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }
@@ -459,8 +463,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("isSuccess");
+        System.out.println("isFalse");
+        System.out.println(errorMessage);
         this.isfalse = true;
+        Toast.makeText(UserProfileActivity.this,
+                "disConnected, try later", Toast.LENGTH_SHORT).show();
 
     }
 
