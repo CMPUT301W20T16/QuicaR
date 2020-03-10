@@ -14,10 +14,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +52,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Button saveButton;
@@ -66,7 +67,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.birthDateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
         saveButton = findViewById(R.id.save_button);
-
+        //?? set cannot edit
+        this.emailLayout.setEnabled(false);
+        this.usernameLayout.setEnabled(false);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -107,6 +110,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         // get current user
         UserDataHelper.getUser(userName,this);
 
+//        // get current user
+//        UserDataHelper.getCurrentUser();
+
 //        long startTime = System.currentTimeMillis();
 //        long endTime;
 //        while (true){
@@ -135,12 +141,15 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                             "Invalid input", Toast.LENGTH_SHORT).show();
                 } else {
                     ;
-                    setDefault();
+//                    setDefault();
 //                    System.out.println("Good");
                     updateUser();
 
 //                    System.out.println(user.getAccountInfo().getPhone());
+//                    System.out.println(user.getAccountInfo().getPhone());
                     UserDataHelper.updateUserProfile(user,listener);
+                    Toast.makeText(UserProfileActivity.this,
+                            "Saved successfully", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -182,27 +191,36 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String email,username,phone,firstName,lastName,gender,password,accNo;
         Wallet wallet = null;
         accNo = email = username = phone = firstName = lastName = gender = password = null;
-        Date birthDate = null;
-
+        String sbirthDate = null;
+        Date birthDate;
+        birthDate = null;
         if(this.user != null){
-            System.out.println("gu");
             if (this.birthDateLayout.getEditText().getText() != null) {
-                String sDate1 = this.birthDateLayout.getEditText().getText().toString();
-//                birthDate =new SimpleDateFormat("MMM dd,yyyy").parse(sDate1);
+                sbirthDate  = this.birthDateLayout.getEditText().getText().toString();
+                try {
+                    birthDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(sbirthDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    birthDate = null;
+                    System.out.println("Teemo");
+                    System.out.println(birthDate);
+                }
             }
-
+            //change later
             if (this.emailLayout.getEditText().getText() != null) {
                 email = this.emailLayout.getEditText().getText().toString();
+                ;
             }
 
             if (this.usernameLayout.getEditText().getText() != null) {
                 username = this.usernameLayout.getEditText().getText().toString();
+                ;
             }
 
             if(this.phoneLayout.getEditText().getText()!= null){
                 phone = this.phoneLayout.getEditText().getText().toString();
 //                System.out.println("here");
-                System.out.println(phone);
+//                System.out.println(phone);
 
             }
             if(this.firstNameLayout.getEditText().getText() != null){
@@ -210,6 +228,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
             if(this.lastNameLayout.getEditText().getText()!= null){
                 lastName = this.lastNameLayout.getEditText().getText().toString();
+                System.out.println(lastName);
             }
             if (this.genderLayout.getEditText().getText()!= null){
                 gender = this.genderLayout.getEditText().getText().toString();
@@ -218,9 +237,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 password = this.passwordLayout.getEditText().getText().toString();
             }
         }
-
-
+        // ???
+        System.out.println(birthDate);
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
+        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }
@@ -248,7 +268,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(!validateGender()) {
             flag = false;
         }
-
 
         if(!validateBirthDate()) {
             flag = false;
@@ -445,8 +464,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("isSuccess");
+        System.out.println("isFalse");
+        System.out.println(errorMessage);
         this.isfalse = true;
+        Toast.makeText(UserProfileActivity.this,
+                "disConnected, try later", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -457,9 +479,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     // design to show update format
     private void updateLabel() {
-        String myFormat = "MMM dd,yyyy"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         birthDateLayout.getEditText().setText(sdf.format(myCalendar.getTime()));
+
     };
 }
