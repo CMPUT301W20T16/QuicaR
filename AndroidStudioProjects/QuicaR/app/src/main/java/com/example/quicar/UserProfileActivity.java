@@ -4,8 +4,10 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
 //???
+// need to change later on solve validate input for gender, password, image select;l
 // .............................................................???
 //    @Override
 //    protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,13 +42,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //    }
 
 
-    private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout, genderLayout,passwordLayout;
+    private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout,passwordLayout;
 
     private boolean issuccess = false;
     private  boolean isfalse = false;
     FirebaseAuth mAuth;
 
-
+    private Spinner spinnerGender;
     private  User user ;
     private OnGetUserDataListener listener = this;
     final Calendar myCalendar = Calendar.getInstance();
@@ -63,7 +66,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.usernameLayout = findViewById(R.id.profile_username);
         this.firstNameLayout = findViewById(R.id.profile_firstName);
         this.lastNameLayout = findViewById(R.id.profile_lastName);
-        this.genderLayout = findViewById(R.id.profile_gender);
+//        this.genderLayout = findViewById(R.id.profile_gender);
         this.birthDateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
         saveButton = findViewById(R.id.save_button);
@@ -106,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 //        String userName = DatabaseHelper.getCurrentUserName();
         //Test
-        String userName = "Hello";
+        String userName = UserDataHelper.getCurrentUserName();
         // get current user
         UserDataHelper.getUser(userName,this);
 
@@ -128,12 +131,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //
 //        }
 
+        spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean validateFlag = checkValidate();
-
+                System.out.println((spinnerGender.getSelectedItem()).toString() );
                 if(!validateFlag) {
                     ;
                     System.out.println("not validate");
@@ -184,6 +188,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     }
 
 
+
     /**
      *Run when pass the validate, to update user information
      */
@@ -230,8 +235,10 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 lastName = this.lastNameLayout.getEditText().getText().toString();
                 System.out.println(lastName);
             }
-            if (this.genderLayout.getEditText().getText()!= null){
-                gender = this.genderLayout.getEditText().getText().toString();
+            if (this.spinnerGender.getSelectedItem()!= null){
+//            if (this.genderLayout.getEditText().getText()!= null){
+//                gender = this.genderLayout.getEditText().getText().toString();
+                gender = spinnerGender.getSelectedItem().toString();
             }
             if (this.passwordLayout.getEditText() != null){
                 password = this.passwordLayout.getEditText().getText().toString();
@@ -313,7 +320,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 this.lastNameLayout.getEditText().setText(user.getAccountInfo().getLastName());
             }
             if (user.getAccountInfo().getGender() != null){
-                this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
+                String gender = user.getAccountInfo().getGender();
+                spinnerGender.setSelection(((ArrayAdapter<String>)spinnerGender.getAdapter()).getPosition(gender));
+//                this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
             }
             if (user.getAccountInfo().getPassword() != null){
                 this.passwordLayout.getEditText().setText(user.getAccountInfo().getPassword());
@@ -468,7 +477,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         System.out.println(errorMessage);
         this.isfalse = true;
         Toast.makeText(UserProfileActivity.this,
-                "disConnected, try later", Toast.LENGTH_SHORT).show();
+                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }
 

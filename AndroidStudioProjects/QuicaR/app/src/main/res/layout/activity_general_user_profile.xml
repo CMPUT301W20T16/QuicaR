@@ -35,6 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
+                android:maxLength="20"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:background="@drawable/rounded_background" />
@@ -52,7 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:inputType="phone"
+                android:inputType="number"
+                android:maxLength="10"
                 android:singleLine="true"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -62,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profile_username"
+            android:maxLength="10"
             app:errorTextAppearance="@style/error"
             app:errorEnabled="true">
 
@@ -69,8 +72,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:inputType="textPersonName"
                 android:singleLine="true"
+                android:inputType="textPersonName"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,8 +90,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:singleLine="true"
+                android:maxLength="10"
                 android:background="@drawable/rounded_background"
+                android:singleLine="true"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,8 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:inputType="textPersonName"
+                android:maxLength="10"
                 android:singleLine="true"
+                android:inputType="textPersonName"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,8 +126,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:inputType="textPersonName"
                 android:singleLine="true"
+                android:maxLength="10"
+                android:inputType="textPersonName"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,28 +145,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:inputType="date"
-                android:singleLine="true"
                 android:focusable="false"
                 android:layout_margin="10dp"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/profile_gender"
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/profile_gender"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/profile_gender"-->
+<!--            app:errorTextAppearance="@style/error"-->
+<!--            app:errorEnabled="true">-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:singleLine="true"-->
+<!--                android:background="@drawable/rounded_background" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+        <TextView
+            android:id="@+id/textViewHinr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/profile_gender"
-            app:errorTextAppearance="@style/error"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:inputType="text"
-                android:singleLine="true"
-                android:background="@drawable/rounded_background" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="2dp"
+            android:text="@string/profile_gender_hint"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <Spinner
+            android:id="@+id/spinner_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_gender_hint"
+            android:entries="@array/gender_array"
+            android:prompt="@string/gender_prompt" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="324dp"

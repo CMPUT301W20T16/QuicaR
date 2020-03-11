@@ -32,8 +32,21 @@
     <string name="profile_firstName">first name</string>
     <string name="profile_lastName">last name</string>
     <string name="profile_birthDate">birth date</string>
-    <string name="profile_gender">gender</string>
+    <string name="profile_gender_hint">gender</string>
     <string name="save_button">save</string>
+
+
+
+    <string name="gender_prompt">Choose a gender</string>
+
+    <string-array name="gender_array">
+        <item>no selection</item>
+        <item>male</item>
+        <item>female</item>
+        <item>gender queer</item>
+
+    </string-array>
+
     <!-- [end] -->
 
     <!-- [START design for register driver  -->
