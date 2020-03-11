@@ -279,7 +279,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 

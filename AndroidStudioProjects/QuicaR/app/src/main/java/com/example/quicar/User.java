@@ -1,12 +1,10 @@
 package com.example.quicar;
 
 
-import java.io.Serializable;
 import java.util.Date;
-
 import com.google.firebase.firestore.PropertyName;
 
-public class User implements Serializable {
+public class User {
 
     private AccountInfo accountInfo;
 
@@ -36,7 +34,7 @@ public class User implements Serializable {
     public void setDriver(boolean driver) {
         isDriver = driver;
     }
-//    protected void setIsDriver(){
+    //    protected void setIsDriver(){
 //        this.isDriver = (this.accountinfo.getDriverInfo() != null);
 //    }
 //
@@ -69,8 +67,8 @@ public class User implements Serializable {
         return this.accountInfo.getUserName();
     }
 
-    protected void setBasic(String email, String password) {
-        setAccountInfo(null, null, null, null, null, null, email, null, password, null);
+    protected void setBasic(String username, String email, String password) {
+        setAccountInfo(null, null, null, null, null, null, email, username, password, null);
     }
 
 }

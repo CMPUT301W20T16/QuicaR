@@ -23,18 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener{
-//    private MarkerOptions start, destination;
-//    private Polyline currentPolyline;
-//    List<MarkerOptions> markerOptionsList = new ArrayList<>();
-
-
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
     Button confirmButton;
-//    Request mRequest;
-//    Location start_location, end_location;
-
 
 
     @Override
@@ -51,10 +43,12 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
 //        mRequest = new Request();
         //get data from firebase
+        System.out.println("------------------------current user name: " + DatabaseHelper.getCurrentUserName());
+
         RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "driver", this);
 
         if ( mRequest != null) {
-//            System.out.println(mRequest);
+            System.out.println("request not null----------: "+ mRequest);
             start_location = mRequest.getStart();
             end_location = mRequest.getDestination();
 
@@ -82,63 +76,12 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
-//    /**
-//     * Draw route methods
-//     */
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mMap = googleMap;
-//        if (start != null && destination != null) {
-//            mMap.addMarker(start);
-//            mMap.addMarker(destination);
-//            showAllMarkers();
-//
-//        }
-//    }
-//
-//    public void showAllMarkers() {
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//
-//        for (MarkerOptions m : markerOptionsList) {
-//            builder.include(m.getPosition());
-//
-//        }
-//        LatLngBounds bounds = builder.build();
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels;
-//        int padding = (int) (width * 0.30);
-//
-//        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-//        mMap.animateCamera(cu);
-//
-//    }
-//
-//
-//
-//    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        String mode = "mode=" + directionMode;
-//        String parameter = str_origin + "&" + str_dest + "&" + mode;
-//        String format = "json";
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-//
-//
-//        return url;
-//
-//    }
-//
-//
-//    @Override
-//    public void onTaskDone(Object... values) {
-//        if (currentPolyline != null)
-//            currentPolyline.remove();
-//
-//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-//    }
 
-
+    /**
+     * RequestDataHelper methods
+     * @param requests
+     * @param tag
+     */
     // if successfully get all request associated with the specific driver, i.e., current user
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
@@ -161,9 +104,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     @Override
     public void onActiveNotification(Request request) {
-//        System.out.println("------------- rider request updated to active -----------------");
-//        mRequest = request;
-//        Toast.makeText(this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
 
     }
 

@@ -57,6 +57,13 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     private NotificationManagerCompat notificationManager;
 
 
+    /**
+     * 问题：
+     * 1.目前只有一个default bottom sheet，没法区分是否被接单
+     * 1.目前还不能更新bottom sheet的detail
+     * @param savedInstanceState
+     */
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -81,8 +88,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
+        RequestDataHelper.setOnNotifyListener(this);
 //        RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "rider", this);
-
 
 
         // set on click listener for buttons
@@ -101,9 +108,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         //send email需要拿到user的email，格式类似上面打电话
 
         // if user tries to cancel the ride while driver is on their way
-        // NOT IMPLEMENTED: time out
         // call cancelRequest so ride will be deleted in the database
         // user back to the main screen
+        /**
+         * 问题：还不能确定允许cancel的时间
+         */
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,90 +128,33 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     }
 
-//        // used to send one notification
-//        public void sendOnChannel1(View v) {
-//            String title = "Get Ready!";
-//            String message = "Your driver is on the way!";
-//
-//            Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-//                    .setSmallIcon(R.drawable.ic_cancel)
-//                    .setContentTitle(title)
-//                    .setContentText(message)
-//                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                    .build();
-//
-//            notificationManager.notify(1, notification);
-//        }
-
-//    /**
-//     * Draw route methods
-//     */
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mMap = googleMap;
-//        if (start != null && destination != null) {
-//            mMap.addMarker(start);
-//            mMap.addMarker(destination);
-//            showAllMarkers();
-//        }
-//    }
-//
-//    public void showAllMarkers() {
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//
-//        for (MarkerOptions m : markerOptionsList) {
-//            builder.include(m.getPosition());
-//
-//        }
-//        LatLngBounds bounds = builder.build();
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels;
-//        int padding = (int) (width * 0.30);
-//
-//        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-//        mMap.animateCamera(cu);
-//
-//    }
-//
-//
-//
-//    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        String mode = "mode=" + directionMode;
-//        String parameter = str_origin + "&" + str_dest + "&" + mode;
-//        String format = "json";
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-//
-//
-//        return url;
-//
-//    }
-//
-//
-//    @Override
-//    public void onTaskDone(Object... values) {
-//        if (currentPolyline != null)
-//            currentPolyline.remove();
-//
-//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-//    }
-
-
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-        if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
-            System.out.println("------------- rider request has been canceled-----------------");
-            Toast.makeText(RiderWaitingRideActivity.this, "rider request canceled successfully", Toast.LENGTH_SHORT).show();
-
-        }
+//        if (tag == RequestDataHelper.USER_REQ_TAG) {
+//            if (requests.size() > 0) {
+//                //  always check if the return value is valid
+//                System.out.println("------------ all open request obtained -----------");
+//                for (Request request: requests) {
+//                    if (request.getAccepted()) {
+//                        mRequest = request;
+//                    }
+//                }
+//            }
+//            else {
+//                System.out.println("------------ empty list obtained -----------");
+//            }
+//        } else if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
+//            System.out.println("------------- rider request has been canceled-----------------");
+//            Toast.makeText(RiderWaitingRideActivity.this, "rider request canceled successfully", Toast.LENGTH_SHORT).show();
+//
+//        }
     }
 
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
+        DatabaseHelper.sendPopUpNotification("Notification test", "Ride is being accepted");
+        mRequest = request;
         Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
 
     }

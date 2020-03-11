@@ -4,6 +4,8 @@
     <string name="sign_up_button">Sign up</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="fcm_message">FCM Message</string>
+    <string name="button_validate">Validate</string>
+    <string name="snooze">SNOOZE</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <!--
         This is the name that users will see when interacting with this channel.
@@ -16,9 +18,35 @@
 
     <string name="map_key" translatable="false">
     AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk
-
     </string>
 
     <string name="navigation_draw_open">Open navigation draw</string>
     <string name="navigation_draw_close">Close navigation draw</string>
+
+    <!-- [START design for general user profile -->
+    <string name="profile_email">Email address </string>
+    <string name="user_profile">user profile </string>
+    <string name="profile_phone"> Phone number</string>
+    <string name="profile_username">user name</string>
+    <string name="profile_password">password</string>
+    <string name="profile_firstName">first name</string>
+    <string name="profile_lastName">last name</string>
+    <string name="profile_birthDate">birth date</string>
+    <string name="profile_gender">gender</string>
+    <string name="save_button">save</string>
+    <!-- [end] -->
+
+    <!-- [START design for register driver  -->
+    <string name="register_page">Sign up as a Driver</string>
+    <string name="register_reminder">please enter your associated email and password to proceed</string>
+    <string name="profile_driver_license_number">driver license number</string>
+    <string name="profile_Driver_birthDate">birth date</string>
+    <string name="profile_validate_plate_number">validate plate number</string>
+    <string name="validate_button">Validate</string>
+
+    <!-- [end] -->
+
+
+
+
 </resources>

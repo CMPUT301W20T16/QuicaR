@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.location.Address;
@@ -37,10 +39,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class RiderSelectLocationActivity extends AppCompatActivity{
+public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener{
     private EditText pickUp;
     private EditText destination;
     private Button confirmButton;
+
+    private int currentPosition;
 
 
     String address,locality,subLocality,state,postalCode,country,knownname,phone;
@@ -53,7 +57,12 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
     Marker marker;
     PlacesClient placesClient;
 
+    private RecyclerView mRecyclerView;
+    private LocationAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Location> locationList;
 
+    AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
 
 
@@ -79,12 +88,19 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
         start_location = new Location();
         end_location = new Location();
 
+        /**
+         * 问题：history location得在点击auto complete fragment之后才显示
+         */
+        locationList = new ArrayList<>();
+        RecordDataHelper.queryHistoryLocation(DatabaseHelper.getCurrentUserName(), 10, this);
+        buildRecyclerView();
 
 
-        final AutocompleteSupportFragment pickUpAutoComplete =
+
+        pickUpAutoComplete =
                 (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.pick_up);
 
-        final AutocompleteSupportFragment destinationAutoComplete =
+        destinationAutoComplete =
                 (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destination);
 
         //get data from intent, i.e., current address
@@ -92,16 +108,50 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
 
-        pickUpAutoComplete.setText(pick_up_address);
-        destinationAutoComplete.setText("MY DESTINATION");
+
+        pickUpAutoComplete.setHint(pick_up_address);
+        destinationAutoComplete.setHint("Select Destination");
+
         onCreateAutoCompletion(pickUpAutoComplete, start_location);
         onCreateAutoCompletion(destinationAutoComplete, end_location);
 
 
     }
 
+    public void buildRecyclerView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.history_loc_list);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new LocationAdapter(locationList);
+//        System.out.println("-------------recycler view build successful-----------");
 
-    public void onCreateAutoCompletion(AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+
+        mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+//                System.out.println("clicked");
+                currentPosition = position;
+//                Request request = (Request)requestList.get(position);
+//                pickUpAutoComplete.setText(pick_up_address);
+//                destinationAutoComplete.setText("MY DESTINATION");
+                /**
+                 * 问题：
+                 * 1.没法确定选择的location是start还是end location
+                 * 2.没法显示地址（目前是location）
+                 */
+                start_location = (Location) locationList.get(position);
+                System.out.println(start_location.getLon() + start_location.getLat());
+
+
+            }
+        });
+    }
+
+
+    public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
                         Place.Field.ID,
@@ -151,11 +201,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
                                 locality = addresses.get(0).getLocality();
-                                subLocality = addresses.get(0).getSubLocality();
-                                state = addresses.get(0).getAdminArea();
-                                country = addresses.get(0).getCountryName();
-                                postalCode = addresses.get(0).getPostalCode();
-                                knownname = addresses.get(0).getFeatureName();
+                                //ystem.out.println("\n\n aaaaaaaaaaaa");
+                                //autocompleteSupportFragment.setText(locality);
+                                EditText etPlace = (EditText) autocompleteSupportFragment
+                                        .getView()
+                                        .findViewById(R.id.places_autocomplete_search_input);
+                                etPlace.setHint(place.getAddress());
+                                //System.out.println(destinationAutoComplete);
+
 
                             }
 
@@ -178,9 +231,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
     }
 
 
-    /**
-     * listview包含近10(?)个rider去过的location
-*/
 
 
     // Used to add check bar on top right of the app bar.
@@ -217,6 +267,21 @@ public class RiderSelectLocationActivity extends AppCompatActivity{
         }
     }
 
+
+    @Override
+    public void onSuccess(ArrayList<Location> history) {
+        for (Location loc: history) {
+            System.out.println(loc.getLat() + " " + loc.getLon() + " --------- history here");
+            locationList.add(loc);
+
+
+        }
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
+    }
 
 }
 

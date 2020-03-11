@@ -32,7 +32,7 @@ public class RequestDataHelper extends DatabaseHelper {
     public static final String CANCEL_REQ_TAG = "cancel opened request";
     public static final String COMPLETE_REQ_TAG = "complete request";
 
-    private static OnGetRequestDataListener listener;
+    private static OnGetRequestDataListener notifyListener;
     private static CollectionReference collectionReferenceReq;
     private static FirebaseFirestore db;
 
@@ -51,7 +51,7 @@ public class RequestDataHelper extends DatabaseHelper {
      *  listener for notification
      */
     public static void setOnNotifyListener(OnGetRequestDataListener listener) {
-        RequestDataHelper.listener = listener;
+        notifyListener = listener;
     }
 
     /**
@@ -61,26 +61,36 @@ public class RequestDataHelper extends DatabaseHelper {
      *  the request that is active
      */
     public static void notifyActive(Request request) {
-        if (listener != null) {
-            listener.onActiveNotification(request);
+        if (notifyListener != null) {
+            notifyListener.onActiveNotification(request);
         }
     }
 
     public static void notifyCancel() {
-        if (listener != null) {
-            listener.onCancelNotification();
+        if (notifyListener != null) {
+            notifyListener.onCancelNotification();
         }
     }
 
     public static void notifyPickedUp(Request request) {
-        if (listener != null) {
-            listener.onPickedUpNotification(request);
+        if (notifyListener != null) {
+            notifyListener.onPickedUpNotification(request);
         }
     }
 
     public static void notifyComplete() {
-        if (listener != null)
-            listener.onCompleteNotification();
+        if (notifyListener != null)
+            notifyListener.onCompleteNotification();
+    }
+
+    /**
+     * This method will obtain all open request when a request is updated
+     * and return a list of request as a parameter to listener by calling
+     *
+     */
+    public static void notifyAllOpenRequests(ArrayList<Request> openRequests) {
+        if (notifyListener != null)
+            notifyListener.onSuccess(openRequests, ALL_REQs_TAG);
     }
 
     /**
@@ -261,45 +271,6 @@ public class RequestDataHelper extends DatabaseHelper {
                         }
                     }
                 });
-    }
-
-    /**
-     * This method will query all open request and return a list of request to listener
-     * @param listener
-     *  listener for notification and obtain return value
-     */
-    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
-        //listener.onStart();
-        Float latRange = 10.0f;
-        Float lonRange = 10.0f;
-
-        collectionReferenceReq
-                .whereEqualTo("isAccepted", false)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<Request> openRequests = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Request query = document.toObject(Request.class);
-                                openRequests.add(query);
-                            }
-                            listener.onSuccess(openRequests, ALL_REQs_TAG);
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure(
-                                    "Error getting documents: " + task.getException(),
-                                    ALL_REQs_TAG);
-                        }
-                    }
-                });
-
-//        .whereLessThan("start.lat", location.getLat() + latRange)
-//                .whereGreaterThan("start.lat", location.getLat() - latRange)
-//                .whereLessThan("destination.lat", location.getLon() + lonRange)
-//                .whereGreaterThan("destination.lat", location.getLon() - lonRange)
     }
 
     /**
