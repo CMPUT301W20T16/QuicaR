@@ -4,7 +4,7 @@ package com.example.quicar;
  * This is an object that store the user's acitivity state for convenient
  */
 public class UserState {
-    private User currentUser;
+    private User currentUser = new User();
     private String currentMode;
     private String token;
     private Boolean active = Boolean.FALSE;

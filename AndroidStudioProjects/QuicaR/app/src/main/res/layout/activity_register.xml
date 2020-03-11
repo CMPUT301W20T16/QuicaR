@@ -18,6 +18,8 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:inputType="textPersonName"
+            android:singleLine="true"
             android:hint="USERNAME"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -33,6 +35,8 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
             android:hint="EMAIL ADDRESS"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:singleLine="true"
             android:hint="PASSWORD"
             android:inputType="textPassword"
             android:textSize="14sp" />
@@ -68,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:singleLine="true"
             android:hint="CONFIRM PASSWORD"
             android:inputType="textPassword"
             android:textSize="14sp" />

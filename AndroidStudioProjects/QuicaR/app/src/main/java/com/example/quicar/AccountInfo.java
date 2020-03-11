@@ -44,6 +44,7 @@ public class AccountInfo {
         this.gender = null;
     }
 
+
     public void setAccNo(String accNo) {
         this.accNo = accNo;
     }

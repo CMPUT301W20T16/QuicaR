@@ -17,16 +17,29 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Login extends AppCompatActivity {
+
+public class Login extends AppCompatActivity implements OnGetUserDataListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference ref;
+    FirebaseUser currentUser;
+
+    /* added by Jeremy */
+    OnGetUserDataListener listener = this;
 
 
     @Override
@@ -56,9 +69,13 @@ public class Login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                                DatabaseHelper.setCurrentUserName(myID);
-                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                //DatabaseHelper.setCurrentUserName(myID);
+                                /* added by Jeremy */
+                                UserDataHelper.getUser(myID, listener);
+//                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+//                                //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                                Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
+//                                startActivity(homeIntent);
                             } else {
                                 Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
@@ -70,10 +87,21 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser currentUser = mAuth.getCurrentUser();
-                                DatabaseHelper.setCurrentUserName("new user");
-                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                                currentUser = mAuth.getInstance().getCurrentUser();
+                                retrieveUsername();
+                                if (currentUser != null) {
+                                    for (UserInfo profile : currentUser.getProviderData()) {
+                                        String name = profile.getDisplayName();
+                                        //DatabaseHelper.setCurrentUserName(name);
+                                        /* added by Jeremy */
+                                        UserDataHelper.getUser(name, listener);
+                                    }
+                                }
+                                // DatabaseHelper.setCurrentUserName(currentUser.getDisplayName());
+
+//                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+//                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
                                 Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
@@ -113,10 +141,21 @@ public class Login extends AppCompatActivity {
     }
 
     public boolean checkUserNameOrEmail(String id) {
-        if (id.contains("@")) {
-            return true;
-        }
-        return false;
+
+//        if (id.contains("@")) {
+//            return true;
+//        }
+//        return false;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (id == null)
+            return false;
+        return pat.matcher(id).matches();
+
     }
 
     public String retrieveEmail() {
@@ -124,4 +163,44 @@ public class Login extends AppCompatActivity {
         return email;
     }
 
+
+    public void retrieveUsername() {
+        currentUser = mAuth.getInstance().getCurrentUser();
+        DatabaseReference myRef = database.getInstance().getReference("User");
+
+        myRef.child(currentUser.getUid()).
+                child("accountInfo").child("userName").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String username = dataSnapshot.getValue().toString();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(username).build();
+                currentUser.updateProfile(profileUpdates);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+        if (tag == UserDataHelper.GET_USER_TAG) {
+            DatabaseHelper.setCurrentUser(user);
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
+            startActivity(homeIntent);
+        }
+    }
+
+    @Override
+    public void onUserExists(Boolean exists, String tag) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
+    }
 }

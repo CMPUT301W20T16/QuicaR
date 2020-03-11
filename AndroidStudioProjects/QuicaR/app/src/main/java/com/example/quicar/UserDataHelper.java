@@ -29,6 +29,7 @@ public class UserDataHelper extends DatabaseHelper {
     private static CollectionReference collectionReferenceUser;
     private static FirebaseFirestore db;
 
+
     /**
      * This is the constructor of UserDataHelper
      */
@@ -142,7 +143,6 @@ public class UserDataHelper extends DatabaseHelper {
     public static void getUser(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
-            return;
         }
         collectionReferenceUser
                 .whereEqualTo("account.userName", userName)
@@ -176,7 +176,6 @@ public class UserDataHelper extends DatabaseHelper {
                         }
                     }
                 });
-
     }
 
     /**
@@ -211,9 +210,6 @@ public class UserDataHelper extends DatabaseHelper {
                             if (count > 0) {
                                 System.out.println("*****  user \" " + userName + " \" has an existing account");
                                 listener.onFailure(userName + " has anexisting account");
-                            } else if (count == 0) {
-                                System.out.println("*****  user \" " + userName + " \" has no existing account");
-                                listener.onFailure(userName + " has no existing account");
                             } else {
                                 UserDataHelper.addUser(newUser, listener);
                             }
@@ -224,6 +220,7 @@ public class UserDataHelper extends DatabaseHelper {
                     }
                 });
     }
+
 
     /**
      * This method will check if the user exists and call updateUser method

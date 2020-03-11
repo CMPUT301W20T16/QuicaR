@@ -39,20 +39,21 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseHelper.setCurrentUser(new User());
-        DatabaseHelper.setCurrentUserName("Name");
+//        DatabaseHelper.setCurrentUser(new User());
+//        DatabaseHelper.setCurrentUserName("Name");
+
+        //  database setup
         DatabaseHelper.setCurrentMode("rider");
         DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
-
-        //  database test cases
         new DatabaseHelper();
         new RequestDataHelper();
         new RecordDataHelper();
         new UserDataHelper();
 
-        RequestDataHelper.setOnNotifyListener(this);
+        //RequestDataHelper.setOnNotifyListener(this);
+        //FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+
 
         // Get token
         // [START retrieve_current_token]
@@ -77,18 +78,18 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
-
-//        startActivity(new Intent(getApplicationContext(), Login.class));
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        finish();
 //
-        //  test map view
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
-                startActivity(homeIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+          // test map view
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent homeIntent = new Intent(MainActivity.this, RiderRequestActivity.class);
+//                startActivity(homeIntent);
+//                finish();
+//            }
+//        }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
 
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                                 // Log and toast
                                 String msg = getString(R.string.msg_token_fmt, token);
                                 Log.d(TAG, msg);
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                 // [END retrieve_current_token]

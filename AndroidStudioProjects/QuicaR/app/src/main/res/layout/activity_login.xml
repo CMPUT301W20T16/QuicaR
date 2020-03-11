@@ -18,7 +18,9 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
-            android:hint="Email" />
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:hint="Email/Username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -32,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:singleLine="true"
             android:inputType="textPassword"
             android:hint="Password" />
 

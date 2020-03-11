@@ -60,11 +60,6 @@ public class DatabaseHelper {
      */
     public DatabaseHelper() {
 
-        if (userState.getCurrentMode() == null || userState.getCurrentUserName() == null)
-            throw new IllegalStateException("\n\t\tAttributes currentUserName and currentMode in " +
-                    "DatabaseHelper class cannot be null," +
-                    "please use the setter method to initialize those value");
-
         if (db != null)
             return;
         FirebaseFirestore.getInstance().clearPersistence();
@@ -388,6 +383,8 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkActiveNotification(Request request) {
+        if (DatabaseHelper.getCurrentUserName() == null)
+            return;
         if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
                 RequestDataHelper.notifyActive(request);
@@ -405,6 +402,8 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkPickedUpNotification(Request request) {
+        if (DatabaseHelper.getCurrentUserName() == null)
+            return;
         if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
@@ -423,6 +422,8 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkCancelNotification(ArrayList<Request> requests) {
+        if (DatabaseHelper.getCurrentUserName() == null)
+            return;
         if (!userState.getOnGoing()) {
             System.out.println("user is not in on going state, unable to get cancel notification!");
             return;
@@ -447,12 +448,15 @@ public class DatabaseHelper {
     /**
      * This method check if there is a notification needed to be sent to the rider
      * that the rider's request is completed
-     * @param record
+     * @param records
+     *  list of records
      */
     private void checkCompleteNotification(ArrayList<Record> records) {
+        if (DatabaseHelper.getCurrentUserName() == null)
+            return;
         for (Record record: records) {
             if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                    && DatabaseHelper.getCurrentMode().equals("rider")) {
+                    && DatabaseHelper.getCurrentMode().equals("rider")  && userState.getOnGoing()) {
                 // might want to check if userstate.getOngoing is updated
                 //sendPopUpNotification("Notification test", "ride is completed", this);
                 userState.setActive(Boolean.FALSE);

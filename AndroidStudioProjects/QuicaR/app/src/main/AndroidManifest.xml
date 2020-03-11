@@ -4,9 +4,11 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -40,7 +42,6 @@
             android:value="@string/default_notification_channel_id" />
 
 
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Register" />
+        <activity android:name=".Register" android:parentActivityName=".Login"/>
         <activity android:name=".Login" /> <!-- [START firebase_service] -->
 
         <activity android:name="com.example.quicar.UserProfileActivity"
@@ -59,8 +60,8 @@
             android:parentActivityName="com.example.quicar.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
-        <activity android:name="com.example.quicar.BaseActivity"
+        <activity android:name="RiderSelectLocationActivity" android:parentActivityName=".Login"/>
+        <activity android:name="BaseActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name="com.example.quicar.RiderConfirmRiderActivity"
@@ -71,11 +72,11 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
         <activity android:name=".ScanActivity" android:parentActivityName=".WalletOverviewActivity"/>
-
         <activity android:name=".QRPaymentActivity" />
-        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderSelectLocationActivity"/>
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
+
 
 
         <service
