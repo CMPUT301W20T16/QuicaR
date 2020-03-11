@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
+
 //        startActivity(new Intent(getApplicationContext(), Login.class));
 //
         //  test map view
@@ -89,10 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             }
         }, SPLASH_TIME_OUT);
 //        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
-//
-//
-        EditText editText = findViewById(R.id.editText);
-        editText.setEnabled(false);
+
+
         Button logTokenButton = findViewById(R.id.logTokenButton);
         logTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -62,6 +62,7 @@
         <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
         <activity android:name="com.example.quicar.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name="com.example.quicar.RiderConfirmRiderActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name="com.example.quicar.RiderWaitingRideActivity"
@@ -69,8 +70,12 @@
         <activity android:name="com.example.quicar.DriverBrowsingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
-        <activity android:name=".ScanActivity" />
+        <activity android:name=".ScanActivity" android:parentActivityName=".WalletOverviewActivity"/>
+
         <activity android:name=".QRPaymentActivity" />
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
 
 
         <service
