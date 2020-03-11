@@ -44,6 +44,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     FirebaseDatabase database;
     private String fetchUserName;
     boolean validateName = true;
+    OnGetUserDataListener listener = this;
 
     public interface SimpleCallback {
         void callback(boolean data);
@@ -93,6 +94,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                     if (task.isSuccessful()) {
                                         User user = new User();
                                         user.setBasic(mUserName, mEmail, mPwd);
+                                        UserDataHelper.addNewUser(user, listener);
                                         database.getInstance().getReference("User").child(auth.getInstance().getCurrentUser().getUid())
                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -161,6 +163,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
             this.confirm_pwd.setError("Field can't be empty");
             return false ;
         } else if (!confirmPassword.equals(signPassword)) {
+            this.pwd.setError("Those passwords didn't match");
             this.confirm_pwd.setError("Those passwords didn't match");
             return false;
         }else {

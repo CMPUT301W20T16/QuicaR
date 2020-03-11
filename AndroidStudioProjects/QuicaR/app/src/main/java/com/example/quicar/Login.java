@@ -161,7 +161,6 @@ public class Login extends AppCompatActivity {
                 String username = dataSnapshot.getValue().toString();
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName(username).build();
-
                 currentUser.updateProfile(profileUpdates);
             }
 
