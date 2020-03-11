@@ -274,6 +274,39 @@ public class RequestDataHelper extends DatabaseHelper {
     }
 
     /**
+     * This method will query all open request and return a list of request to listener
+     * @param location
+     *  location of the driver
+     * @param listener
+     *  listener for notification and obtain return value
+     */
+    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
+
+        collectionReferenceReq
+                .whereEqualTo("isAccepted", false)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        ArrayList<Request> openRequests = new ArrayList<>();
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Request query = document.toObject(Request.class);
+                                if (!query.getAccepted())
+                                    openRequests.add(query);
+                            }
+                            listener.onSuccess(openRequests, RequestDataHelper.ALL_REQs_TAG);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    RequestDataHelper.ALL_REQs_TAG);
+                        }
+                    }
+                });
+    }
+
+    /**
      * This method will check if there is an inactive request belongs to the rider and set the
      * request to active, then call the updateRequest method
      * @param requestID

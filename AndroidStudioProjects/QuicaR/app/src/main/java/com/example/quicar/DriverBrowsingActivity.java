@@ -29,8 +29,6 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Request> requestList;
 
-    private OnGetRequestDataListener listener = this;
-
     private int currentPosition;
 
     @Override
@@ -44,7 +42,10 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_open_requests);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-        RequestDataHelper.setOnNotifyListener(listener);
+        RequestDataHelper.setOnNotifyListener(this);
+
+        /* added by Jeremy */
+        RequestDataHelper.queryAllOpenRequests(this);
 
         System.out.println("------------------------current user name: " + DatabaseHelper.getCurrentUserName());
 
