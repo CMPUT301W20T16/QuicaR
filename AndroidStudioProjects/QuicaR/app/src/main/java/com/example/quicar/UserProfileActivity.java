@@ -109,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 //        String userName = DatabaseHelper.getCurrentUserName();
         //Test
-        String userName = "Hello";
+        String userName = UserDataHelper.getCurrentUserName();
         // get current user
         UserDataHelper.getUser(userName,this);
 
