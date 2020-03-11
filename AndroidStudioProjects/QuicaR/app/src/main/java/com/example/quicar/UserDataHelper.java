@@ -121,7 +121,7 @@ public class UserDataHelper extends DatabaseHelper {
             @Override
             public void onSuccess(String userID) {
                 Log.d(TAG, "Transaction success: " + userID);
-                listener.onSuccess(null, UPDATE_USER_TAG);
+                listener.onSuccess(user, UserDataHelper.UPDATE_USER_TAG);
             }
         })
                 .addOnFailureListener(new OnFailureListener() {

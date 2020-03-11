@@ -1,15 +1,17 @@
 package com.example.quicar;
 
+import java.io.Serializable;
+
 /**
  * Location class that have longitude and latitude attributes
  */
-public class Location {
-    Double lat;
-    Double lon;
+public class Location implements Serializable {
+    private Double lat;
+    private Double lon;
 
     public Location() {
-        lat = new Double(0);
-        lon = new Double(0);
+        lat = 0.d;
+        lon = 0.d;
     }
 
     /**

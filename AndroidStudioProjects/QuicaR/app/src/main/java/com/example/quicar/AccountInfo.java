@@ -1,7 +1,6 @@
 package com.example.quicar;
 
 import java.util.Date;
-import com.google.firebase.firestore.PropertyName;
 
 public class AccountInfo {
     /**

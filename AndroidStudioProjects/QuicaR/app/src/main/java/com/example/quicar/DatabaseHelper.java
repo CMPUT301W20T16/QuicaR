@@ -70,6 +70,7 @@ public class DatabaseHelper {
         // for a different threshold (minimum 1 MB) or set to "CACHE_SIZE_UNLIMITED"
         // to disable clean-up.
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
                 .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
                 .build();
 
@@ -322,7 +323,6 @@ public class DatabaseHelper {
     /**
      * This is the method that set the current mode of the user, either rider or driver mode
      * @return
-     *  the current mode of the user
      */
     public static String getCurrentMode() {
         return userState.getCurrentMode();

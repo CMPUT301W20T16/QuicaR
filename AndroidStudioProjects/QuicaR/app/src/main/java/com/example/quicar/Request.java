@@ -2,12 +2,14 @@ package com.example.quicar;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
+
 
 /**
  * This is the class that store start location, destination, rider, driver, status of reequest and
  * the estimated cost of the request / order.
  */
-public class Request {
+public class Request implements Serializable {
 
     private String rid;
     private Location start;

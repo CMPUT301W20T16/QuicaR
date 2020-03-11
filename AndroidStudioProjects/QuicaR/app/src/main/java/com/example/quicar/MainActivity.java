@@ -241,5 +241,3 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
-
-
