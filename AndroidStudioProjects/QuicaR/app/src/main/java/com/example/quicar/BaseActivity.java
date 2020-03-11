@@ -43,10 +43,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
-    protected Location mLastLocation;
+    protected Location mLastLocation = null;
     protected LocationRequest mLocationRequest;
     protected Marker mCurrLocationMarker;
     protected Geocoder geocoder;
@@ -160,6 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onLocationChanged(Location location) {
+
         mLastLocation = location;
 
         if (mCurrLocationMarker != null) {
@@ -275,6 +276,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
 
     // enable user to select item from navigation drawer
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -283,9 +285,23 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 startActivityForResult(intent, 2);
                 break;
 
+
             case R.id.nav_driver_mode:
-                Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
-                startActivity(intent2);
+                if(DatabaseHelper.getCurrentMode() == "rider") {
+
+                    Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
+                    startActivity(intent2);
+                }
+                break;
+
+            case R.id.rider_mode:
+                if(DatabaseHelper.getCurrentMode() == "driver") {
+                    //Toast.makeText(this, "Enter if statement!", Toast.LENGTH_LONG).show();
+
+
+                    Intent intent3 = new Intent(getApplicationContext(), RiderRequestActivity.class);
+                    startActivity(intent3);
+                }
                 break;
 
 
@@ -294,6 +310,5 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

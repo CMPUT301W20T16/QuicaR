@@ -26,6 +26,8 @@ public class RiderRequestActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHelper.setCurrentMode("rider");
+
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_request, frameLayout);
 
         setTitle("rider map");
@@ -77,61 +79,4 @@ public class RiderRequestActivity extends BaseActivity {
 
     }
 
-
-
-
-    /**
-     *     database method
-
-     @Override
-     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-     }
-
-     @Override
-     public void onSuccessRiderOpenRequest(Request request) {
-     if (request != null) {
-     //  always check if the return value is valid
-     System.out.println("---------------" + request.getRider().getName() + "---------------");
-     }
-     }
-
-     @Override
-     public void onSuccessAllOpenRequests(ArrayList<Request> requests) {
-     if (requests.size() > 0) {
-     //  always check if the return value is valid
-     System.out.println("------------ active request obtained -----------");
-     }
-     else {
-     System.out.println("------------ empty list obtained -----------");
-     }
-     }
-
-     @Override
-     public void onSuccessDriverActiveRequest(Request request) {
-     if (request != null) {
-     //  always check if the return value is valid
-     System.out.println("---------------" + request.getDriver().getName() + "---------------");
-     }
-     }
-
-
-     @Override
-     public void onSuccessSetActive() {
-     System.out.println("------------ request is set to active -----------");
-     //        DatabaseHelper.queryAllOpenRequests(new Location(), this);
-     //        DatabaseHelper.queryDriverActiveRequest("new Driver", this);
-     }
-
-     @Override
-     public void onSuccessDelete() {
-     System.out.println("------------ request is deleted -----------");
-     }
-
-     @Override
-     public void onFailure(String errorMessage) {
-     System.out.println("-----------" + errorMessage + "-----------");
-
-     }
-     */
 }

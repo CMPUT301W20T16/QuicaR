@@ -36,6 +36,8 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHelper.setCurrentMode("driver");
+
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_browsing, frameLayout);
 

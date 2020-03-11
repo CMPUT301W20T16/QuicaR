@@ -130,24 +130,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-//        if (tag == RequestDataHelper.USER_REQ_TAG) {
-//            if (requests.size() > 0) {
-//                //  always check if the return value is valid
-//                System.out.println("------------ all open request obtained -----------");
-//                for (Request request: requests) {
-//                    if (request.getAccepted()) {
-//                        mRequest = request;
-//                    }
-//                }
-//            }
-//            else {
-//                System.out.println("------------ empty list obtained -----------");
-//            }
-//        } else if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
-//            System.out.println("------------- rider request has been canceled-----------------");
-//            Toast.makeText(RiderWaitingRideActivity.this, "rider request canceled successfully", Toast.LENGTH_SHORT).show();
-//
-//        }
     }
 
     @Override
