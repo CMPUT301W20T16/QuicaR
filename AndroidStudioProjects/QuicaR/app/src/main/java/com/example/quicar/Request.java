@@ -11,7 +11,9 @@ public class Request {
 
     private String rid;
     private Location start;
+    private String startAddrName;
     private Location destination;
+    private String destAddrName;
     private User rider;
     private User driver;
     private Boolean isAccepted;
@@ -83,6 +85,46 @@ public class Request {
      */
     public void setStart(Location start) {
         this.start = start;
+    }
+
+    /**
+     * This method return the name of start address
+     * @return
+     *  name of start address
+     */
+    @PropertyName("startingAddress")
+    public String getStartAddrName() {
+        return startAddrName;
+    }
+
+    /**
+     * This method set the value of the name of start address
+     * @param startAddrName
+     *  candidate start address name
+     */
+    @PropertyName("startingAddress")
+    public void setStartAddrName(String startAddrName) {
+        this.startAddrName = startAddrName;
+    }
+
+    /**
+     * This method return the name of destination address
+     * @return
+     *  name of destination address
+     */
+    @PropertyName("destinationAddress")
+    public String getDestAddrName() {
+        return destAddrName;
+    }
+
+    /**
+     * This method set the value of the name of destination
+     * @param destAddrName
+     *  candidate destination address name
+     */
+    @PropertyName("destinationAddress")
+    public void setDestAddrName(String destAddrName) {
+        this.destAddrName = destAddrName;
     }
 
     /**
