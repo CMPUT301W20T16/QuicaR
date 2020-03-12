@@ -9,4 +9,8 @@ AndroidStudioProjects/QuicaR/app/src/main/java/.DS_Store
 AndroidStudioProjects/QuicaR/app/src/main/java/com/.DS_Store
 AndroidStudioProjects/QuicaR/app/src/main/java/com/example/.DS_Store
 AndroidStudioProjects/QuicaR/app/src/main/res/.DS_Store
+AndroidStudioProjects/QuicaR/.idea/
+AndroidStudioProjects/.idea/
 .idea/
+.gradle/
+*.iml
