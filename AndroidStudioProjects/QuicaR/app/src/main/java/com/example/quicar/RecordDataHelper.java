@@ -31,6 +31,11 @@ public class RecordDataHelper {
         collectionReferenceRec = DatabaseHelper.getInstance().getCollectionReferenceRec();
     }
 
+    /**
+     * This method is the only static method that create a singleton for RecordDataHelper
+     * @return
+     *  return the instance of RecordDataHelper singleton
+     */
     public static RecordDataHelper getInstance() {
         if (recordDataHelper == null)
             recordDataHelper = new RecordDataHelper();

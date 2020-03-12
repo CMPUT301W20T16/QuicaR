@@ -47,6 +47,11 @@ public class RequestDataHelper {
         db = DatabaseHelper.getInstance().getDb();
     }
 
+    /**
+     * This method is the only static method that create a singleton for RequestDataHelper
+     * @return
+     *  return the instance of RequestDataHelper singleton
+     */
     public static RequestDataHelper getInstance() {
         if (requestDataHelper == null)
             requestDataHelper = new RequestDataHelper();
@@ -74,18 +79,27 @@ public class RequestDataHelper {
         }
     }
 
+    /**
+     * This method will notify the latest listener stored in this class that the request is cancel
+     */
     void notifyCancel() {
         if (notifyListener != null) {
             notifyListener.onCancelNotification();
         }
     }
 
+    /**
+     * This method will notify the latest listener stored in this class that the request is picked up
+     */
     void notifyPickedUp(Request request) {
         if (notifyListener != null) {
             notifyListener.onPickedUpNotification(request);
         }
     }
 
+    /**
+     * This method will notify the latest listener stored in this class that the request is completed
+     */
     void notifyComplete() {
         if (notifyListener != null)
             notifyListener.onCompleteNotification();

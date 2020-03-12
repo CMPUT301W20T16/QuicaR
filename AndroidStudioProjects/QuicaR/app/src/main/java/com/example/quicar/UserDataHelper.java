@@ -41,6 +41,11 @@ public class UserDataHelper {
         db = DatabaseHelper.getInstance().getDb();
     }
 
+    /**
+     * This method is the only static method that create a singleton for UserDataHelper
+     * @return
+     *  return the instance of UserDataHelper singleton
+     */
     public static UserDataHelper getInstance() {
         if (userDataHelper == null)
             userDataHelper = new UserDataHelper();

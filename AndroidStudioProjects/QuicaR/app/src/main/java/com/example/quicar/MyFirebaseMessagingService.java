@@ -148,7 +148,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(1410 /* ID of notification */, notificationBuilder.build());
     }
 
-
+    /**
+     * This method send a pop up notification to the device by building a notification and
+     * set the title, body and intent of the notification
+     * @param aTitle
+     *  title of the notification
+     * @param aMessage
+     *  message body of the notification
+     * @param goToIntent
+     *  intent that will lead to when notification is clicked
+     */
     private void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
         final int NOTIFY_ID = c.incrementAndGet();
         String CHANNEL_ID = getString(R.string.default_notification_channel_id);

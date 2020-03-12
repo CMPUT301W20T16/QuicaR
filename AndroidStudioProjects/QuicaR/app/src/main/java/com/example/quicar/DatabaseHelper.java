@@ -152,6 +152,11 @@ public class DatabaseHelper {
         // [END retrieve_current_token]
     }
 
+    /**
+     * This method is the only static method that create a singleton for DatabaseHelper
+     * @return
+     *  return the instance of DatabaseHelper singleton
+     */
     public static DatabaseHelper getInstance() {
         if (databaseHelper == null)
             databaseHelper = new DatabaseHelper();

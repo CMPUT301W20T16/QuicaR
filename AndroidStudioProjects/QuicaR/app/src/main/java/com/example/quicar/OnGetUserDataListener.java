@@ -1,7 +1,7 @@
 package com.example.quicar;
 
 /**
- * This is the interface that act as a listener when interacting with database helper
+ * This is the interface that act as a listener when interacting with firebase
  * so that it can be notified when user accounts data transfer is successful or failed.
  */
 public interface OnGetUserDataListener {
