@@ -26,7 +26,7 @@ public class RiderRequestActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHelper.setCurrentMode("rider");
+        DatabaseHelper.getInstance().setCurrentMode("rider");
 
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_request, frameLayout);
 

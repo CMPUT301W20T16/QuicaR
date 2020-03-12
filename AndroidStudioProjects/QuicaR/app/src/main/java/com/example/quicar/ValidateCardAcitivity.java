@@ -33,7 +33,7 @@ public class ValidateCardAcitivity extends AppCompatActivity {
 
         BankAccount card = (BankAccount) getIntent().getSerializableExtra("card");
         name.setText(card.getNameOnCard());
-        cardNum.setText(card.getCardnumber());
+        cardNum.setText(card.getCardNumber());
         expiryDate.setText(card.getExpireDate().toString());
         ccv.setText(card.getCcvCode());
 
@@ -43,9 +43,9 @@ public class ValidateCardAcitivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 BankAccount card_1 = new BankAccount();
                 card_1.setNameOnCard(name.getText().toString());
-                card_1.setCardnumber(cardNum.getText().toString());
+                card_1.setCardNumber(cardNum.getText().toString());
                 card_1.setCcvCode(ccv.getText().toString());
-                card_1.setCardType();
+                card_1.setType("random");
                 String Date = expiryDate.getText().toString();
                 try {
                     Date date = new SimpleDateFormat("yyyy/MM/dd").parse(Date);

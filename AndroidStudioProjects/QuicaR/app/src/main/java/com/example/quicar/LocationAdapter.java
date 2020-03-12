@@ -1,18 +1,14 @@
 package com.example.quicar;
 
 
-import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder>  {
 

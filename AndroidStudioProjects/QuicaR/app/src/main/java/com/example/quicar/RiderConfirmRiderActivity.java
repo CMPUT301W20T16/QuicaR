@@ -85,14 +85,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
                  *   instantiate a new User class for current user
                   */
                 User newUser = new User();
-                newUser.setName(DatabaseHelper.getCurrentUserName());
+                newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
                 /**
                  *    new request's cost is hard coded for now
                   */
                 Request request = new Request(start_location, end_location, newUser, new User(), 20.0f);
 
-                RequestDataHelper.addNewRequest(request, listener);
+                RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
 

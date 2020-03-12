@@ -22,7 +22,8 @@ import java.util.ArrayList;
 /**
  * This class extend DatabaseHelper and mainly handle requests data
  */
-public class RequestDataHelper extends DatabaseHelper {
+public class RequestDataHelper {
+    final String TAG = "quicarDB-request";
 
     public static final String USER_REQ_TAG = "user query request";
     public static final String ALL_REQs_TAG = "all opened request";
@@ -32,17 +33,24 @@ public class RequestDataHelper extends DatabaseHelper {
     public static final String CANCEL_REQ_TAG = "cancel opened request";
     public static final String COMPLETE_REQ_TAG = "complete request";
 
-    private static OnGetRequestDataListener notifyListener;
-    private static CollectionReference collectionReferenceReq;
-    private static FirebaseFirestore db;
+    private OnGetRequestDataListener notifyListener;
+    private CollectionReference collectionReferenceReq;
+    private FirebaseFirestore db;
+
+    private static RequestDataHelper requestDataHelper;
 
     /**
      * This is the constructor of RequestDataHelper
      */
-    public RequestDataHelper() {
-        super();
-        RequestDataHelper.collectionReferenceReq = super.getCollectionReferenceReq();
-        RequestDataHelper.db = super.getDb();
+    private RequestDataHelper() {
+        collectionReferenceReq = DatabaseHelper.getInstance().getCollectionReferenceReq();
+        db = DatabaseHelper.getInstance().getDb();
+    }
+
+    public static RequestDataHelper getInstance() {
+        if (requestDataHelper == null)
+            requestDataHelper = new RequestDataHelper();
+        return requestDataHelper;
     }
 
     /**
@@ -50,7 +58,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void setOnNotifyListener(OnGetRequestDataListener listener) {
+    void setOnNotifyListener(OnGetRequestDataListener listener) {
         notifyListener = listener;
     }
 
@@ -60,25 +68,25 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param request
      *  the request that is active
      */
-    public static void notifyActive(Request request) {
+    void notifyActive(Request request) {
         if (notifyListener != null) {
             notifyListener.onActiveNotification(request);
         }
     }
 
-    public static void notifyCancel() {
+    void notifyCancel() {
         if (notifyListener != null) {
             notifyListener.onCancelNotification();
         }
     }
 
-    public static void notifyPickedUp(Request request) {
+    void notifyPickedUp(Request request) {
         if (notifyListener != null) {
             notifyListener.onPickedUpNotification(request);
         }
     }
 
-    public static void notifyComplete() {
+    void notifyComplete() {
         if (notifyListener != null)
             notifyListener.onCompleteNotification();
     }
@@ -88,7 +96,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * and return a list of request as a parameter to listener by calling
      *
      */
-    public static void notifyAllOpenRequests(ArrayList<Request> openRequests) {
+    void notifyAllOpenRequests(ArrayList<Request> openRequests) {
         if (notifyListener != null)
             notifyListener.onSuccess(openRequests, ALL_REQs_TAG);
     }
@@ -100,7 +108,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+    private void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
         ArrayList<Request> requests = new ArrayList<Request>();
         requests.add(newRequest);
         collectionReferenceReq
@@ -129,7 +137,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+    public void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
         if (newRequest == null || newRequest.getRider().getName() == null
                 || newRequest.getRider().getName().length() == 0) {
             listener.onFailure("invalid parameters", ADD_REQ_TAG);
@@ -137,7 +145,7 @@ public class RequestDataHelper extends DatabaseHelper {
         }
         String id = db.collection("collection_name").document().getId();
         newRequest.setRid(id);
-        RequestDataHelper.addRequest(newRequest, listener);
+        addRequest(newRequest, listener);
     }
 
     /**
@@ -145,7 +153,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param requestID
      *  id of request to be deleted
      */
-    private static void delRequest(final String requestID, final OnGetRequestDataListener listener,
+    private void delRequest(final String requestID, final OnGetRequestDataListener listener,
                                    final String mode) {
         collectionReferenceReq
                 .document(requestID)
@@ -181,7 +189,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void updateRequest(final String requestID, final Request request,
+    private void updateRequest(final String requestID, final Request request,
                                       final OnGetRequestDataListener listener,
                                       final boolean setActiveMode) {
 
@@ -234,7 +242,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryUserRequest(final String userName, final String mode,
+    public void queryUserRequest(final String userName, final String mode,
                                              final OnGetRequestDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("invalid parameters", USER_REQ_TAG);
@@ -275,12 +283,10 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This method will query all open request and return a list of request to listener
-     * @param location
-     *  location of the driver
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryAllOpenRequests(final OnGetRequestDataListener listener) {
+    public void queryAllOpenRequests(final OnGetRequestDataListener listener) {
 
         collectionReferenceReq
                 .whereEqualTo("isAccepted", false)
@@ -296,11 +302,11 @@ public class RequestDataHelper extends DatabaseHelper {
                                 if (!query.getAccepted())
                                     openRequests.add(query);
                             }
-                            listener.onSuccess(openRequests, RequestDataHelper.ALL_REQs_TAG);
+                            listener.onSuccess(openRequests, ALL_REQs_TAG);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             listener.onFailure("Error getting documents: " + task.getException(),
-                                    RequestDataHelper.ALL_REQs_TAG);
+                                    ALL_REQs_TAG);
                         }
                     }
                 });
@@ -316,7 +322,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
+    public void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
                                         final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", SET_ACTIVE_TAG);
@@ -355,7 +361,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                 query.setEstimatedCost(offeredPrice);
                                 query.setDriver(driver);
                                 System.out.println("***** " + requestID);
-                                RequestDataHelper.updateRequest(requestID, query, listener, true);
+                                updateRequest(requestID, query, listener, true);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -374,7 +380,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param driver
      * @param listener
      */
-    public static void setRequestPickedUp(final String requestID, final User driver,
+    public void setRequestPickedUp(final String requestID, final User driver,
                                         final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", SET_PICKEDUP_TAG);
@@ -416,7 +422,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                 query.setAccepted(true);
                                 query.setDriver(driver);
                                 System.out.println("***** " + requestID);
-                                RequestDataHelper.updateRequest(requestID, query, listener, false);
+                                updateRequest(requestID, query, listener, false);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -434,7 +440,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void cancelRequest(final String requestID, final OnGetRequestDataListener listener) {
+    public void cancelRequest(final String requestID, final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", CANCEL_REQ_TAG);
             return;
@@ -466,7 +472,7 @@ public class RequestDataHelper extends DatabaseHelper {
                                         requestID + " is an ongoing request", CANCEL_REQ_TAG);
                             } else {
                                 System.out.println("***** " + requestID);
-                                RequestDataHelper.delRequest(requestID, listener, "cancel");
+                                delRequest(requestID, listener, "cancel");
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -489,7 +495,7 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void completeRequest(final String requestID, final Float payment,
+    public void completeRequest(final String requestID, final Float payment,
                                        final Float rating,
                                        final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
@@ -523,9 +529,9 @@ public class RequestDataHelper extends DatabaseHelper {
                                         requestID + " is not an ongoing request", COMPLETE_REQ_TAG);
                             } else {
                                 System.out.println("***** " + requestID);
-                                RequestDataHelper.delRequest(requestID, listener, "complete");
+                                delRequest(requestID, listener, "complete");
                                 Record record = new Record(query, payment, rating);
-                                RecordDataHelper.addRecord(record);
+                                RecordDataHelper.getInstance().addRecord(record);
                                 listener.onSuccess( null, COMPLETE_REQ_TAG);
                             }
                         } else {

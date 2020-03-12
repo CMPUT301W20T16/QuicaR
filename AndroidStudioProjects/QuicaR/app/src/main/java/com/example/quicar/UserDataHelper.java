@@ -21,22 +21,30 @@ import com.google.firebase.firestore.Transaction;
 /**
  * This class extend DatabaseHelper and mainly handle user data
  */
-public class UserDataHelper extends DatabaseHelper {
+public class UserDataHelper {
+    final String TAG = "quicarDB-user";
     public static String ADD_USER_TAG = "add user";
     public static String UPDATE_USER_TAG = "update user";
     public static String GET_USER_TAG = "get user";
 
-    private static CollectionReference collectionReferenceUser;
-    private static FirebaseFirestore db;
+    private CollectionReference collectionReferenceUser;
+    private FirebaseFirestore db;
+
+    private static UserDataHelper userDataHelper;
 
 
     /**
      * This is the constructor of UserDataHelper
      */
-    public UserDataHelper() {
-        super();
-        UserDataHelper.collectionReferenceUser = super.getCollectionReferenceUser();
-        UserDataHelper.db = super.getDb();
+    private UserDataHelper() {
+        collectionReferenceUser = DatabaseHelper.getInstance().getCollectionReferenceUser();
+        db = DatabaseHelper.getInstance().getDb();
+    }
+
+    public static UserDataHelper getInstance() {
+        if (userDataHelper == null)
+            userDataHelper = new UserDataHelper();
+        return userDataHelper;
     }
 
     /**
@@ -46,7 +54,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void addUser(final User newUser, final OnGetUserDataListener listener) {
+    private void addUser(final User newUser, final OnGetUserDataListener listener) {
         collectionReferenceUser
                 .document()
                 .set(newUser)
@@ -70,7 +78,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param userID
      *  id of user to be deleted
      */
-    private static void delUser(final String userID) {
+    private void delUser(final String userID) {
         collectionReferenceUser
                 .document(userID)
                 .delete()
@@ -97,7 +105,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
+    private void updateUser(final User user, final String userID, final OnGetUserDataListener listener) {
 
         final DocumentReference userDocRef = collectionReferenceUser.document(userID);
 
@@ -140,7 +148,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification (onSuccess, onFailure)
      */
-    public static void getUser(final String userName, final OnGetUserDataListener listener) {
+    void getUser(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
         }
@@ -185,7 +193,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void addNewUser(final User newUser, final OnGetUserDataListener listener) {
+    void addNewUser(final User newUser, final OnGetUserDataListener listener) {
         if (newUser == null) {
             listener.onFailure("user provided is a null object");
             return;
@@ -211,7 +219,7 @@ public class UserDataHelper extends DatabaseHelper {
                                 System.out.println("*****  user \" " + userName + " \" has an existing account");
                                 listener.onFailure(userName + " has anexisting account");
                             } else {
-                                UserDataHelper.addUser(newUser, listener);
+                                addUser(newUser, listener);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -229,7 +237,7 @@ public class UserDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void updateUserProfile(final User user, final OnGetUserDataListener listener) {
+    void updateUserProfile(final User user, final OnGetUserDataListener listener) {
         if (user == null || user.getName() == null || user.getName().length() == 0) {
             listener.onFailure("user name provided is a null or empty");
             return;
@@ -260,7 +268,7 @@ public class UserDataHelper extends DatabaseHelper {
                                 System.out.println("*****  user \" " + userName + " \" has no existing account");
                                 listener.onFailure(userName + " has no existing account");
                             } else {
-                                UserDataHelper.updateUser(user, userID, listener);
+                                updateUser(user, userID, listener);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -270,111 +278,4 @@ public class UserDataHelper extends DatabaseHelper {
                 });
     }
 
-    /**
-     * This method check if either the user name or email already exists
-     * It will notify the listener if user name exists, or call checkEmailExists() method
-     * @param userName
-     *  candidate user name
-     * @param email
-     *  candidate user email
-     * @param listener
-     *  listener for notification
-     */
-    public static void checkUserExists(final String userName, final String email, final String phone,
-                                      final OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .whereEqualTo("account.username", userName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            String userID = "";
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                userID = document.getId();
-                                count++;
-                            }
-                            if (count > 0) {
-                                listener.onUserExists(true, "userName");
-                            } else {
-                                checkEmailExists(email, phone, listener);
-                            }
-                        } else {
-                            listener.onUserExists(null, "Error getting document");
-                        }
-                    }
-                });
-    }
-
-    /**
-     * This method is called from checkUserExists() method when user name does not exists
-     * It will notify the listener if the email exists
-     * @param email
-     *  candidate email
-     * @param listener
-     *  listener for notification
-     */
-    private static void checkEmailExists(final String email, final String phone, final OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .whereEqualTo("account.email", email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            String userID = "";
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                userID = document.getId();
-                                count++;
-                            }
-                            if (count > 0) {
-                                listener.onUserExists(true, "email");
-                            } else {
-                                checkPhoneExists(phone, listener);
-                            }
-                        } else {
-                            listener.onUserExists(null, "Error getting document");
-                        }
-                    }
-                });
-
-    }
-
-    private static void checkPhoneExists(final String phone, final OnGetUserDataListener listener) {
-        collectionReferenceUser
-                .whereEqualTo("account.phone", phone)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-                            String userID = "";
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                userID = document.getId();
-                                count++;
-                            }
-                            if (count > 0) {
-                                listener.onUserExists(true, "phone");
-                            } else {
-                                listener.onUserExists(false, null);
-                            }
-                        } else {
-                            listener.onUserExists(null, "Error getting document");
-                        }
-                    }
-                });
-
-    }
 }

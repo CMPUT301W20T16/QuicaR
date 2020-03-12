@@ -96,8 +96,8 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                     if (task.isSuccessful()) {
                                         User user = new User();
                                         user.setBasic(mUserName, mEmail, mPwd);
-                                        UserDataHelper.addNewUser(user, listener);
-                                        DatabaseHelper.setCurrentUser(user);
+                                        UserDataHelper.getInstance().addNewUser(user, listener);
+                                        DatabaseHelper.getInstance().setCurrentUser(user);
                                         database.getInstance().getReference("User").child(auth.getInstance().getCurrentUser().getUid())
                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

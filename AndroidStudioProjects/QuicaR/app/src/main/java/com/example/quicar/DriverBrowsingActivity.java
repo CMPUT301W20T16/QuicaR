@@ -34,7 +34,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHelper.setCurrentMode("driver");
+        DatabaseHelper.getInstance().setCurrentMode("driver");
 
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_browsing, frameLayout);
@@ -42,14 +42,12 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_open_requests);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-        RequestDataHelper.setOnNotifyListener(this);
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
 
         /* added by Jeremy */
-        RequestDataHelper.queryAllOpenRequests(this);
+        RequestDataHelper.getInstance().queryAllOpenRequests(this);
 
-        System.out.println("------------------------current user name: " + DatabaseHelper.getCurrentUserName());
-
-
+        System.out.println("-------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
 
         requestList = new ArrayList<>();
         buildRecyclerView();
@@ -81,8 +79,6 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
                  */
                 new DriverAcceptRideDialogue().show(getSupportFragmentManager(), "DELETE");
 
-
-
             }
         });
     }
@@ -108,8 +104,12 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
 //            RequestDataHelper.queryAllOpenRequests(this);
-            RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "driver", this);
-            Toast.makeText(this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                            "driver", this);
+            Toast.makeText(this, "rider request updated to active successfully",
+                    Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -147,7 +147,10 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         // testing
 //                DatabaseHelper.setCurrentUserName("Name");
         Request request = (Request)requestList.get(currentPosition);
-        RequestDataHelper.setRequestActive(request.getRid(), DatabaseHelper.getCurrentUser(), request.getEstimatedCost(), DriverBrowsingActivity.this);
+        RequestDataHelper
+                .getInstance()
+                .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
+                        request.getEstimatedCost(), DriverBrowsingActivity.this);
         Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
         startActivity(intent);
         finish();

@@ -288,7 +288,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
             case R.id.nav_driver_mode:
-                if(DatabaseHelper.getCurrentMode() == "rider") {
+                if(DatabaseHelper.getInstance().getCurrentMode() == "rider") {
 
                     Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
                     startActivity(intent2);
@@ -296,7 +296,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
 
             case R.id.rider_mode:
-                if(DatabaseHelper.getCurrentMode() == "driver") {
+                if(DatabaseHelper.getInstance().getCurrentMode() == "driver") {
                     //Toast.makeText(this, "Enter if statement!", Toast.LENGTH_LONG).show();
 
 

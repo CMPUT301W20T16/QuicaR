@@ -1,6 +1,5 @@
 package com.example.quicar;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,23 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.quicar.App.CHANNEL_1_ID;
 
 
 /**
@@ -53,10 +39,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     Button EmailButton;
     Button CancelButton;
 
-
-    private NotificationManagerCompat notificationManager;
-
-
     /**
      * 问题：
      * 1.目前只有一个default bottom sheet，没法区分是否被接单
@@ -69,8 +51,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         super.onCreate(savedInstanceState);
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
-
-        notificationManager = NotificationManagerCompat.from(this);
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
@@ -88,7 +68,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
-        RequestDataHelper.setOnNotifyListener(this);
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
 //        RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "rider", this);
 
 
@@ -117,7 +97,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
             @Override
             public void onClick(View v) {
                 if (mRequest != null) {
-                    RequestDataHelper.cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
+                    RequestDataHelper
+                            .getInstance()
+                            .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
                 }
                 Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
                 startActivity(intent);
@@ -135,7 +117,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        DatabaseHelper.sendPopUpNotification("Notification test", "Ride is being accepted");
+        //DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Ride is being accepted");
         mRequest = request;
         Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
 

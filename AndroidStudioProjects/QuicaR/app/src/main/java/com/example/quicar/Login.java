@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,9 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -64,20 +64,22 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 }
                 if (!checkUserNameOrEmail(myID)){
                     String getEmail = retrieveEmail();
-                    mAuth.signInWithEmailAndPassword(getEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    mAuth.signInWithEmailAndPassword(getEmail, mypwd)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                                //DatabaseHelper.setCurrentUserName(myID);
                                 /* added by Jeremy */
-                                UserDataHelper.getUser(myID, listener);
-//                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-//                                //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                                Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
-//                                startActivity(homeIntent);
+                                UserDataHelper.getInstance().getUser(myID, listener);
+                                ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                pgsBar.setVisibility(v.VISIBLE);
+                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             } else {
-                                Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this,
+                                        "Login failed" + task.getException(),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -93,15 +95,14 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                 if (currentUser != null) {
                                     for (UserInfo profile : currentUser.getProviderData()) {
                                         String name = profile.getDisplayName();
-                                        //DatabaseHelper.setCurrentUserName(name);
                                         /* added by Jeremy */
-                                        UserDataHelper.getUser(name, listener);
+                                        UserDataHelper.getInstance().getUser(name, listener);
+                                        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                        pgsBar.setVisibility(v.VISIBLE);
+                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     }
                                 }
-                                // DatabaseHelper.setCurrentUserName(currentUser.getDisplayName());
-
-//                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-//                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
                                 Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
@@ -187,8 +188,9 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     @Override
     public void onSuccess(User user, String tag) {
         if (tag == UserDataHelper.GET_USER_TAG) {
-            DatabaseHelper.setCurrentUser(user);
+            DatabaseHelper.getInstance().setCurrentUser(user);
             Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
             startActivity(homeIntent);
         }

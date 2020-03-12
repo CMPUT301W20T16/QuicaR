@@ -109,9 +109,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 //        String userName = DatabaseHelper.getCurrentUserName();
         //Test
-        String userName = UserDataHelper.getCurrentUserName();
+        String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
-        UserDataHelper.getUser(userName,this);
+        UserDataHelper.getInstance().getUser(userName,this);
 
 //        // get current user
 //        UserDataHelper.getCurrentUser();
@@ -151,7 +151,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 //                    System.out.println(user.getAccountInfo().getPhone());
 //                    System.out.println(user.getAccountInfo().getPhone());
-                    UserDataHelper.updateUserProfile(user,listener);
+                    UserDataHelper.getInstance().updateUserProfile(user,listener);
                     Toast.makeText(UserProfileActivity.this,
                             "Saved successfully", Toast.LENGTH_SHORT).show();
 

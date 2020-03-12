@@ -39,13 +39,16 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
         confirmButton = linearLayout.findViewById(R.id.pick_up);
 
-        RequestDataHelper.setOnNotifyListener(this);
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
 
 //        mRequest = new Request();
         //get data from firebase
-        System.out.println("------------------------current user name: " + DatabaseHelper.getCurrentUserName());
+        System.out.println("------------------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
 
-        RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "driver", this);
+        RequestDataHelper
+                .getInstance()
+                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                        "driver", this);
 
         if ( mRequest != null) {
             System.out.println("request not null----------: "+ mRequest);
@@ -68,7 +71,10 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestDataHelper.setRequestPickedUp(mRequest.getRid(), mRequest.getDriver(), DriverPickUpActivity.this);
+                RequestDataHelper
+                        .getInstance()
+                        .setRequestPickedUp(mRequest.getRid(), mRequest.getDriver(),
+                                DriverPickUpActivity.this);
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
                 startActivity(intent);
             }

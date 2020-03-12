@@ -9,6 +9,7 @@ public class UserState {
     private String token;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
+    private Boolean onComplete = Boolean.FALSE;
     private Location firstSelectedLocation;
     private Location secondSelectedLocation;
     private String activityState;
@@ -62,6 +63,14 @@ public class UserState {
 
     public void setOnGoing(Boolean onGoing) {
         this.onGoing = onGoing;
+    }
+
+    public Boolean getOnComplete() {
+        return onComplete;
+    }
+
+    public void setOnComplete(Boolean onComplete) {
+        this.onComplete = onComplete;
     }
 
     public Location getFirstSelectedLocation() {

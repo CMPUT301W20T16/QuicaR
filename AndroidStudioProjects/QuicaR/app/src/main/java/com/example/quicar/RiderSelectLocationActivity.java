@@ -93,7 +93,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
          * 问题：history location得在点击auto complete fragment之后才显示
          */
         locationList = new ArrayList<>();
-        RecordDataHelper.queryHistoryLocation(DatabaseHelper.getCurrentUserName(), 10, this);
+        RecordDataHelper
+                .getInstance()
+                .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
         buildRecyclerView();
 
 

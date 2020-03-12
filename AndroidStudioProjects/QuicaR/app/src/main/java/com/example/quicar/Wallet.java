@@ -6,10 +6,7 @@ import java.util.Date;
 
 public class Wallet {
 
-    @PropertyName("balance")
     private Float balance;
-
-    @PropertyName("bankAccountList")
     private ArrayList<BankAccount> bankAccountArrayList;
 
 
@@ -56,10 +53,12 @@ public class Wallet {
 //    }
 
 
+    @PropertyName("bankAccountList")
     public ArrayList<BankAccount> getBankAccountArrayList() {
         return bankAccountArrayList;
     }
 
+    @PropertyName("bankAccountList")
     public void setBankAccountArrayList(ArrayList<BankAccount> bankAccountArrayList) {
         this.bankAccountArrayList = bankAccountArrayList;
     }

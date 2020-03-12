@@ -1,20 +1,14 @@
 package com.example.quicar;
 
 
-import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
-import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONObject;
 
@@ -30,38 +26,27 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is the class that handle data transfer between the app and firebase
  */
 public class DatabaseHelper {
-    private static final String REC_COLL_NAME = "Records";
-    private static final String REQ_COLL_NAME = "Requests";
-    private static final String USER_COLL_NAME = "Users";
+    final String TAG = "quicarDB";
 
-    protected static final String TAG = "quicarDB";
-    private static String oldServerKey;
+    private String oldServerKey;
+    private FirebaseFirestore db;
+    private CollectionReference collectionReferenceRec;
+    private CollectionReference collectionReferenceReq;
+    private CollectionReference collectionReferenceUser;
+    private UserState userState;
 
-    private static FirebaseFirestore db;
-    private static CollectionReference collectionReferenceRec;
-    private static CollectionReference collectionReferenceReq;
-    private static CollectionReference collectionReferenceUser;
-
-    //private static ArrayList<Record> records = new ArrayList<>();
-    //private static ArrayList<Request> requests = new ArrayList<>();
-    //private static ArrayList<User> users = new ArrayList<>();
-
-    private static UserState userState = new UserState();
+    private static DatabaseHelper databaseHelper;
 
     /**
      * This is the constructor of database helper which initialize the firebase instance
      * and set up values for interacting.
      */
-    public DatabaseHelper() {
-
-        if (db != null)
-            return;
+    private DatabaseHelper() {
         FirebaseFirestore.getInstance().clearPersistence();
         db = FirebaseFirestore.getInstance();
 
@@ -76,9 +61,11 @@ public class DatabaseHelper {
 
         db.setFirestoreSettings(settings);
 
-        collectionReferenceRec = db.collection(REC_COLL_NAME);
-        collectionReferenceReq = db.collection(REQ_COLL_NAME);
-        collectionReferenceUser = db.collection(USER_COLL_NAME);
+        collectionReferenceRec = db.collection("Records");
+        collectionReferenceReq = db.collection("Requests");
+        collectionReferenceUser = db.collection("Users");
+
+        userState = new UserState();
 
         collectionReferenceRec.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
             @Override
@@ -116,20 +103,17 @@ public class DatabaseHelper {
                     Log.d(TAG,"Got a " +
                             (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
                             + " update for request");
-
-                    //DatabaseHelper.requests.clear();
                     if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
                         String requestID = "request0";
                         ArrayList<Request> requests = new ArrayList<>();
                         ArrayList<Request> openRequests = new ArrayList<>();
 
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            //                        Log.d(TAG, String.valueOf(doc.getData().get(REQUEST_KEY)));
                             requestID = doc.getId();
 //                            delRequest(requestID);
                             Request request = doc.toObject(Request.class);
                             //  check if there is a change in the request status of current user
-                            if (DatabaseHelper.getCurrentMode() == "rider") {
+                            if (getCurrentMode() == "rider") {
                                 checkActiveNotification(request);
                                 checkPickedUpNotification(request);
                             }
@@ -137,37 +121,41 @@ public class DatabaseHelper {
                             if (!request.getAccepted())
                                 openRequests.add(request);
                         }
-                        RequestDataHelper.notifyAllOpenRequests(openRequests);
-                        if (DatabaseHelper.getCurrentMode() == "driver")
+                        RequestDataHelper.getInstance().notifyAllOpenRequests(openRequests);
+                        if (getCurrentMode() == "driver")
                             checkCancelNotification(requests);
                     }
                 }
             }
         });
 
-        collectionReferenceUser.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (queryDocumentSnapshots != null) {
-                    // notification for local and server update
-                    Log.d(TAG,"Got a " +
-                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
-                            + " update for user account");
+        // Get token
+        // [START retrieve_current_token]
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
 
-                    //DatabaseHelper.users.clear();
-
-                    String userID = "request0";
-
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-//                        Log.d(TAG, String.valueOf(doc.getData().get(USER_KEY)));
-//                        userID = doc.getId();
-//                        delUser(userID);
-                        User user = doc.toObject(User.class);
-                        //DatabaseHelper.users.add(user);
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        setToken(token);
+                        // Log and toast
+                        String msg = "InstanceID Token:" + token;
+                        Log.d(TAG, msg);
+                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
-                }
-            }
-        });
+                });
+        // [END retrieve_current_token]
+    }
+
+    public static DatabaseHelper getInstance() {
+        if (databaseHelper == null)
+            databaseHelper = new DatabaseHelper();
+        return databaseHelper;
     }
 
 //    /**
@@ -175,7 +163,7 @@ public class DatabaseHelper {
 //     * @param requestID
 //     *  id of request to be deleted
 //     */
-//    private static void delRequest(final String requestID) {
+//    private void delRequest(final String requestID) {
 //        collectionReferenceReq
 //                .document(requestID)
 //                .delete()
@@ -193,7 +181,7 @@ public class DatabaseHelper {
 //                });
 //    }
 //
-//    private static void delRecord(final String recordID) {
+//    private void delRecord(final String recordID) {
 //        collectionReferenceRec
 //                .document(recordID)
 //                .delete()
@@ -212,11 +200,21 @@ public class DatabaseHelper {
 //    }
 
     /**
+     * This method return the firebase firestore db variable
+     * @return
+     *  firebase firestore db variable
+     */
+    FirebaseFirestore getDb() {
+        return db;
+    }
+
+
+    /**
      * This method return the firebase collection reference of requests
      * @return
      *  firebase collection reference of requests
      */
-    protected CollectionReference getCollectionReferenceReq() {
+    CollectionReference getCollectionReferenceReq() {
         return collectionReferenceReq;
     }
 
@@ -225,7 +223,7 @@ public class DatabaseHelper {
      * @return
      *  firebase collection reference of records
      */
-    protected CollectionReference getCollectionReferenceRec() {
+    CollectionReference getCollectionReferenceRec() {
         return collectionReferenceRec;
     }
 
@@ -234,25 +232,17 @@ public class DatabaseHelper {
      * @return
      *  firebase collection reference of users
      */
-    protected CollectionReference getCollectionReferenceUser() {
+    CollectionReference getCollectionReferenceUser() {
         return collectionReferenceUser;
     }
 
-    /**
-     * This method return the firebase firestore db variable
-     * @return
-     *  firebase firestore db variable
-     */
-    protected FirebaseFirestore getDb() {
-        return db;
-    }
 
     /**
      * This is the method that return the Firebase token of this device
      * @return
      *  Firebase token of this device
      */
-    public static String getToken() {
+    private String getToken() {
         return userState.getToken();
     }
 
@@ -261,7 +251,7 @@ public class DatabaseHelper {
      * @param token
      *  the value of token in DatabaseHelper
      */
-    public static void setToken(String token) {
+    void setToken(String token) {
         userState.setToken(token);
     }
 
@@ -270,7 +260,7 @@ public class DatabaseHelper {
      * @return
      *  the old server key of quicar firebase
      */
-    public static String getOldServerKey() {
+    private String getOldServerKey() {
         return oldServerKey;
     }
 
@@ -279,8 +269,8 @@ public class DatabaseHelper {
      * @param oldServerKey
      *  value of old server key in DatabaseHelper
      */
-    public static void setOldServerKey(String oldServerKey) {
-        DatabaseHelper.oldServerKey = oldServerKey;
+    void setOldServerKey(String oldServerKey) {
+        oldServerKey = oldServerKey;
     }
 
 
@@ -289,25 +279,25 @@ public class DatabaseHelper {
      * @return
      *  current user name
      */
-    public static String getCurrentUserName() {
+    public String getCurrentUserName() {
         return userState.getCurrentUserName();
     }
 
-    /**
-     * This is the method that set the current user name locally
-     * @param currentUserName
-     *  user name
-     */
-    public static void setCurrentUserName(String currentUserName) {
-        userState.setCurrentUserName(currentUserName);
-    }
+//    /**
+//     * This is the method that set the current user name locally
+//     * @param currentUserName
+//     *  user name
+//     */
+//    public void setCurrentUserName(String currentUserName) {
+//        userState.setCurrentUserName(currentUserName);
+//    }
 
     /**
      * This method return current user object
      * @return
      *  current user object
      */
-    public static User getCurrentUser() {
+    User getCurrentUser() {
         return userState.getCurrentUser();
     }
 
@@ -316,7 +306,7 @@ public class DatabaseHelper {
      * @param user
      *  candidate user object
      */
-    public static void setCurrentUser(User user) {
+    void setCurrentUser(User user) {
         userState.setCurrentUser(user);
     }
 
@@ -324,7 +314,7 @@ public class DatabaseHelper {
      * This is the method that set the current mode of the user, either rider or driver mode
      * @return
      */
-    public static String getCurrentMode() {
+    String getCurrentMode() {
         return userState.getCurrentMode();
     }
 
@@ -333,7 +323,7 @@ public class DatabaseHelper {
      * @param currentMode
      *  the current mode of the user
      */
-    public static void setCurrentMode(String currentMode) {
+    void setCurrentMode(String currentMode) {
         if (currentMode != "rider" && currentMode != "driver")
             throw new IllegalArgumentException("user mode can only be rider or driver, but an alternative obtained!");
 
@@ -345,7 +335,7 @@ public class DatabaseHelper {
      * @return
      *  first location selected by rider
      */
-    public static Location getFirstLocation() {
+    public Location getFirstLocation() {
         return userState.getFirstSelectedLocation();
     }
 
@@ -354,7 +344,7 @@ public class DatabaseHelper {
      * @param location
      *  first location selected by rider
      */
-    public static void setFirstLocation(Location location) {
+    public void setFirstLocation(Location location) {
         userState.setFirstSelectedLocation(location);
     }
 
@@ -363,7 +353,7 @@ public class DatabaseHelper {
      * @return
      *  second location selected by rider
      */
-    public static Location getSecondLocation() {
+    public Location getSecondLocation() {
         return userState.getSecondSelectedLocation();
     }
 
@@ -372,7 +362,7 @@ public class DatabaseHelper {
      * @param location
      *  value of second location in DatabaseHelper
      */
-    public static void setSecondLocation(Location location) {
+    public void setSecondLocation(Location location) {
         userState.setSecondSelectedLocation(location);
     }
 
@@ -383,11 +373,11 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkActiveNotification(Request request) {
-        if (DatabaseHelper.getCurrentUserName() == null)
+        if (getCurrentUserName() == null)
             return;
-        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
+        if (request.getRider().getName().equals(getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
-                RequestDataHelper.notifyActive(request);
+                RequestDataHelper.getInstance().notifyActive(request);
                 //sendPopUpNotification("request is accepted");
                 userState.setActive(Boolean.TRUE);
                 System.out.println("-------- Accept Notification sent --------");
@@ -402,12 +392,12 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkPickedUpNotification(Request request) {
-        if (DatabaseHelper.getCurrentUserName() == null)
+        if (getCurrentUserName() == null)
             return;
-        if (request.getRider().getName().equals(DatabaseHelper.getCurrentUserName())) {
+        if (request.getRider().getName().equals(getCurrentUserName())) {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
-                RequestDataHelper.notifyPickedUp(request);
+                RequestDataHelper.getInstance().notifyPickedUp(request);
                 //sendPopUpNotification("Notification test", "rider is picked up", this);
                 userState.setOnGoing(Boolean.TRUE);
                 System.out.println("-------- Picked up Notification sent --------");
@@ -422,7 +412,7 @@ public class DatabaseHelper {
      *  candidate request
      */
     private void checkCancelNotification(ArrayList<Request> requests) {
-        if (DatabaseHelper.getCurrentUserName() == null)
+        if (getCurrentUserName() == null)
             return;
         if (!userState.getOnGoing()) {
             System.out.println("user is not in on going state, unable to get cancel notification!");
@@ -431,14 +421,14 @@ public class DatabaseHelper {
 
         boolean found = false;
         for (Request request: requests) {
-            if (request.getDriver().getName().equals(DatabaseHelper.getCurrentUserName())) {
+            if (request.getDriver().getName().equals(getCurrentUserName())) {
                 found = true;
                 break;
             }
         }
         if (!found) {
             //sendPopUpNotification("Notification test", "Request is canceled", this);
-            RequestDataHelper.notifyCancel();
+            RequestDataHelper.getInstance().notifyCancel();
             userState.setOnGoing(Boolean.FALSE);
             System.out.println("-------- Cancel Notification sent --------");
         }
@@ -452,29 +442,20 @@ public class DatabaseHelper {
      *  list of records
      */
     private void checkCompleteNotification(ArrayList<Record> records) {
-        if (DatabaseHelper.getCurrentUserName() == null)
+        if (getCurrentUserName() == null)
             return;
         for (Record record: records) {
-            if (record.getRequest().getRider().getName().equals(DatabaseHelper.getCurrentUserName())
-                    && DatabaseHelper.getCurrentMode().equals("rider")  && userState.getOnGoing()) {
+            if (record.getRequest().getRider().getName().equals(getCurrentUserName())
+                    && getCurrentMode().equals("rider")  && userState.getOnGoing()) {
                 // might want to check if userstate.getOngoing is updated
                 //sendPopUpNotification("Notification test", "ride is completed", this);
                 userState.setActive(Boolean.FALSE);
                 userState.setOnGoing(Boolean.FALSE);
-                RequestDataHelper.notifyComplete();
+                RequestDataHelper.getInstance().notifyComplete();
                 System.out.println("-------- Notification sent --------");
                 break;
             }
-//            if (record.getRequest().getDriver().getName().equals(DatabaseHelper.getCurrentUserName())
-//                    && DatabaseHelper.getCurrentMode().equals("driver") && userState.getOnGoing()) {
-//                //sendPopUpNotification("Notification test", "ride is completed", this);
-//                userState.setActive(Boolean.FALSE);
-//                userState.setOnGoing(Boolean.FALSE);
-//                RequestDataHelper.notifyComplete();
-//                System.out.println("-------- Notification sent --------");
-//            }
         }
-
     }
 
 
@@ -483,7 +464,7 @@ public class DatabaseHelper {
      * @param msg
      *  message body in the notification
      */
-    public static void sendPopUpNotification(String title, String msg) {
+    void sendPopUpNotification(final String title, final String msg) {
         System.out.println("_---------------- notify please");
         new Notify().execute(title, msg);
 
@@ -511,12 +492,12 @@ public class DatabaseHelper {
                 conn.setRequestMethod("POST");
 
 
-                conn.setRequestProperty("Authorization", "key=" + DatabaseHelper.getOldServerKey() );
+                conn.setRequestProperty("Authorization", "key=" + DatabaseHelper.getInstance().getOldServerKey() );
                 conn.setRequestProperty("Content-Type", "application/json");
 
                 JSONObject json = new JSONObject();
 
-                json.put("to", DatabaseHelper.getToken());
+                json.put("to", DatabaseHelper.getInstance().getToken());
 
                 String title = data[0];
                 String body = data[1];
