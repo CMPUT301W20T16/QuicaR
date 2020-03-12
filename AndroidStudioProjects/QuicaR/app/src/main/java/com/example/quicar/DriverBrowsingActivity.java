@@ -125,6 +125,11 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     }
 
     @Override
+    public  void onArrivedNotification(Request request) {
+
+    }
+
+    @Override
     public void onCancelNotification () {
 
     }

@@ -116,6 +116,7 @@ public class DatabaseHelper {
                             if (getCurrentMode() == "rider") {
                                 checkActiveNotification(request);
                                 checkPickedUpNotification(request);
+                                checkArrivedNotification(request);
                             }
                             requests.add(request);
                             if (!request.getAccepted())
@@ -406,6 +407,17 @@ public class DatabaseHelper {
                 //sendPopUpNotification("Notification test", "rider is picked up", this);
                 userState.setOnGoing(Boolean.TRUE);
                 System.out.println("-------- Picked up Notification sent --------");
+            }
+        }
+    }
+
+    private void checkArrivedNotification(Request request) {
+        if (getCurrentUserName() == null)
+            return;
+        if (request.getRider().getName().equals(getCurrentUserName())) {
+            if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
+                    && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
+                RequestDataHelper.getInstance().notifyArrived(request);
             }
         }
     }

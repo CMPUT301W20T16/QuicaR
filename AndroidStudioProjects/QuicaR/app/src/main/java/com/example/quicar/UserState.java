@@ -9,7 +9,7 @@ public class UserState {
     private String token;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
-    private Boolean onComplete = Boolean.FALSE;
+    private Boolean onArrived = Boolean.FALSE;
     private Location firstSelectedLocation;
     private Location secondSelectedLocation;
     private String activityState;
@@ -128,22 +128,23 @@ public class UserState {
     }
 
     /**
-     * This method return the completing state of current user's request
+     * This method return the arriving state of current user's request
      * @return
-     *  completing state of current user's request
+     *  arriving state of current user's request
      */
-    public Boolean getOnComplete() {
-        return onComplete;
+    public Boolean getOnArrived() {
+        return onArrived;
     }
 
     /**
-     * This method set the completing state of current user's request
-     * @param onComplete
-     *  boolean for completing state
+     * This method set the arriving state of current user's request
+     * @param onArrived
+     *  arriving state of current user's request
      */
-    public void setOnComplete(Boolean onComplete) {
-        this.onComplete = onComplete;
+    public void setOnArrived(Boolean onArrived) {
+        this.onArrived = onArrived;
     }
+
 
     /**
      * This method return the first selected location of the user (in rider selection activity)

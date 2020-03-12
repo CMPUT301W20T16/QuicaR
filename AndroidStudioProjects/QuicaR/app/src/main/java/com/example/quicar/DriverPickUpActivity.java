@@ -73,7 +73,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
             public void onClick(View v) {
                 RequestDataHelper
                         .getInstance()
-                        .setRequestPickedUp(mRequest.getRid(), mRequest.getDriver(),
+                        .setRequestPickedUp(mRequest.getRid(),
                                 DriverPickUpActivity.this);
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
                 startActivity(intent);
@@ -115,6 +115,11 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     @Override
     public void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public  void onArrivedNotification(Request request) {
 
     }
 

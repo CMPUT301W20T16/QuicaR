@@ -69,7 +69,9 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 User newUser = new User();
                 newUser.setName(input.getText().toString());
                 DatabaseHelper.getInstance().setCurrentUser(newUser);
-                Request request = new Request(new Location(), new Location(), newUser, new User(), 27.0f);
+                Request request = new Request(new Location(), "address name for starting point",
+                        new Location(), "address name for destination",
+                        newUser, new User(),27.0f);
                 RequestDataHelper.getInstance().addNewRequest(request, listener);
             }
         });
@@ -138,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
+    public  void onArrivedNotification(Request request) {
+
+    }
+    @Override
     public void onCancelNotification() {
 
     }
@@ -149,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 5,this);
         System.out.println("here ------");
     }
+
+
 
     @Override
     public void onFailure(String errorMessage, String tag) {
