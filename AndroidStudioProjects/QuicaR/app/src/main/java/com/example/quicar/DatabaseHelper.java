@@ -404,7 +404,7 @@ public class DatabaseHelper {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
                 RequestDataHelper.getInstance().notifyPickedUp(request);
-                //sendPopUpNotification("Notification test", "rider is picked up", this);
+                sendPopUpNotification("Notification test", "rider is picked up");
                 userState.setOnGoing(Boolean.TRUE);
                 System.out.println("-------- Picked up Notification sent --------");
             }
@@ -418,6 +418,8 @@ public class DatabaseHelper {
             if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
                     && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
                 RequestDataHelper.getInstance().notifyArrived(request);
+                sendPopUpNotification("Notification test", "rider is picked up");
+                userState.setOnArrived(Boolean.TRUE);
             }
         }
     }
@@ -444,7 +446,7 @@ public class DatabaseHelper {
             }
         }
         if (!found) {
-            //sendPopUpNotification("Notification test", "Request is canceled", this);
+            sendPopUpNotification("Notification test", "Request is canceled");
             RequestDataHelper.getInstance().notifyCancel();
             userState.setOnGoing(Boolean.FALSE);
             System.out.println("-------- Cancel Notification sent --------");
@@ -465,7 +467,7 @@ public class DatabaseHelper {
             if (record.getRequest().getRider().getName().equals(getCurrentUserName())
                     && getCurrentMode().equals("rider")  && userState.getOnGoing()) {
                 // might want to check if userstate.getOngoing is updated
-                //sendPopUpNotification("Notification test", "ride is completed", this);
+                sendPopUpNotification("Notification test", "ride is completed");
                 userState.setActive(Boolean.FALSE);
                 userState.setOnGoing(Boolean.FALSE);
                 RequestDataHelper.getInstance().notifyComplete();
