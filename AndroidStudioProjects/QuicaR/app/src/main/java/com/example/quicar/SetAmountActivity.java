@@ -53,7 +53,8 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 UserDataHelper.updateUserProfile(toUser, SetAmountActivity.this);
                 UserDataHelper.setCurrentUser(toUser);
                 UserDataHelper.setCurrentUser(fromUser);
-                //Float.parseFloat
+                // finally should be connected with the password enter
+                startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
 
             }
         });

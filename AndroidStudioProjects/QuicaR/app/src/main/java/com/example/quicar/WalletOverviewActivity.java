@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -25,33 +27,28 @@ public class WalletOverviewActivity extends AppCompatActivity {
     Button camera_scan;
     Button card_info;
     ImageView qr_code;
+    TextView balance;
     Handler handler = new Handler();
-
-    // every 30 seconds refresh the qr code 1 time
-    private Runnable runnable = new Runnable() {
-        public void run() {
-            this.update();
-            handler.postDelayed(runnable, 1000 * 30);
-        }
-        void update() {
-            generate_qr(qr_code);
-        }
-    };
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_overview);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        qr_code = (ImageView) findViewById(R.id.qr_code);
         change_pay = (Button)findViewById(R.id.change_pay);
         card_pay = (Button)findViewById(R.id.card_pay);
         camera_scan = (Button)findViewById(R.id.camera_scan);
         card_info = (Button)findViewById(R.id.card_information);
-        qr_code = (ImageView) findViewById(R.id.qr_code);
+        balance = (TextView)findViewById(R.id.balance);
 
         handler.postDelayed(runnable, 1000 * 30);
-
         generate_qr(qr_code);
+
+        User user = DatabaseHelper.getCurrentUser();
+        String currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+        balance.setText(currentBalance);
+        balance.bringToFront();
 
         camera_scan.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -73,6 +70,17 @@ public class WalletOverviewActivity extends AppCompatActivity {
         handler.removeCallbacks(runnable);
         super.onDestroy();
     }
+
+    // every 30 seconds refresh the qr code 1 time
+    private Runnable runnable = new Runnable() {
+        public void run() {
+            this.update();
+            handler.postDelayed(runnable, 1000 * 30);
+        }
+        void update() {
+            generate_qr(qr_code);
+        }
+    };
 
     protected void generate_qr(ImageView qr_code) {
         String time = LocalDateTime.now().toString();
