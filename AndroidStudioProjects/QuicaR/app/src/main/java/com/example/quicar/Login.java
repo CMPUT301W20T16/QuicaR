@@ -66,23 +66,23 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                     String getEmail = retrieveEmail();
                     mAuth.signInWithEmailAndPassword(getEmail, mypwd)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseUser currentUser = mAuth.getCurrentUser();
-                                /* added by Jeremy */
-                                UserDataHelper.getInstance().getUser(myID, listener);
-                                ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
-                                pgsBar.setVisibility(v.VISIBLE);
-                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            } else {
-                                Toast.makeText(Login.this,
-                                        "Login failed" + task.getException(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                                        /* added by Jeremy */
+                                        UserDataHelper.getInstance().getUser(myID, listener);
+                                        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                        pgsBar.setVisibility(v.VISIBLE);
+                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                    } else {
+                                        Toast.makeText(Login.this,
+                                                "Login failed" + task.getException(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 } else {
 
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -121,6 +121,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     }
 
+    /**
+     * To validate user inputs email/username
+     * @param email
+     *      user inputs email/username
+     * @return
+     *      return if the user correctly inputs email/username
+     * */
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             this.userID.setError("Field can't be empty");
@@ -131,6 +138,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         }
     }
 
+    /**
+     * To validate user inputs password
+     * @param password
+     *      user inputs password
+     * @return
+     *      return if the user correctly inputs password
+     * */
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
@@ -141,6 +155,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         }
     }
 
+    /**
+     * To validate user inputs email or username
+     * @param id
+     *      user inputs email/username
+     * @return
+     *      return whether user inputs email or username
+     * */
     public boolean checkUserNameOrEmail(String id) {
 
 //        if (id.contains("@")) {
@@ -164,7 +185,11 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         return email;
     }
 
-
+    /**
+     * retrieve username according to
+     * the current user's uid
+     *
+     * */
     public void retrieveUsername() {
         currentUser = mAuth.getInstance().getCurrentUser();
         DatabaseReference myRef = database.getInstance().getReference("User");
