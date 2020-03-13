@@ -77,7 +77,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+
         sendNotification(title, body, new Intent(this, MainActivity.class));
+        //sendNotification(title);
     }
     // [END receive_message]
 
@@ -158,21 +160,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param goToIntent
      *  intent that will lead to when notification is clicked
      */
-    private void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
+    protected void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
         final int NOTIFY_ID = c.incrementAndGet();
-        String CHANNEL_ID = getString(R.string.default_notification_channel_id);
+        String CHANNEL_ID = "fcm_default_channel"; // getString(R.string.default_notification_channel_id);
         String CHANNEL_NAME = "user_channel"; // They are hardcoded only for show it's just strings
         String CHANNEL_DESCR = "user_first_channel"; // The user-visible description of the channel.
 
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
 
-//        NotificationManager notifManager = null;
-
-//        if (notifManager == null) {
-//            notifManager =
-//                    (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-//        }
         if (notificationManager == null)
             notificationManager = getSystemService(NotificationManager.class);
 
