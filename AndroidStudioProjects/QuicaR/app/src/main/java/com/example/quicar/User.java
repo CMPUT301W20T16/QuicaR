@@ -36,7 +36,6 @@ public class User {
         isDriver = driver;
     }
 
-//
     protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet){
         this.accountInfo.setAccNo(accNo);
         this.accountInfo.setFirstName(firstname);
