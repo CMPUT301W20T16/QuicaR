@@ -50,7 +50,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         void callback(boolean data);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         signUpButton = findViewById(R.id.sign_up_button);
         signInText = findViewById(R.id.signInButtonText);
         auth = FirebaseAuth.getInstance();
-        // databaseReference = FirebaseDatabase.getInstance().getReference("User");
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +70,8 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                 final String mPwd = pwd.getEditText().getText().toString();
                 String mConfirm_pwd = confirm_pwd.getEditText().getText().toString();
 
-                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateName) {
+
+                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateName | validateUserName(mUserName)) {
                     return;
                 }
 
@@ -82,19 +81,21 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+                            // to check if the username is already exited in the database
                             Toast.makeText(Register.this, "Username exist", Toast.LENGTH_SHORT).show();
                             userName.setError("Duplicate username");
-                            // finishedCallBack.callback(false);
                         }  else {
                             // Toast.makeText(Register.this, "User not found", Toast.LENGTH_SHORT).show();
-                            // finishedCallBack.callback(true);
+                            // username is not in used
+                            // register process
                             auth.createUserWithEmailAndPassword(mEmail, mPwd).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         User user = new User();
                                         user.setBasic(mUserName, mEmail, mPwd);
-                                        // UserDataHelper.addNewUser(user, listener);
+                                        UserDataHelper.getInstance().addNewUser(user, listener);
+                                        DatabaseHelper.getInstance().setCurrentUser(user);
                                         database.getInstance().getReference("User").child(auth.getInstance().getCurrentUser().getUid())
                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -106,7 +107,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                         Toast.makeText(Register.this, "sign up failed", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-
                             });
                         }
                     }
@@ -127,6 +127,13 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         });
     }
 
+    /**
+     * To validate user inputs username
+     * @param username
+     *      user inputs username
+     * @return
+     *      return if the user correctly inputs username
+     * */
     public boolean validateUserName(String username) {
 
         if (TextUtils.isEmpty(username)) {
@@ -138,6 +145,13 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
+    /**
+     * To validate user inputs email
+     * @param email
+     *      user inputs email
+     * @return
+     *      return if the user correctly inputs email
+     * */
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             this.email.setError("Field can't be empty");
@@ -148,6 +162,13 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
+    /**
+     * To validate user inputs password
+     * @param password
+     *      user inputs password
+     * @return
+     *      return if the user correctly inputs password
+     * */
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
@@ -158,6 +179,15 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
+    /**
+     * To validate user inputs password and re-entered password matches
+     * @param confirmPassword
+     *      user inputs password
+     * @param signPassword
+     *      user re-enters password
+     * @return
+     *      return if the user correctly inputs confirmed password
+     * */
     public boolean validateConfirmPassword(String confirmPassword, String signPassword) {
         if (TextUtils.isEmpty(confirmPassword)) {
             this.confirm_pwd.setError("Field can't be empty");
@@ -172,11 +202,18 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-
     @Override
     public void onSuccess(User user, String tag) {
-        if (tag == UserDataHelper.ADD_USER_TAG)
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        if (tag == UserDataHelper.ADD_USER_TAG) {
+            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Intent homeIntent = new Intent(Register.this, RiderRequestActivity.class);
+            startActivity(homeIntent);
+        }
+    }
+
+    @Override
+    public void onUserExists(Boolean exists, String tag) {
+
     }
 
     @Override

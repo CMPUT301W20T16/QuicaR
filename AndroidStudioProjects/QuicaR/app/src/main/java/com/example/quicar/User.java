@@ -34,7 +34,7 @@ public class User {
     public void setDriver(boolean driver) {
         isDriver = driver;
     }
-//    protected void setIsDriver(){
+    //    protected void setIsDriver(){
 //        this.isDriver = (this.accountinfo.getDriverInfo() != null);
 //    }
 //
@@ -60,7 +60,7 @@ public class User {
 //    }
 
     protected void setName(String name) {
-        setAccountInfo(null, null, null, null, null, null, null, name, null, null);
+        setAccountInfo(null, null, null, null, null, null, null, name, null, new Wallet());
     }
 
     protected String getName() {
@@ -68,7 +68,7 @@ public class User {
     }
 
     protected void setBasic(String username, String email, String password) {
-        setAccountInfo(null, null, null, null, null, null, email, username, password, null);
+        setAccountInfo(null, null, null, null, null, null, email, username, password, new Wallet());
     }
 
 }

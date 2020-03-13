@@ -22,27 +22,41 @@ import java.util.ArrayList;
 /**
  * This class extend DatabaseHelper and mainly handle requests data
  */
-public class RequestDataHelper extends DatabaseHelper {
+public class RequestDataHelper {
+    final String TAG = "quicarDB-request";
 
     public static final String USER_REQ_TAG = "user query request";
     public static final String ALL_REQs_TAG = "all opened request";
     public static final String ADD_REQ_TAG = "add new request";
     public static final String SET_ACTIVE_TAG = "set request active";
     public static final String SET_PICKEDUP_TAG = "set request picked up";
+    public static final String SET_ARRIVED_TAG = "set request arrived";
     public static final String CANCEL_REQ_TAG = "cancel opened request";
     public static final String COMPLETE_REQ_TAG = "complete request";
 
-    private static OnGetRequestDataListener listener;
-    private static CollectionReference collectionReferenceReq;
-    private static FirebaseFirestore db;
+    private OnGetRequestDataListener notifyListener;
+    private CollectionReference collectionReferenceReq;
+    private FirebaseFirestore db;
+
+    private static RequestDataHelper requestDataHelper;
 
     /**
      * This is the constructor of RequestDataHelper
      */
-    public RequestDataHelper() {
-        super();
-        RequestDataHelper.collectionReferenceReq = super.getCollectionReferenceReq();
-        RequestDataHelper.db = super.getDb();
+    private RequestDataHelper() {
+        collectionReferenceReq = DatabaseHelper.getInstance().getCollectionReferenceReq();
+        db = DatabaseHelper.getInstance().getDb();
+    }
+
+    /**
+     * This method is the only static method that create a singleton for RequestDataHelper
+     * @return
+     *  return the instance of RequestDataHelper singleton
+     */
+    public static RequestDataHelper getInstance() {
+        if (requestDataHelper == null)
+            requestDataHelper = new RequestDataHelper();
+        return requestDataHelper;
     }
 
     /**
@@ -50,8 +64,8 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void setOnActiveListener(OnGetRequestDataListener listener) {
-        RequestDataHelper.listener = listener;
+    void setOnNotifyListener(OnGetRequestDataListener listener) {
+        notifyListener = listener;
     }
 
     /**
@@ -60,22 +74,52 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param request
      *  the request that is active
      */
-    public static void notifyActive(Request request) {
-        if (listener != null) {
-            listener.onActiveNotification(request);
+    void notifyActive(Request request) {
+        if (notifyListener != null) {
+            notifyListener.onActiveNotification(request);
         }
     }
 
-    public static void notifyCancel() {
-        if (listener != null) {
-            listener.onCancelNotification();
+    /**
+     * This method will notify the latest listener stored in this class that the request is cancel
+     */
+    void notifyCancel() {
+        if (notifyListener != null) {
+            notifyListener.onCancelNotification();
         }
     }
 
-    public static void notifyPickedUp(Request request) {
-        if (listener != null) {
-            listener.onPickedUpNotification(request);
+    /**
+     * This method will notify the latest listener stored in this class that the request is picked up
+     */
+    void notifyPickedUp(Request request) {
+        if (notifyListener != null) {
+            notifyListener.onPickedUpNotification(request);
         }
+    }
+
+    void notifyArrived(Request request) {
+        if (notifyListener != null) {
+            notifyListener.onArrivedNotification(request);
+        }
+    }
+
+    /**
+     * This method will notify the latest listener stored in this class that the request is completed
+     */
+    void notifyComplete() {
+        if (notifyListener != null)
+            notifyListener.onCompleteNotification();
+    }
+
+    /**
+     * This method will obtain all open request when a request is updated
+     * and return a list of request as a parameter to listener by calling
+     *
+     */
+    void notifyAllOpenRequests(ArrayList<Request> openRequests) {
+        if (notifyListener != null)
+            notifyListener.onSuccess(openRequests, ALL_REQs_TAG);
     }
 
     /**
@@ -85,22 +129,24 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+    private void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+        ArrayList<Request> requests = new ArrayList<Request>();
+        requests.add(newRequest);
         collectionReferenceReq
-                .document()
+                .document(newRequest.getRid())
                 .set(newRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " request addition successful");
-                        listener.onSuccess(null, null, ADD_REQ_TAG);
+                        listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG,  "Request addition failed" + e.toString());
-                        listener.onFailure("Request addition failed" + e.toString());
+                        listener.onFailure("Request addition failed" + e.toString(), ADD_REQ_TAG);
                     }
                 });
     }
@@ -112,37 +158,15 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
-
-        final String riderName = newRequest.getRider().getName();
-        collectionReferenceReq
-                .whereEqualTo("rider.account.userName", riderName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //  this for loop should only loop for once
-                            //  user should not have more than one requests exist in the db
-                            int count = 0;
-//                            Request query = null;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-//                                query = document.toObject(Request.class);
-                                count++;
-                            }
-                            if (count > 0) {
-                                System.out.println("*****  user \" " + riderName + " \" already has one request");
-                                listener.onFailure(riderName + " already has one request");
-                            } else {
-                                RequestDataHelper.addRequest(newRequest, listener);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
-                        }
-                    }
-                });
+    public void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+        if (newRequest == null || newRequest.getRider().getName() == null
+                || newRequest.getRider().getName().length() == 0) {
+            listener.onFailure("invalid parameters", ADD_REQ_TAG);
+            return;
+        }
+        String id = db.collection("collection_name").document().getId();
+        newRequest.setRid(id);
+        addRequest(newRequest, listener);
     }
 
     /**
@@ -150,7 +174,8 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param requestID
      *  id of request to be deleted
      */
-    private static void delRequest(final String requestID, OnGetRequestDataListener listener) {
+    private void delRequest(final String requestID, final OnGetRequestDataListener listener,
+                                   final String mode) {
         collectionReferenceReq
                 .document(requestID)
                 .delete()
@@ -158,14 +183,20 @@ public class RequestDataHelper extends DatabaseHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
-                        listener.onSuccess(null, null, CANCEL_REQ_TAG);
+                        if (mode == "cancel")
+                            listener.onSuccess(null, CANCEL_REQ_TAG);
+                        else if (mode == "complete")
+                            listener.onSuccess(null, COMPLETE_REQ_TAG);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, requestID + " deletion failed" + e.toString());
-                        listener.onFailure(requestID + " deletion failed");
+                        if (mode == "cancel")
+                            listener.onFailure(requestID + " deletion failed", CANCEL_REQ_TAG);
+                        else if (mode == "complete")
+                            listener.onFailure(requestID + " deletion failed", COMPLETE_REQ_TAG);
                     }
                 });
     }
@@ -179,9 +210,9 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    private static void updateRequest(final String requestID, final Request request,
+    private void updateRequest(final String requestID, final Request request,
                                       final OnGetRequestDataListener listener,
-                                      final boolean setActiveMode) {
+                                      final String updateMode) {
 
         final DocumentReference reqDocRef = collectionReferenceReq.document(requestID);
 
@@ -204,17 +235,24 @@ public class RequestDataHelper extends DatabaseHelper {
             @Override
             public void onSuccess(String docID) {
                 Log.d(TAG, "Transaction success: " + docID);
-                if (setActiveMode)
-                    listener.onSuccess(null, null, SET_ACTIVE_TAG);
-                else
-                    listener.onSuccess(null, null, SET_PICKEDUP_TAG);
+                if (updateMode == SET_ACTIVE_TAG)
+                    listener.onSuccess(null, SET_ACTIVE_TAG);
+                else if (updateMode == SET_PICKEDUP_TAG)
+                    listener.onSuccess(null, SET_PICKEDUP_TAG);
+                else if (updateMode == SET_ARRIVED_TAG)
+                    listener.onSuccess(null, SET_ARRIVED_TAG);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Transaction failure.", e);
-                listener.onFailure("Transaction failure. " + e);
+                if (updateMode == SET_ACTIVE_TAG)
+                    listener.onFailure("Transaction failure. " + e, SET_ACTIVE_TAG);
+                else if (updateMode == SET_PICKEDUP_TAG)
+                    listener.onFailure("Transaction failure. " + e, SET_PICKEDUP_TAG);
+                else if (updateMode == SET_ARRIVED_TAG)
+                    listener.onFailure("Transaction failure" + e, SET_ACTIVE_TAG);
             }
         });
     }
@@ -229,10 +267,10 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryUserRequest(final String userName, final String mode,
+    public void queryUserRequest(final String userName, final String mode,
                                              final OnGetRequestDataListener listener) {
         if (userName == null || userName.length() == 0) {
-            listener.onFailure("rider name provided is a null or empty");
+            listener.onFailure("invalid parameters", USER_REQ_TAG);
             return;
         }
         String field;
@@ -251,23 +289,18 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  this for loop should only loop for once
                             //  user should not have more than one requests exist in the db
                             int count = 0;
-                            Request query = null;
+                            ArrayList<Request> requests = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                query = document.toObject(Request.class);
+                                requests.add(document.toObject(Request.class));
                                 count++;
                             }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + userName + " \" has more than one request");
-                                listener.onFailure(userName + " has more than one request");
-                            } else if (query == null) {
-                                listener.onFailure(userName + " has no request");
-                            } else{
-                                listener.onSuccess(query,null, USER_REQ_TAG);
-                            }
+                            listener.onSuccess(requests, USER_REQ_TAG);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure(
+                                    "Error getting documents: " + task.getException(),
+                                    USER_REQ_TAG);
                         }
                     }
                 });
@@ -275,15 +308,10 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This method will query all open request and return a list of request to listener
-     * @param location
-     *  location of the driver
      * @param listener
      *  listener for notification and obtain return value
      */
-    public static void queryAllOpenRequests(final Location location, final OnGetRequestDataListener listener) {
-        //listener.onStart();
-        Float latRange = 10.0f;
-        Float lonRange = 10.0f;
+    public void queryAllOpenRequests(final OnGetRequestDataListener listener) {
 
         collectionReferenceReq
                 .whereEqualTo("isAccepted", false)
@@ -299,42 +327,38 @@ public class RequestDataHelper extends DatabaseHelper {
                                 if (!query.getAccepted())
                                     openRequests.add(query);
                             }
-                            listener.onSuccess(null, openRequests, ALL_REQs_TAG);
+                            listener.onSuccess(openRequests, ALL_REQs_TAG);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    ALL_REQs_TAG);
                         }
                     }
                 });
-
-//        .whereLessThan("start.lat", location.getLat() + latRange)
-//                .whereGreaterThan("start.lat", location.getLat() - latRange)
-//                .whereLessThan("destination.lat", location.getLon() + lonRange)
-//                .whereGreaterThan("destination.lat", location.getLon() - lonRange)
     }
 
     /**
      * This method will check if there is an inactive request belongs to the rider and set the
      * request to active, then call the updateRequest method
-     * @param riderName
-     *  rider name of query
+     * @param requestID
+     *  id of the request
      * @param driver
      *  driver of the request to be set
      * @param listener
      *  listener for notification
      */
-    public static void setRequestActive(final String riderName, final User driver, final Float offeredPrice,
+    public void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
                                         final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0) {
-            listener.onFailure("rider name provided is a null or empty");
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", SET_ACTIVE_TAG);
             return;
-        } else if (driver == null) {
-            listener.onFailure("driver provided is a null object");
+        } else if (driver == null || driver.getName() == null || driver.getName().length() == 0) {
+            listener.onFailure("invalid parameters", SET_ACTIVE_TAG);
             return;
         }
 
         collectionReferenceReq
-                .whereEqualTo("rider.account.userName", riderName)
+                .whereEqualTo("requestID", requestID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -345,47 +369,50 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  user should not have more than one requests exist in the db
                             int count = 0;
                             Request query = null;
-                            String docID = "";
+//                            String docID = "";
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 query = document.toObject(Request.class);
-                                docID = document.getId();
+//                                docID = document.getId();
                                 count++;
                             }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + riderName + " \" has more than one request");
-                                listener.onFailure(riderName + " has more than one request");
-                            } else if (query == null) {
-                                listener.onFailure(riderName + " has no request");
+                            if (query == null) {
+                                listener.onFailure(requestID + " does not exist", SET_ACTIVE_TAG);
                             } else if (query.getAccepted()) {
-                                listener.onFailure(riderName + "has an active request already");
+                                listener.onFailure(requestID + " is already active",
+                                        SET_ACTIVE_TAG);
                             } else {
                                 query.setAccepted(true);
                                 query.setEstimatedCost(offeredPrice);
                                 query.setDriver(driver);
-                                System.out.println("***** " + docID);
-                                RequestDataHelper.updateRequest(docID, query, listener, true);
+                                System.out.println("***** " + requestID);
+                                updateRequest(requestID, query, listener, SET_ACTIVE_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    SET_ACTIVE_TAG);
                         }
                     }
                 });
     }
 
-    public static void setRequestPickedUp(final String riderName, final User driver,
-                                        final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0) {
-            listener.onFailure("rider name provided is a null or empty");
-            return;
-        } else if (driver == null) {
-            listener.onFailure("driver provided is a null object");
+    /**
+     * This method will check if there is an active and not picked up request belongs to the rider and set the
+     * request to picked up, then call the updateRequest method
+     * @param requestID
+     *  id of the request
+     * @param listener
+     *  listener for notification
+     */
+    public void setRequestPickedUp(final String requestID, final OnGetRequestDataListener listener) {
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", SET_PICKEDUP_TAG);
             return;
         }
 
         collectionReferenceReq
-                .whereEqualTo("rider.account.userName", riderName)
+                .whereEqualTo("requestID", requestID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -396,31 +423,90 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  user should not have more than one requests exist in the db
                             int count = 0;
                             Request query = null;
-                            String docID = "";
+//                            String docID = "";
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 query = document.toObject(Request.class);
-                                docID = document.getId();
+//                                docID = document.getId();
                                 count++;
                             }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + riderName + " \" has more than one request");
-                                listener.onFailure(riderName + " has more than one request");
-                            } else if (query == null) {
-                                listener.onFailure(riderName + " has no request");
+                            if (query == null) {
+                                listener.onFailure(requestID + " does not exist",
+                                        SET_PICKEDUP_TAG);
                             } else if (!query.getAccepted()) {
-                                listener.onFailure(riderName + "has no active request exists");
+                                listener.onFailure(requestID + " is not active yet",
+                                        SET_PICKEDUP_TAG);
                             } else if (query.getPickedUp()) {
-                                listener.onFailure(riderName + "has an picked up request already");
+                                listener.onFailure(requestID + " is picked up already",
+                                        SET_PICKEDUP_TAG);
                             } else {
-                                query.setAccepted(true);
-                                query.setDriver(driver);
-                                System.out.println("***** " + docID);
-                                RequestDataHelper.updateRequest(docID, query, listener, false);
+                                query.setPickedUp(true);
+                                System.out.println("***** " + requestID);
+                                updateRequest(requestID, query, listener, SET_PICKEDUP_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    SET_PICKEDUP_TAG);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This method will check if there is an active and picked up but has not arrived reuqest that
+     * belongs to the rider and set the request to has arrived, then call the updateRequest method
+     * @param requestID
+     *  id of the request
+     * @param listener
+     *  listener for notification
+     */
+    public void setRequestArrived(final String requestID,  final OnGetRequestDataListener listener) {
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", SET_ARRIVED_TAG);
+            return;
+        }
+
+        collectionReferenceReq
+                .whereEqualTo("requestID", requestID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            Request query = null;
+//                            String docID = "";
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                query = document.toObject(Request.class);
+//                                docID = document.getId();
+                                count++;
+                            }
+                            if (query == null) {
+                                listener.onFailure(requestID + " does not exist",
+                                        SET_ARRIVED_TAG);
+                            } else if (!query.getAccepted()) {
+                                listener.onFailure(requestID + " is not active yet",
+                                        SET_ARRIVED_TAG);
+                            } else if (!query.getPickedUp()) {
+                                listener.onFailure(requestID + " is not picked up yet",
+                                        SET_ARRIVED_TAG);
+                            } else if (query.getHasArrived()) {
+                                listener.onFailure(requestID + " has already arrived",
+                                        SET_ARRIVED_TAG);
+                            } else {
+                                query.setHasArrived(true);
+                                System.out.println("***** " + requestID);
+                                updateRequest(requestID, query, listener, SET_ARRIVED_TAG);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    SET_ARRIVED_TAG);
                         }
                     }
                 });
@@ -428,18 +514,18 @@ public class RequestDataHelper extends DatabaseHelper {
 
     /**
      * This method will check if an inactive request exists and call the delRequest method
-     * @param riderName
+     * @param requestID
      *  rider name of query
      * @param listener
      *  listener for notification
      */
-    public static void cancelRequest(final String riderName, final OnGetRequestDataListener listener) {
-        if (riderName == null || riderName.length() == 0) {
-            listener.onFailure("rider name provided is a null or empty");
+    public void cancelRequest(final String requestID, final OnGetRequestDataListener listener) {
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", CANCEL_REQ_TAG);
             return;
         }
         collectionReferenceReq
-                .whereEqualTo("rider.account.userName", riderName)
+                .whereEqualTo("requestID", requestID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -450,31 +536,27 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  user should not have more than one requests exist in the db
                             int count = 0;
                             Request query = null;
-                            String docID = "";
+//                            String docID = "";
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 query = document.toObject(Request.class);
-                                docID = document.getId();
+//                                docID = document.getId();
                                 count++;
                             }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + riderName + " \" has more than one request");
-                                listener.onFailure(riderName + " has more than one request");
-                            } else {
-                                if (query == null) {
+                            if (query == null) {
                                     listener.onFailure("Deletion unsuccessful: " +
-                                            riderName + " has no request");
-                                } else if (query.getPickedUp() == true) {
-                                    listener.onFailure("Deletion denied: " +
-                                            riderName + " has an ongoing request");
-                                } else {
-                                    System.out.println("***** " + docID);
-                                    RequestDataHelper.delRequest(docID, listener);
-                                }
+                                            requestID + " does not exist", CANCEL_REQ_TAG);
+                            } else if (query.getPickedUp() == true) {
+                                listener.onFailure("Deletion denied: " +
+                                        requestID + " is an ongoing request", CANCEL_REQ_TAG);
+                            } else {
+                                System.out.println("***** " + requestID);
+                                delRequest(requestID, listener, "cancel");
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    CANCEL_REQ_TAG);
                         }
                     }
                 });
@@ -483,8 +565,8 @@ public class RequestDataHelper extends DatabaseHelper {
     /**
      * This method will check if an active request exists and call delRequest method follow by
      * addRecord method
-     * @param driverName
-     *  driver name of the query
+     * @param requestID
+     *  id of the request
      * @param payment
      *  payment of the request
      * @param rating
@@ -492,14 +574,15 @@ public class RequestDataHelper extends DatabaseHelper {
      * @param listener
      *  listener for notification
      */
-    public static void completeRequest(final String driverName, final Float payment, final Float rating,
+    public void completeRequest(final String requestID, final Float payment,
+                                       final Float rating,
                                        final OnGetRequestDataListener listener) {
-        if (driverName == null || driverName.length() == 0) {
-            listener.onFailure("driver name provided is a null or empty");
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", COMPLETE_REQ_TAG);
             return;
         }
         collectionReferenceReq
-                .whereEqualTo("driver.account.userName", driverName)
+                .whereEqualTo("requestID", requestID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -510,34 +593,30 @@ public class RequestDataHelper extends DatabaseHelper {
                             //  user should not have more than one requests exist in the db
                             int count = 0;
                             Request query = null;
-                            String docID = "";
+//                            String docID = "";
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 query = document.toObject(Request.class);
-                                docID = document.getId();
+//                                docID = document.getId();
                                 count++;
                             }
-                            if (count > 1) {
-                                System.out.println("*****  user \" " + driverName + " \" has more than one request");
-                                listener.onFailure(driverName + " has more than one request");
+                            if (query == null) {
+                                listener.onFailure("Deletion unsuccessful: " +
+                                        requestID + " does not exist", COMPLETE_REQ_TAG);
+                            } else if (query.getAccepted() != true || query.getPickedUp() != true) {
+                                listener.onFailure("Deletion denied: " +
+                                        requestID + " is not an ongoing request", COMPLETE_REQ_TAG);
                             } else {
-                                if (query == null) {
-                                    listener.onFailure("Deletion unsuccessful: " +
-                                            driverName + " has no request");
-                                } else if (query.getAccepted() != true || query.getPickedUp() != true) {
-                                    listener.onFailure("Deletion denied: " +
-                                            driverName + " has no ongoing request");
-                                } else {
-                                    System.out.println("***** " + docID);
-                                    RequestDataHelper.delRequest(docID, listener);
-                                    Record record = new Record(query, payment, rating);
-                                    RecordDataHelper.addRecord(record);
-                                    listener.onSuccess(null, null, COMPLETE_REQ_TAG);
-                                }
+                                System.out.println("***** " + requestID);
+                                delRequest(requestID, listener, "complete");
+                                Record record = new Record(query, payment, rating);
+                                RecordDataHelper.getInstance().addRecord(record);
+                                listener.onSuccess( null, COMPLETE_REQ_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure("Error getting documents: " + task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    COMPLETE_REQ_TAG);
                         }
                     }
                 });

@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +25,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Login extends AppCompatActivity {
+
+public class Login extends AppCompatActivity implements OnGetUserDataListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
@@ -36,6 +37,9 @@ public class Login extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference ref;
     FirebaseUser currentUser;
+
+    /* added by Jeremy */
+    OnGetUserDataListener listener = this;
 
 
     @Override
@@ -59,37 +63,49 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (!checkUserNameOrEmail(myID)){
+                    // If sign in with username
                     String getEmail = retrieveEmail();
-                    mAuth.signInWithEmailAndPassword(getEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    mAuth.signInWithEmailAndPassword(getEmail, mypwd)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                                DatabaseHelper.setCurrentUserName(myID);
-                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                /* added by Jeremy */
+                                UserDataHelper.getInstance().getUser(myID, listener);
+                                // get current user
+                                ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                pgsBar.setVisibility(v.VISIBLE);
+                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             } else {
-                                Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this,
+                                        "Login failed" + task.getException(),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 } else {
-
+                    // if sign in with email
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+
                                 currentUser = mAuth.getInstance().getCurrentUser();
                                 retrieveUsername();
                                 if (currentUser != null) {
                                     for (UserInfo profile : currentUser.getProviderData()) {
                                         String name = profile.getDisplayName();
-                                        DatabaseHelper.setCurrentUserName(name);
+                                        /* added by Jeremy */
+                                        UserDataHelper.getInstance().getUser(name, listener);
+                                        // get current user
+                                        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                        pgsBar.setVisibility(v.VISIBLE);
+                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     }
                                 }
-                                // DatabaseHelper.setCurrentUserName(currentUser.getDisplayName());
-                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
                                 Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
@@ -108,6 +124,13 @@ public class Login extends AppCompatActivity {
 
     }
 
+    /**
+     * To validate user inputs email/username
+     * @param email
+     *      user inputs email/username
+     * @return
+     *      return if the user correctly inputs email/username
+     * */
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             this.userID.setError("Field can't be empty");
@@ -118,6 +141,13 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * To validate user inputs password
+     * @param password
+     *      user inputs password
+     * @return
+     *      return if the user correctly inputs password
+     * */
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
@@ -128,11 +158,14 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * To validate user inputs email or username
+     * @param id
+     *      user inputs email/username
+     * @return
+     *      return whether user inputs email or username
+     * */
     public boolean checkUserNameOrEmail(String id) {
-//        if (id.contains("@")) {
-//            return true;
-//        }
-//        return false;
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -142,6 +175,7 @@ public class Login extends AppCompatActivity {
         if (id == null)
             return false;
         return pat.matcher(id).matches();
+
     }
 
     public String retrieveEmail() {
@@ -149,7 +183,11 @@ public class Login extends AppCompatActivity {
         return email;
     }
 
-
+    /**
+     * retrieve username according to
+     * the current user's uid
+     *
+     * */
     public void retrieveUsername() {
         currentUser = mAuth.getInstance().getCurrentUser();
         DatabaseReference myRef = database.getInstance().getReference("User");
@@ -170,4 +208,24 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onSuccess(User user, String tag) {
+        if (tag == UserDataHelper.GET_USER_TAG) {
+            DatabaseHelper.getInstance().setCurrentUser(user);
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
+            startActivity(homeIntent);
+        }
+    }
+
+    @Override
+    public void onUserExists(Boolean exists, String tag) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
+    }
 }

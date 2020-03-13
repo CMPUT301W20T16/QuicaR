@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +27,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key"/>
 
-
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -31,28 +48,41 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Register" />
+        <activity android:name=".Register" android:parentActivityName=".Login"/>
         <activity android:name=".Login" /> <!-- [START firebase_service] -->
 
-        <activity android:name="com.example.quicar.UserProfileActivity"
-            android:parentActivityName="com.example.quicar.RiderRequestActivity">
+        <activity android:name=".UserProfileActivity"
+            android:parentActivityName=".RiderRequestActivity">
         </activity>
 
-        <activity android:name="com.example.quicar.RiderRequestActivity"
-            android:parentActivityName="com.example.quicar.MainActivity"
+        <activity android:name=".RiderRequestActivity"
+            android:parentActivityName=".Login"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.example.quicar.RiderSelectLocationActivity" />
-        <activity android:name="com.example.quicar.BaseActivity"
+        <activity android:name=".RiderSelectLocationActivity"
+            android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".BaseActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <!--        <activity android:name="com.example.quicar.RiderConfirmRiderActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
-        <!--        <activity android:name="com.example.quicar.RiderWaitingRideActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
-        <!--        <activity android:name="com.example.quicar.DriverBrowsingActivity"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar"/>-->
 
+        <activity android:name=".RiderConfirmRiderActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderWaitingRideActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverBrowsingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--        wen kai >-->
+        <activity android:name=".ScanActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".QRPaymentActivity" />
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderSelectLocationActivity"/>
+        <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
 
+        <activity android:name=".DriverPickUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderOnGoingRequest"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverOnGoingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -64,6 +94,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

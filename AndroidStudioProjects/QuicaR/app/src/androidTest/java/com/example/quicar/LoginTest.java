@@ -11,6 +11,7 @@ import com.robotium.solo.Solo;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,5 +64,8 @@ public class LoginTest {
         solo.assertCurrentActivity("Not switched", Register.class);
     }
 
-
+    @After
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+    }
 }

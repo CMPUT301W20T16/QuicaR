@@ -1,7 +1,7 @@
 package com.example.quicar;
 
 /**
- * This is the interface that act as a listener when interacting with database helper
+ * This is the interface that act as a listener when interacting with firebase
  * so that it can be notified when user accounts data transfer is successful or failed.
  */
 public interface OnGetUserDataListener {
@@ -10,6 +10,8 @@ public interface OnGetUserDataListener {
     //  notify listener that user profile is updated successfully
     //  notify listener that user is obtained successfully
     void onSuccess(User user, String tag);
+
+    void onUserExists(Boolean exists, String tag);
 
     // whenever the query return null object or reading database failed
     void onFailure(String errorMessage);

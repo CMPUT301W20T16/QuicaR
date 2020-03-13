@@ -7,7 +7,7 @@ package com.example.quicar;
 import java.util.ArrayList;
 
 /**
- * This is the interface that act as a listener when interacting with database helper
+ * This is the interface that act as a listener when interacting with firebase
  * so that it can be notified when requests data transfer is successful or failed.
  */
 public interface OnGetRequestDataListener {
@@ -20,14 +20,18 @@ public interface OnGetRequestDataListener {
     //  notify listener that request is successfully deleted
     //  notify listener that request is completed, request deleted and new record created
     //  notify when a request is set to active (only when the user is in rider mode)
-    void onSuccess(Request request, ArrayList<Request> requests, String tag);
+    void onSuccess(ArrayList<Request> requests, String tag);
 
     void onActiveNotification(Request request);
 
     void onPickedUpNotification(Request request);
 
+    void onArrivedNotification(Request request);
+
     void onCancelNotification();
 
+    void onCompleteNotification();
+
     // whenever the query return null object or reading database failed
-    void onFailure(String errorMessage);
+    void onFailure(String errorMessage, String tag);
 }

@@ -1,44 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
+    android:weightSum="2"
     >
 
 
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
+        android:background="@drawable/border_shadow"
+        android:paddingTop="18dp"
+        android:layout_weight="1.5">
 
-    <fragment
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:id="@+id/autocomplete_fragment"
+        <fragment
+            android:id="@+id/pick_up"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp" />
+
+        <fragment
+            android:id="@+id/destination"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/pick_up"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginRight="50dp" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <!--    <AutoCompleteTextView-->
-    <!--        android:padding="10dp"-->
-    <!--        android:layout_marginRight="20dp"-->
-    <!--        android:layout_marginLeft="20dp"-->
-    <!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <!--        android:id="@+id/input_search"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_marginTop="13dp"-->
-    <!--        android:background="@drawable/rounded_courner_input"-->
-    <!--        android:hint="Enter Destination's Address, City or Zip Code"-->
-    <!--        android:imeOptions="actionSearch"-->
-    <!--        android:textColor="#000"-->
-    <!--        android:textSize="15sp" />-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="History Location"
+            android:gravity="center_horizontal"
+            android:textSize="15sp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_loc_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:padding="4dp"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -18,6 +18,8 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
             android:hint="Email/Username" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -32,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_background"
+            android:singleLine="true"
             android:inputType="textPassword"
             android:hint="Password" />
 
@@ -88,5 +91,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ProgressBar
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="130dp"
+        android:layout_marginRight="130dp"
+        android:visibility="invisible"></ProgressBar>
 
 </LinearLayout>
