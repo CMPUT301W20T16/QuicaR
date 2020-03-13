@@ -181,8 +181,8 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 } catch (ParseException e) {
                     e.printStackTrace();
                     birthDate = null;
-                    System.out.println("Teemo");
-                    System.out.println(birthDate);
+//                    System.out.println("Teemo");
+//                    System.out.println(birthDate);
                 }
             }
             //change later
@@ -207,7 +207,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
             if(this.lastNameLayout.getEditText().getText()!= null){
                 lastName = this.lastNameLayout.getEditText().getText().toString();
-                System.out.println(lastName);
+//                System.out.println(lastName);
             }
             if (this.spinnerGender.getSelectedItem()!= null){
 //            if (this.genderLayout.getEditText().getText()!= null){
@@ -219,9 +219,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
         }
         // ???
-        System.out.println(birthDate);
+//        System.out.println(birthDate);
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
-        System.out.println(user.getAccountInfo().getBirthDate());
+//        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }

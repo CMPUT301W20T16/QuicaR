@@ -37,7 +37,7 @@ public class UserProfileActivityTest {
 
 
     /**
-     * Check whether the user is correct or not
+     * Check whether the user is update correct or not
      */
 
     @Test
@@ -52,7 +52,7 @@ public class UserProfileActivityTest {
         final TextInputLayout phoneLayout = solo.getCurrentActivity().findViewById(R.id.profile_phone);
         final TextInputLayout firstNameLayout = solo.getCurrentActivity().findViewById(R.id.profile_firstName);
         final TextInputLayout lastNameLayout = solo.getCurrentActivity().findViewById(R.id.profile_lastName);
-//               this.genderLayout = findViewById(R.id.profile_gender);
+        //gender
         final  TextInputLayout birthDateLayout = solo.getCurrentActivity().findViewById(R.id.profile_birthDate);
         final TextInputLayout passwordLayout = solo.getCurrentActivity().findViewById(R.id.profile_password);
 
@@ -60,13 +60,45 @@ public class UserProfileActivityTest {
         solo.enterText(firstNameLayout.getEditText(), "Mushroom");
         solo.enterText(lastNameLayout.getEditText(), "Teemo");
         solo.enterText(passwordLayout.getEditText(),"Mushroom");
-        solo.clickOnView(solo.getView(R.id.save_button));
+
+
+//        solo.clickOnText("Preferences");
+//        solo.clickOnText("User");
+
+
+//        solo.clickOnView(solo.getCurrentActivity().findViewById(R.id.spinner_gender));
+//        solo.waitForText("male");
+//        solo.clickOnText("male");
+        // 0 is the first spinner in the layout
+//        View view1 = solo.getView(Spinner.class, 0);
+//        solo.clickOnView(view1);
+//        solo.scrollToTop(); // I put this in here so that it always keeps the list at start
+//// select the 10th item in the spinner
+//        solo.clickOnView(solo.getView(TextView.class, 2));
+//
+//
+//        solo.clickOnView(solo.getView(R.id.save_button));
 
         Assert.assertTrue(solo.waitForText("Mushroom"));
         Assert.assertTrue(solo.waitForText("12345678"));
         Assert.assertTrue(solo.waitForText("Teemo"));
+
+
+//        Assert.assertTrue(solo.waitForText("male"));
         solo.goBack();
 
     }
+    /**
+     * Check Spinner works or not
+     */
+    @Test
+    public void checkSpinner() {
+        solo.assertCurrentActivity("Wrong Activity", UserProfileActivity.class);
+        solo.pressSpinnerItem(0,0);
+        System.out.println("here");
+        Assert.assertTrue(solo.isSpinnerTextSelected(0,"no selection") );
+        solo.goBack();
+    }
+
 
 }
