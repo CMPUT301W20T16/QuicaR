@@ -126,11 +126,18 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
-        if (user != null) {
-            if((user.isDriver())) {
-                openDriverInfo();
-            }
-        }
+        System.out.println("ji");
+
+//
+//        if (user != null) {
+//            System.out.println("gu");
+//            if(user.isDriver()) {
+//                System.out.println("i am driver");
+//                openDriverInfo();
+//            }
+//        } else {
+//            System.out.println("null user");
+//        }
 
 
 
@@ -351,6 +358,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     private void setDefault() {
         if(this.user != null) {
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //set default user info
             if (user.getAccountInfo().getBirthDate() != null) {
@@ -400,6 +408,17 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      * for setting Driver Default
      */
     private void setDriverDefault() {
+
+        if (user != null) {
+            System.out.println("gu");
+            if(user.isDriver()) {
+                System.out.println("i am driver");
+                openDriverInfo();
+            }
+        } else {
+            System.out.println("null user");
+        }
+
         if(user.getAccountInfo().getDriverInfo().getLicense() != null){
             this.licenseLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getLicense());
         }
