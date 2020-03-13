@@ -12,16 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
 
 public class SetAmountActivity extends AppCompatActivity implements OnGetUserDataListener{
     TextView toUsername;
     EditText amount;
     Button confirm;
-    float money;
+    public static float money;
     User toUser;
     User fromUser;
 
@@ -36,7 +32,6 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
 
         String info = ScanTransferActivity.result.getText().toString();
         String username = info.split("\n")[1];
-        toUsername.setText(username);
 
         Gson gson = new Gson();
         if (username != null){
@@ -45,6 +40,7 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
             Toast.makeText(SetAmountActivity.this,
                     "Cannot transfer to a user not exists.", Toast.LENGTH_SHORT).show();
         }
+        toUsername.setText(toUser.getAccountInfo().getUserName());
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +51,8 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 toUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() + money);
                 UserDataHelper.updateUserProfile(fromUser, SetAmountActivity.this);
                 UserDataHelper.updateUserProfile(toUser, SetAmountActivity.this);
+                UserDataHelper.setCurrentUser(toUser);
+                UserDataHelper.setCurrentUser(fromUser);
                 //Float.parseFloat
 
             }
@@ -64,7 +62,7 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
 
     @Override
     public void onSuccess(User user, String tag) {
-
+        startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
     }
 
     @Override
