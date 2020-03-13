@@ -158,7 +158,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification
      */
-    public void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+    void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
         if (newRequest == null || newRequest.getRider().getName() == null
                 || newRequest.getRider().getName().length() == 0) {
             listener.onFailure("invalid parameters", ADD_REQ_TAG);
@@ -267,7 +267,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    public void queryUserRequest(final String userName, final String mode,
+    void queryUserRequest(final String userName, final String mode,
                                              final OnGetRequestDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("invalid parameters", USER_REQ_TAG);
@@ -311,7 +311,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    public void queryAllOpenRequests(final OnGetRequestDataListener listener) {
+    void queryAllOpenRequests(final OnGetRequestDataListener listener) {
 
         collectionReferenceReq
                 .whereEqualTo("isAccepted", false)
@@ -347,7 +347,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification
      */
-    public void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
+    void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
                                         final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", SET_ACTIVE_TAG);

@@ -622,11 +622,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     }
 
-    @Override
-    public  void  onUserExists(Boolean exists, String tag){
-
-    }
-
     // design to show update format
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
