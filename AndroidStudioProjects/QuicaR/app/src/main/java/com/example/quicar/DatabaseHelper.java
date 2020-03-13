@@ -337,42 +337,6 @@ public class DatabaseHelper {
     }
 
     /**
-     * This is the method that return the first location selected by rider
-     * @return
-     *  first location selected by rider
-     */
-    public Location getFirstLocation() {
-        return userState.getFirstSelectedLocation();
-    }
-
-    /**
-     * This is the method that set the value of first location selected by rider
-     * @param location
-     *  first location selected by rider
-     */
-    public void setFirstLocation(Location location) {
-        userState.setFirstSelectedLocation(location);
-    }
-
-    /**
-     * This is the method that return the second location selected by rider
-     * @return
-     *  second location selected by rider
-     */
-    public Location getSecondLocation() {
-        return userState.getSecondSelectedLocation();
-    }
-
-    /**
-     * This is the method that set the value of second location in DatabaseHelper
-     * @param location
-     *  value of second location in DatabaseHelper
-     */
-    public void setSecondLocation(Location location) {
-        userState.setSecondSelectedLocation(location);
-    }
-
-    /**
      * This is the method that check if there is a notification needed to be sent to the rider
      * that there is a request set to active (a driver accepted the rider's request)
      * @param request
