@@ -15,13 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.IOException;
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
@@ -156,30 +154,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                             "Saved successfully", Toast.LENGTH_SHORT).show();
 
                 }
-
-
-
-//                //!!!!!@ update correct user here
-//
-//
-//
-////
-////                UserDataHelper.updateUserProfile(user,listener);
-//
-//                // need to be change here
-//
-////                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-////                    @Override
-////                    public void onComplete(@NonNull Task<AuthResult> task) {
-////                        if (task.isSuccessful()) {
-////                            Toast.makeText(UserProfile.this, "Login successful", Toast.LENGTH_SHORT).show();
-////                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-////                        } else {
-////                            Toast.makeText(UserProfile.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
-////                        }
-////                    }
-////                });
-
 
             }
         });
