@@ -37,7 +37,7 @@ public class UserProfileActivityTest {
 
 
     /**
-     * Check whether the user name is correct or not
+     * Check whether the user is correct or not
      */
 
     @Test
