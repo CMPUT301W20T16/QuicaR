@@ -41,6 +41,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
     private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout,passwordLayout;
+    private  TextInputLayout plateNumberLayout,licenseLayout,sinNumberLayout;
 
     private boolean issuccess = false;
     private  boolean isfalse = false;
@@ -63,14 +64,29 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.phoneLayout = findViewById(R.id.profile_phone);
         this.usernameLayout = findViewById(R.id.profile_username);
         this.firstNameLayout = findViewById(R.id.profile_firstName);
-        this.lastNameLayout = findViewById(R.id.profile_lastName);
 //        this.genderLayout = findViewById(R.id.profile_gender);
+        this.lastNameLayout = findViewById(R.id.profile_lastName);
         this.birthDateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
+
+        this.plateNumberLayout = findViewById(R.id.profile_driver_plateNumber);
+        this.licenseLayout = findViewById(R.id.profile_driver_license_number);
+        this.sinNumberLayout = findViewById(R.id.profile_driver_sin);
+
         saveButton = findViewById(R.id.save_button);
         //?? set cannot edit
         this.emailLayout.setEnabled(false);
         this.usernameLayout.setEnabled(false);
+
+        // below set for driver mode invisible
+//        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
+////        this.licenseLayout.setVisibility(TextInputLayout.GONE);
+////        this.sinNumberLayout.setVisibility(TextInputLayout.GONE);
+        // user is not driver
+
+
+        closeDriverInfo();
+
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -110,24 +126,20 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
+        System.out.println("ji");
 
-//        // get current user
-//        UserDataHelper.getCurrentUser();
-
-//        long startTime = System.currentTimeMillis();
-//        long endTime;
-//        while (true){
-//            System.out.println("i am  waiting");
 //
-//            endTime = System.currentTimeMillis();
-//            if ((endTime - startTime) > 5000 ){
-//                break;
+//        if (user != null) {
+//            System.out.println("gu");
+//            if(user.isDriver()) {
+//                System.out.println("i am driver");
+//                openDriverInfo();
 //            }
-//            if (user == null) {
-//                System.out.println("no user result");
-//            }
-//
+//        } else {
+//            System.out.println("null user");
 //        }
+
+
 
         spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
 
@@ -146,6 +158,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //                    setDefault();
 //                    System.out.println("Good");
                     updateUser();
+                    if(user.isDriver()) {
+                        updateDriver();
+                    }
 
 //                    System.out.println(user.getAccountInfo().getPhone());
 //                    System.out.println(user.getAccountInfo().getPhone());
@@ -159,8 +174,30 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         });
 
 
+
+
+
     }
 
+
+    /**
+     *Run when you are not driver, do not show driver info
+     */
+    private  void closeDriverInfo() {
+        this.plateNumberLayout.setVisibility(View.GONE);
+        this.licenseLayout.setVisibility(View.GONE);
+        this.sinNumberLayout.setVisibility(View.GONE);
+
+    }
+    /**
+     *Run when you are driver, show driver info
+     */
+    private  void openDriverInfo (){
+        this.plateNumberLayout.setVisibility(View.VISIBLE);
+        this.licenseLayout.setVisibility(View.VISIBLE);
+        this.sinNumberLayout.setVisibility(View.VISIBLE);
+
+    }
 
 
     /**
@@ -226,6 +263,45 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
     }
 
+
+    /**
+     *Run when pass the validate, to update driver information
+     */
+
+    private void updateDriver() {
+        String license,sin,plate;
+        license = sin = plate  = null;
+
+        if(this.user != null){
+            if (this.licenseLayout.getEditText().getText() != null) {
+                license  = this.licenseLayout.getEditText().getText().toString();
+            }
+            //change later
+            if (this.plateNumberLayout.getEditText().getText() != null) {
+                plate = this.plateNumberLayout.getEditText().getText().toString();
+                ;
+            }
+
+            if (this.sinNumberLayout.getEditText().getText() != null) {
+                sin = this.sinNumberLayout.getEditText().getText().toString();
+                ;
+            }
+
+            DriverInfo driverInfo = user.getAccountInfo().getDriverInfo();
+            Double rating = driverInfo.getRating();
+            user.setDriverInfo( rating,  plate,  license,  sin);
+        }
+        // ???
+//        System.out.println(birthDate);
+
+//        System.out.println(user.getAccountInfo().getBirthDate());
+        ;
+
+    }
+
+
+
+
     /**
      * check Validate
      * @nretur
@@ -260,6 +336,18 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(!validateUsername()){
             flag = false;
         }
+
+        if(user.isDriver()){
+            if(!validateDriverLicense()){
+                flag = false;
+            }
+            if(!validateDriverPlate()){
+                flag = false;
+            }
+            if(!validateDriverSin()){
+                flag = false;
+            }
+        }
         return  flag;
     }
 
@@ -268,8 +356,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * defined for set default information to help user to update info
      */
-    public void setDefault() {
+    private void setDefault() {
         if(this.user != null) {
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //set default user info
             if (user.getAccountInfo().getBirthDate() != null) {
@@ -302,10 +391,88 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 this.passwordLayout.getEditText().setText(user.getAccountInfo().getPassword());
             }
 
-            System.out.println("setting default");
+            System.out.println("setting user default");
+
+            if (user.isDriver()) {
+                setDriverDefault();
+                System.out.println("setting driver default");
+            }
+
+
         }
 
 
+    }
+
+    /**
+     * for setting Driver Default
+     */
+    private void setDriverDefault() {
+
+        if (user != null) {
+            System.out.println("gu");
+            if(user.isDriver()) {
+                System.out.println("i am driver");
+                openDriverInfo();
+            }
+        } else {
+            System.out.println("null user");
+        }
+
+        if(user.getAccountInfo().getDriverInfo().getLicense() != null){
+            this.licenseLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getLicense());
+        }
+        if(user.getAccountInfo().getDriverInfo().getPlateNumber() != null){
+            this.plateNumberLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getPlateNumber());
+        }
+        if(user.getAccountInfo().getDriverInfo().getSinNumber() != null){
+            this.sinNumberLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getSinNumber());
+        }
+
+    }
+
+
+    /**
+     * for check valid driver plate number
+     */
+    private boolean validateDriverPlate() {
+        String plate = plateNumberLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(plate)) {
+            this.plateNumberLayout.setError("Field can't be empty");
+            return false;
+        } else {
+            this.plateNumberLayout.setError(null);
+            return true;
+        }
+    }
+
+    /**
+     * for check valid driver license number
+     */
+    private boolean validateDriverLicense() {
+        String license = licenseLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(license)) {
+            this.licenseLayout.setError("Field can't be empty");
+            return false;
+        } else {
+            this.licenseLayout.setError(null);
+            return true;
+        }
+    }
+
+
+    /**
+     * for check valid driver sin number
+     */
+    private boolean validateDriverSin() {
+        String sin = sinNumberLayout.getEditText().getText().toString();
+        if (TextUtils.isEmpty(sin)) {
+            this.sinNumberLayout.setError("Field can't be empty");
+            return false;
+        } else {
+            this.sinNumberLayout.setError(null);
+            return true;
+        }
     }
 
     /**
