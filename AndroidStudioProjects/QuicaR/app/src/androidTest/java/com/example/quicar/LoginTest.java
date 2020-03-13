@@ -32,14 +32,13 @@ public class LoginTest {
         //solo.enterText((EditText) solo.getView(R.id.sign_in_email), "usertest");
         final TextInputLayout userNameInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_email);
         final TextInputLayout passwordInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_password);
-        solo.enterText(userNameInput.getEditText(), "usertest");
-        solo.enterText(passwordInput.getEditText(), "123456");
+        solo.enterText(userNameInput.getEditText(), "mushroom");
+        solo.enterText(passwordInput.getEditText(), "mushroom");
         // solo.clickOnButton("LOGIN");
         solo.clickOnView(solo.getView(R.id.sign_in_button));
         solo.clearEditText(userNameInput.getEditText());
         solo.clearEditText(passwordInput.getEditText());
         assertTrue(solo.waitForText("Login successful"));
-        assertFalse(solo.searchText("Login successful"));
     }
 
     @Test
@@ -48,14 +47,13 @@ public class LoginTest {
         //solo.enterText((EditText) solo.getView(R.id.sign_in_email), "usertest");
         final TextInputLayout userEmailInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_email);
         final TextInputLayout userPasswordInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_password);
-        solo.enterText(userEmailInput.getEditText(), "usertest@gmail.com");
-        solo.enterText(userPasswordInput.getEditText(), "123456");
+        solo.enterText(userEmailInput.getEditText(), "mushroom@gmail.com");
+        solo.enterText(userPasswordInput.getEditText(), "mushroom");
         // solo.clickOnButton("LOGIN");
         solo.clickOnView(solo.getView(R.id.sign_in_button));
         solo.clearEditText(userEmailInput.getEditText());
         solo.clearEditText(userPasswordInput.getEditText());
         assertTrue(solo.waitForText("Login successful"));
-        assertFalse(solo.searchText("Login successful"));
     }
 
     @Test
