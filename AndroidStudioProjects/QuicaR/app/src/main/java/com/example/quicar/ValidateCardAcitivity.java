@@ -45,7 +45,7 @@ public class ValidateCardAcitivity extends AppCompatActivity {
                 card_1.setNameOnCard(name.getText().toString());
                 card_1.setCardnumber(cardNum.getText().toString());
                 card_1.setCcvCode(ccv.getText().toString());
-                card_1.setCardType();
+                card_1.setType(null);
                 String Date = expiryDate.getText().toString();
                 try {
                     Date date = new SimpleDateFormat("yyyy/MM/dd").parse(Date);

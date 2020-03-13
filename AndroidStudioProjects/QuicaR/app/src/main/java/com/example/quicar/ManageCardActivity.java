@@ -2,18 +2,17 @@ package com.example.quicar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ManageCardActivity extends AppCompatActivity {
+public class ManageCardActivity extends AppCompatActivity implements OnGetUserDataListener{
 
     User user;
     Button addCard;
@@ -26,11 +25,12 @@ public class ManageCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activiry_manage_card);
 
+        user = DatabaseHelper.getCurrentUser();
         addCard = (Button)findViewById(R.id.add_card);
         cardList = (ListView)findViewById(R.id.card_list);
 
         //cardDataList = user.getAccountInfo().getWallet().getBankAccountArrayList();
-        cardDataList = new ArrayList<BankAccount>();
+        cardDataList = user.getAccountInfo().getWallet().getBankAccountArrayList();
         cardAdapter = new CardList(this, cardDataList);
         cardList.setAdapter(cardAdapter);
 
@@ -76,8 +76,27 @@ public class ManageCardActivity extends AppCompatActivity {
                     BankAccount card_1 = (BankAccount) data.getExtras().getSerializable("card_1");
                     cardDataList.add(card_1);
                     cardAdapter.notifyDataSetChanged();
+                    DatabaseHelper.setCurrentUser(user);
+                    UserDataHelper.updateUserProfile(user, this);
                     System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
                 }
         }
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+        Toast.makeText(ManageCardActivity.this,
+                "Successfully add a new card", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUserExists(Boolean exists, String tag) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        Toast.makeText(ManageCardActivity.this,
+                "Failure to  add a new card", Toast.LENGTH_SHORT).show();
     }
 }

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
@@ -75,6 +76,8 @@ public class WalletOverviewActivity extends AppCompatActivity {
 
     protected void generate_qr(ImageView qr_code) {
         String time = LocalDateTime.now().toString();
+        Gson gson = new Gson();
+        String json = gson.toJson(DatabaseHelper.getCurrentUser());
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point point = new Point();
@@ -83,7 +86,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
         int y = point.y;
         int icon = x < y ? x : y;
         icon = icon * 3 / 4;
-        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time, BarcodeFormat.QR_CODE.toString(), icon);
+        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json, BarcodeFormat.QR_CODE.toString(), icon);
         try {
             Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
             qr_code.setImageBitmap(bitmap);

@@ -52,7 +52,7 @@ public class BankAccount implements Serializable {
         this.cardnumber = cardnumber;
     }
 
-    public void setCardType() {
+    public void setType(String type) {
         String[] cardTypeList = new String[]{"Debit Card", "MasterCard"};
         Random r = new Random(System.currentTimeMillis());
         int index = r.nextInt(2);

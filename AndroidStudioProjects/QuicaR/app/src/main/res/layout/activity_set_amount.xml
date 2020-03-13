@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/addCardBackground">
+
+    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="35dp"
+    android:background="@drawable/select_amount"
+    android:contentDescription="@string/select_amount"/>
+
+    <EditText
+        android:id="@+id/card_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="78dp"
+        android:layout_marginStart="75dp"
+        android:inputType="numberDecimal"
+        android:hint="@null"/>
+
+
+</LinearLayout>

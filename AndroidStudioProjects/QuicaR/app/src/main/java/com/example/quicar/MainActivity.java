@@ -3,9 +3,7 @@ package com.example.quicar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,23 +16,27 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
 import static com.example.quicar.DatabaseHelper.TAG;
 
 
-public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener {
+public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener {
 
     private OnGetRequestDataListener listener = this;
     private static int SPLASH_TIME_OUT = 0;
+
+    private String requestID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseHelper.setCurrentUserName("testing1");
+        DatabaseHelper.setCurrentUser(new User());
+        DatabaseHelper.setCurrentUserName("Name");
         DatabaseHelper.setCurrentMode("rider");
         DatabaseHelper.setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         new UserDataHelper();
 
         RequestDataHelper.setOnNotifyListener(this);
+
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         // Get token
         // [START retrieve_current_token]
@@ -69,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         // [END retrieve_current_token]
 
 //        //  test adding new user in register page
-        //startActivity(new Intent(getApplicationContext(), Login.class));
+//        startActivity(new Intent(getApplicationContext(), Login.class));
 //
-        //test map view
+        //  test map view
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -80,9 +84,11 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
                 finish();
             }
         }, SPLASH_TIME_OUT);
-        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
-
-
+//        System.out.println("user name" + DatabaseHelper.getCurrentUserName());
+//
+//
+        EditText editText = findViewById(R.id.editText);
+        editText.setEnabled(false);
         Button logTokenButton = findViewById(R.id.logTokenButton);
         logTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             public void onClick(View v) {
                 User newDriver = new User();
                 newDriver.setName("new Driver");
-                RequestDataHelper.setRequestActive(DatabaseHelper.getCurrentUserName(), newDriver, 666.f, listener);
-                DatabaseHelper.sendPopUpNotification("hello");
+                RequestDataHelper.setRequestActive(requestID, newDriver, 666.f, listener);
             }
         });
 
@@ -141,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestDataHelper.completeRequest("new Driver", 30.0f, 5.0f, listener);
+                RequestDataHelper.completeRequest(requestID, 30.0f, 5.0f, listener);
             }
         });
 
@@ -149,20 +154,22 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     }
 
     @Override
-    public void onSuccess(Request request, ArrayList<Request> requests, String tag) {
+    public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.USER_REQ_TAG) {
-            System.out.println("---------------" + request.getRider().getName() + "---------------");
+
         } else if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
                 System.out.println("------------ active request obtained -----------");
+                for (Request request: requests)
+                    System.out.println(request);
             }
             else {
                 System.out.println("------------ empty list obtained -----------");
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests(new Location(), this);
+            //RequestDataHelper.queryAllOpenRequests( this);
             RequestDataHelper.queryUserRequest("new Driver", "driver", this);
             Toast.makeText(MainActivity.this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.SET_PICKEDUP_TAG) {
@@ -176,12 +183,19 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             Toast.makeText(MainActivity.this, "rider request completed successfully", Toast.LENGTH_SHORT).show();
         } else if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(MainActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+            requestID = requests.get(0).getRid();
+            System.out.println(requestID+"---------requestID");
         }
     }
+
+    /*
+    This is part for OnGetRequestDataListener
+     */
 
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
+        DatabaseHelper.sendPopUpNotification("Notification test", "hello");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
     }
 
@@ -197,7 +211,24 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     @Override
     public void onCompleteNotification() {
+        RecordDataHelper.queryHistoryLocation(DatabaseHelper.getCurrentUserName(), null,this);
+        System.out.println("here ------");
+    }
 
+    @Override
+    public void onFailure(String errorMessage, String tag) {
+        System.out.println("-----------" + errorMessage + "-----------");
+        Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+    This is part for OnGetRecordDataListener
+     */
+
+    @Override
+    public void onSuccess(ArrayList<Location> history) {
+        for (Location loc: history)
+            System.out.println(loc.getLat() + " " + loc.getLon() + " --------- history here");
     }
 
     @Override

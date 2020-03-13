@@ -5,6 +5,7 @@
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="fcm_message">FCM Message</string>
     <string name="button_validate">Validate</string>
+    <string name="snooze">SNOOZE</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <!--
         This is the name that users will see when interacting with this channel.
@@ -48,6 +49,7 @@
     <string name="name_on_card">Name on the card</string>
     <string name="card_fragment">this is the card fragment</string>
     <string name="add_card_name">You can find all these information on the card</string>
+    <string name="select_amount">select an amount to pay</string>
 
     <!-- [end] -->
 

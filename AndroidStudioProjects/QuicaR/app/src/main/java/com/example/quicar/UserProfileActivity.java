@@ -1,16 +1,25 @@
 package com.example.quicar;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
@@ -30,14 +39,18 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //    }
 
 
-    private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstnameLayout, lastnameLayout, birthdateLayout, genderLayout,passwordLayout;
+    private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout, genderLayout,passwordLayout;
 
-    private int getUser = 0;
+    private boolean issuccess = false;
+    private  boolean isfalse = false;
     FirebaseAuth mAuth;
 
 
     private  User user ;
-    private OnGetUserDataListener listener;
+    private OnGetUserDataListener listener = this;
+    final Calendar myCalendar = Calendar.getInstance();
+
+
 
 
     @Override
@@ -48,32 +61,99 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.emailLayout = findViewById(R.id.profile_email);
         this.phoneLayout = findViewById(R.id.profile_phone);
         this.usernameLayout = findViewById(R.id.profile_username);
-        this.firstnameLayout = findViewById(R.id.profile_firstName);
-        this.lastnameLayout = findViewById(R.id.profile_lastName);
+        this.firstNameLayout = findViewById(R.id.profile_firstName);
+        this.lastNameLayout = findViewById(R.id.profile_lastName);
         this.genderLayout = findViewById(R.id.profile_gender);
-        this.birthdateLayout = findViewById(R.id.profile_birthDate);
+        this.birthDateLayout = findViewById(R.id.profile_birthDate);
         this.passwordLayout = findViewById(R.id.profile_password);
         saveButton = findViewById(R.id.save_button);
-
+        //?? set cannot edit
+        this.emailLayout.setEnabled(false);
+        this.usernameLayout.setEnabled(false);
         mAuth = FirebaseAuth.getInstance();
 
 
-        String userName = DatabaseHelper.getCurrentUserName();
+        // set date picker
+        // Reference: Alireza Noorali, Android_coder
+        // URL:https://stackoverflow.com/questions/14933330/datepicker-how-to-popup-datepicker-when-click-on-edittext
+        final DatePickerDialog.OnDateSetListener Dates = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+        birthDateLayout.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(UserProfileActivity.this, Dates, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+            }
+        });
+
+
+
+
+
+//        String userName = DatabaseHelper.getCurrentUserName();
+        //Test
+        String userName = "Hello";
         // get current user
         UserDataHelper.getUser(userName,this);
 
-        this.setDefault();
+//        // get current user
+//        UserDataHelper.getCurrentUser();
+
+//        long startTime = System.currentTimeMillis();
+//        long endTime;
+//        while (true){
+//            System.out.println("i am  waiting");
+//
+//            endTime = System.currentTimeMillis();
+//            if ((endTime - startTime) > 5000 ){
+//                break;
+//            }
+//            if (user == null) {
+//                System.out.println("no user result");
+//            }
+//
+//        }
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean validateFlag = checkValidate();
-//                boolean validateFlag = new UserProfileActivity().checkValidate();
 
-//                if(validateFlag == false) {
-//
-//
-//                }
+                if(!validateFlag) {
+                    ;
+                    System.out.println("not validate");
+                    Toast.makeText(UserProfileActivity.this,
+                            "Invalid input", Toast.LENGTH_SHORT).show();
+                } else {
+                    ;
+//                    setDefault();
+//                    System.out.println("Good");
+                    updateUser();
+
+//                    System.out.println(user.getAccountInfo().getPhone());
+//                    System.out.println(user.getAccountInfo().getPhone());
+                    UserDataHelper.updateUserProfile(user,listener);
+                    Toast.makeText(UserProfileActivity.this,
+                            "Saved successfully", Toast.LENGTH_SHORT).show();
+
+                }
+
+
 
 //                //!!!!!@ update correct user here
 //
@@ -104,8 +184,75 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     }
 
 
+    /**
+     *Run when pass the validate, to update user information
+     */
+    private void updateUser() {
+        String email,username,phone,firstName,lastName,gender,password,accNo;
+        Wallet wallet = null;
+        accNo = email = username = phone = firstName = lastName = gender = password = null;
+        String sbirthDate = null;
+        Date birthDate;
+        birthDate = null;
+        if(this.user != null){
+            if (this.birthDateLayout.getEditText().getText() != null) {
+                sbirthDate  = this.birthDateLayout.getEditText().getText().toString();
+                try {
+                    birthDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(sbirthDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    birthDate = null;
+                    System.out.println("Teemo");
+                    System.out.println(birthDate);
+                }
+            }
+            //change later
+            if (this.emailLayout.getEditText().getText() != null) {
+                email = this.emailLayout.getEditText().getText().toString();
+                ;
+            }
+
+            if (this.usernameLayout.getEditText().getText() != null) {
+                username = this.usernameLayout.getEditText().getText().toString();
+                ;
+            }
+
+            if(this.phoneLayout.getEditText().getText()!= null){
+                phone = this.phoneLayout.getEditText().getText().toString();
+//                System.out.println("here");
+//                System.out.println(phone);
+
+            }
+            if(this.firstNameLayout.getEditText().getText() != null){
+                firstName = this.firstNameLayout.getEditText().getText().toString();
+            }
+            if(this.lastNameLayout.getEditText().getText()!= null){
+                lastName = this.lastNameLayout.getEditText().getText().toString();
+                System.out.println(lastName);
+            }
+            if (this.genderLayout.getEditText().getText()!= null){
+                gender = this.genderLayout.getEditText().getText().toString();
+            }
+            if (this.passwordLayout.getEditText() != null){
+                password = this.passwordLayout.getEditText().getText().toString();
+            }
+        }
+        // ???
+        System.out.println(birthDate);
+        user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
+        System.out.println(user.getAccountInfo().getBirthDate());
+        ;
+
+    }
+
+    /**
+     * check Validate
+     * @nretur
+     */
+
     private boolean checkValidate() {
         boolean flag = true;
+
         if (!validateEmail()) {
             flag = false;
         }
@@ -113,7 +260,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             flag = false;
         }
         if(!validateFirstName()){
-            System.out.println(flag);
             flag = false;
         }
         if (!validateLastName()) {
@@ -122,12 +268,14 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         if(!validateGender()) {
             flag = false;
         }
+
         if(!validateBirthDate()) {
             flag = false;
         }
         if(!validatePhone()) {
             flag = false;
         }
+
         if(!validateUsername()){
             flag = false;
         }
@@ -139,17 +287,38 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * defined for set default information to help user to update info
      */
-    private void setDefault() {
-        if(this.getUser == 1) {
+    public void setDefault() {
+        if(this.user != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //set default user info
-            this.emailLayout.getEditText().setText(user.getAccountInfo().getEmail());
-            this.usernameLayout.getEditText().setText(user.getAccountInfo().getUserName());
-            this.phoneLayout.getEditText().setText(user.getAccountInfo().getPhone());
-            this.firstnameLayout.getEditText().setText(user.getAccountInfo().getFirstName());
-            this.lastnameLayout.getEditText().setText(user.getAccountInfo().getLastName());
-            this.birthdateLayout.getEditText().setText(sdf.format(user.getAccountInfo().getBirthDate()));
-            this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
+            if (user.getAccountInfo().getBirthDate() != null) {
+                this.birthDateLayout.getEditText().setText(sdf.format(user.getAccountInfo().getBirthDate()));
+            } else {
+                ;
+            }
+            if (user.getAccountInfo().getEmail() != null) {
+                this.emailLayout.getEditText().setText(user.getAccountInfo().getEmail());
+            }
+
+            if (user.getAccountInfo().getUserName() != null) {
+                this.usernameLayout.getEditText().setText(user.getAccountInfo().getUserName());
+            }
+            if(user.getAccountInfo().getPhone() != null){
+                this.phoneLayout.getEditText().setText(user.getAccountInfo().getPhone());
+            }
+            if(user.getAccountInfo().getFirstName() != null){
+                this.firstNameLayout.getEditText().setText(user.getAccountInfo().getFirstName());
+            }
+            if(user.getAccountInfo().getLastName() != null){
+                this.lastNameLayout.getEditText().setText(user.getAccountInfo().getLastName());
+            }
+            if (user.getAccountInfo().getGender() != null){
+                this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
+            }
+            if (user.getAccountInfo().getPassword() != null){
+                this.passwordLayout.getEditText().setText(user.getAccountInfo().getPassword());
+            }
+
             System.out.println("setting default");
         }
 
@@ -161,6 +330,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     public boolean validateEmail() {
         String email = emailLayout.getEditText().getText().toString().trim();
+        if(!email.contains("@")){
+            return false;
+        }
         if (TextUtils.isEmpty(email)) {
             this.emailLayout.setError("Field can't be empty");
             return false ;
@@ -220,12 +392,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      * for check valid user input FirstName
      */
     private boolean validateFirstName() {
-        String firstName = firstnameLayout.getEditText().getText().toString();
+        String firstName = firstNameLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(firstName)) {
-            this.firstnameLayout.setError("Field can't be empty");
+            this.firstNameLayout.setError("Field can't be empty");
             return false ;
         } else {
-            this.firstnameLayout.setError(null);
+            this.firstNameLayout.setError(null);
             return true;
         }
     }
@@ -234,29 +406,42 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      * for check valid user input LastName
      */
     private boolean validateLastName() {
-        String lastTime = lastnameLayout.getEditText().getText().toString();
+        String lastTime = lastNameLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(lastTime)) {
-            this.lastnameLayout.setError("Field can't be empty");
+            this.lastNameLayout.setError("Field can't be empty");
             return false ;
         } else {
-            this.lastnameLayout.setError(null);
+            this.lastNameLayout.setError(null);
             return true;
         }
     }
 
 
     /**
-     * for check valid user input gender
+     * for check valid user input gender, Check later
      */
     private boolean validateGender() {
         return true;
     }
 
     /**
-     * for check valid user input birthdate
+     * for check valid user input birthDate, Check later
      */
     private boolean validateBirthDate() {
         return true;
+    }
+
+
+    /**
+     * This is an extra method that return date and time as a string in standard format
+     * @return
+     *  date and time as a string in standard format
+     */
+    public String getDateTimeString(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy", Locale.CANADA);
+        if (date == null)
+            throw new IllegalArgumentException();
+        return sdf.format(date);
     }
 
 
@@ -266,14 +451,24 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     @Override
     public void onSuccess(User user, String tag) {
-        if (tag == UserDataHelper.GET_USER_TAG)
+
+        if (tag == UserDataHelper.GET_USER_TAG){
             this.user = user;
-            this.getUser = 1;
+            this.issuccess = true;
+            System.out.println("isSuccess");
+        }
+        System.out.println(user);
+        this.setDefault();
+
     }
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("your implementation worong");
+        System.out.println("isFalse");
+        System.out.println(errorMessage);
+        this.isfalse = true;
+        Toast.makeText(UserProfileActivity.this,
+                "disConnected, try later", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -281,4 +476,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     public  void  onUserExists(Boolean exists, String tag){
 
     }
+
+    // design to show update format
+    private void updateLabel() {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        birthDateLayout.getEditText().setText(sdf.format(myCalendar.getTime()));
+
+    };
 }

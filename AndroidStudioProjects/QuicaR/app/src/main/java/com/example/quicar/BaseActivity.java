@@ -283,6 +283,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
                 startActivity(intent2);
                 break;
+
             case R.id.nav_wallet:
                 Intent intent3 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
                 startActivity(intent3);

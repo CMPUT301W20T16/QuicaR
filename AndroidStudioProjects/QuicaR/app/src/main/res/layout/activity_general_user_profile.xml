@@ -128,6 +128,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:inputType="date"
+                android:focusable="false"
                 android:layout_margin="10dp"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
