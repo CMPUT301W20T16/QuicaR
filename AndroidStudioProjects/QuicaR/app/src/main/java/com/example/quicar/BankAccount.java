@@ -1,30 +1,37 @@
 package com.example.quicar;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;
 
-import com.google.firebase.firestore.PropertyName;
-
 public class BankAccount implements Serializable {
 
     // no more accNo
+    @PropertyName("name")
     private String nameOnCard;
-    private String cardNumber;
+
+    @PropertyName("cardNo")
+    private String cardnumber;
+
+    @PropertyName("expireDate")
     private Date expireDate;
+
+    @PropertyName("ccvCode")
     private String ccvCode;
+
+    @PropertyName("type")
     private String type;
 
     public BankAccount() {
         this.nameOnCard = "";
-        this.cardNumber = "";
+        this.cardnumber = "";
         this.expireDate = new Date();
         this.ccvCode = "";
         this.type = "";
     }
 
-
-    @PropertyName("name")
     public void setNameOnCard(String name) {
         this.nameOnCard = name;
     }
@@ -37,7 +44,10 @@ public class BankAccount implements Serializable {
         this.ccvCode = ccvCode;
     }
 
-    @PropertyName("type")
+    public void setCardnumber(String cardnumber) {
+        this.cardnumber = cardnumber;
+    }
+
     public void setType(String type) {
         String[] cardTypeList = new String[]{"Debit Card", "MasterCard"};
         Random r = new Random(System.currentTimeMillis());
@@ -45,25 +55,15 @@ public class BankAccount implements Serializable {
         this.type = cardTypeList[index];
     }
 
-    @PropertyName("cardNo")
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getLastFour(){
-        return this.cardNumber.substring(12, 13) + " " + this.cardNumber.substring(13, 14) + " " +
-                this.cardNumber.substring(14, 15) + " " + this.cardNumber.substring(15, 16);
-    }
-
-    @PropertyName("name")
     public String getNameOnCard() {
-        return this.cardNumber;
+        return this.cardnumber;
     }
 
-    @PropertyName("cardNo")
-    public String getCardNumber() {
-        return cardNumber;
+    public String getCardnumber() {
+        return this.cardnumber;
     }
+
+    public String getLastFour(){return this.cardnumber.substring(12, 13) + " "+ this.cardnumber.substring(13, 14) + " " + this.cardnumber.substring(14, 15) + " " + this.cardnumber.substring(15, 16);}
 
     public Date getExpireDate() {
         return this.expireDate;
@@ -73,7 +73,6 @@ public class BankAccount implements Serializable {
         return this.ccvCode;
     }
 
-    @PropertyName("type")
     public String getType() {
         return this.type;
     }
