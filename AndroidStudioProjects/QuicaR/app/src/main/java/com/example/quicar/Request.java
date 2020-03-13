@@ -20,6 +20,7 @@ public class Request implements Serializable {
     private User driver;
     private Boolean isAccepted;
     private Boolean isPickedUp;
+    private Boolean hasArrived;
     private Float estimatedCost;
 
     /**
@@ -40,13 +41,17 @@ public class Request implements Serializable {
      * @param estimatedCost
      *  estimated cost of the request / order
      */
-    public Request(Location start, Location destination, User rider, User driver, Float estimatedCost) {
+    public Request(Location start, String startAddrName, Location destination, String destAddrName,
+                   User rider, User driver, Float estimatedCost) {
         this.start = start;
+        this.startAddrName = startAddrName;
         this.destination = destination;
+        this.destAddrName = destAddrName;
         this.rider = rider;
         this.driver = driver;
         this.isAccepted = false;
         this.isPickedUp = false;
+        this.hasArrived = false;
         this.estimatedCost = estimatedCost;
     }
 
@@ -219,6 +224,24 @@ public class Request implements Serializable {
      */
     public void setPickedUp(Boolean pickedUp) {
         isPickedUp = pickedUp;
+    }
+
+    /**
+     * This method return the arriving state of the request
+     * @return
+     *  arriving state of the request
+     */
+    public Boolean getHasArrived() {
+        return hasArrived;
+    }
+
+    /**
+     * This method set the arriving state of the request
+     * @param hasArrived
+     *  arriving state of the request
+     */
+    public void setHasArrived(Boolean hasArrived) {
+        this.hasArrived = hasArrived;
     }
 
     /**

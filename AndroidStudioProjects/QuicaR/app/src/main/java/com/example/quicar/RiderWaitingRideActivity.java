@@ -131,6 +131,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     }
 
     @Override
+    public  void onArrivedNotification(Request request) {
+
+    }
+
+    @Override
     public void onCancelNotification() {
         System.out.println("------------- rider has been canceled -----------------");
         Toast.makeText(RiderWaitingRideActivity.this, "rider is canceled by driver", Toast.LENGTH_SHORT).show();

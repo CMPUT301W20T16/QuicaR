@@ -31,6 +31,11 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
     }
 
     @Override
+    public  void onArrivedNotification(Request request) {
+
+    }
+
+    @Override
     public void onCancelNotification() {
 
     }

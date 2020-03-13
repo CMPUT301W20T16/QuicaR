@@ -30,6 +30,7 @@ public class RequestDataHelper {
     public static final String ADD_REQ_TAG = "add new request";
     public static final String SET_ACTIVE_TAG = "set request active";
     public static final String SET_PICKEDUP_TAG = "set request picked up";
+    public static final String SET_ARRIVED_TAG = "set request arrived";
     public static final String CANCEL_REQ_TAG = "cancel opened request";
     public static final String COMPLETE_REQ_TAG = "complete request";
 
@@ -94,6 +95,12 @@ public class RequestDataHelper {
     void notifyPickedUp(Request request) {
         if (notifyListener != null) {
             notifyListener.onPickedUpNotification(request);
+        }
+    }
+
+    void notifyArrived(Request request) {
+        if (notifyListener != null) {
+            notifyListener.onArrivedNotification(request);
         }
     }
 
@@ -205,7 +212,7 @@ public class RequestDataHelper {
      */
     private void updateRequest(final String requestID, final Request request,
                                       final OnGetRequestDataListener listener,
-                                      final boolean setActiveMode) {
+                                      final String updateMode) {
 
         final DocumentReference reqDocRef = collectionReferenceReq.document(requestID);
 
@@ -228,20 +235,24 @@ public class RequestDataHelper {
             @Override
             public void onSuccess(String docID) {
                 Log.d(TAG, "Transaction success: " + docID);
-                if (setActiveMode)
+                if (updateMode == SET_ACTIVE_TAG)
                     listener.onSuccess(null, SET_ACTIVE_TAG);
-                else
+                else if (updateMode == SET_PICKEDUP_TAG)
                     listener.onSuccess(null, SET_PICKEDUP_TAG);
+                else if (updateMode == SET_ARRIVED_TAG)
+                    listener.onSuccess(null, SET_ARRIVED_TAG);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Transaction failure.", e);
-                if (setActiveMode)
+                if (updateMode == SET_ACTIVE_TAG)
                     listener.onFailure("Transaction failure. " + e, SET_ACTIVE_TAG);
-                else
+                else if (updateMode == SET_PICKEDUP_TAG)
                     listener.onFailure("Transaction failure. " + e, SET_PICKEDUP_TAG);
+                else if (updateMode == SET_ARRIVED_TAG)
+                    listener.onFailure("Transaction failure" + e, SET_ACTIVE_TAG);
             }
         });
     }
@@ -375,7 +386,7 @@ public class RequestDataHelper {
                                 query.setEstimatedCost(offeredPrice);
                                 query.setDriver(driver);
                                 System.out.println("***** " + requestID);
-                                updateRequest(requestID, query, listener, true);
+                                updateRequest(requestID, query, listener, SET_ACTIVE_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -391,15 +402,11 @@ public class RequestDataHelper {
      * request to picked up, then call the updateRequest method
      * @param requestID
      *  id of the request
-     * @param driver
      * @param listener
+     *  listener for notification
      */
-    public void setRequestPickedUp(final String requestID, final User driver,
-                                        final OnGetRequestDataListener listener) {
+    public void setRequestPickedUp(final String requestID, final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
-            listener.onFailure("invalid parameters", SET_PICKEDUP_TAG);
-            return;
-        } else if (driver == null) {
             listener.onFailure("invalid parameters", SET_PICKEDUP_TAG);
             return;
         }
@@ -433,15 +440,73 @@ public class RequestDataHelper {
                                 listener.onFailure(requestID + " is picked up already",
                                         SET_PICKEDUP_TAG);
                             } else {
-                                query.setAccepted(true);
-                                query.setDriver(driver);
+                                query.setPickedUp(true);
                                 System.out.println("***** " + requestID);
-                                updateRequest(requestID, query, listener, false);
+                                updateRequest(requestID, query, listener, SET_PICKEDUP_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             listener.onFailure("Error getting documents: " + task.getException(),
                                     SET_PICKEDUP_TAG);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This method will check if there is an active and picked up but has not arrived reuqest that
+     * belongs to the rider and set the request to has arrived, then call the updateRequest method
+     * @param requestID
+     *  id of the request
+     * @param listener
+     *  listener for notification
+     */
+    public void setRequestArrived(final String requestID,  final OnGetRequestDataListener listener) {
+        if (requestID == null || requestID.length() == 0) {
+            listener.onFailure("invalid parameters", SET_ARRIVED_TAG);
+            return;
+        }
+
+        collectionReferenceReq
+                .whereEqualTo("requestID", requestID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+                            //  this for loop should only loop for once
+                            //  user should not have more than one requests exist in the db
+                            int count = 0;
+                            Request query = null;
+//                            String docID = "";
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                query = document.toObject(Request.class);
+//                                docID = document.getId();
+                                count++;
+                            }
+                            if (query == null) {
+                                listener.onFailure(requestID + " does not exist",
+                                        SET_ARRIVED_TAG);
+                            } else if (!query.getAccepted()) {
+                                listener.onFailure(requestID + " is not active yet",
+                                        SET_ARRIVED_TAG);
+                            } else if (!query.getPickedUp()) {
+                                listener.onFailure(requestID + " is not picked up yet",
+                                        SET_ARRIVED_TAG);
+                            } else if (query.getHasArrived()) {
+                                listener.onFailure(requestID + " has already arrived",
+                                        SET_ARRIVED_TAG);
+                            } else {
+                                query.setHasArrived(true);
+                                System.out.println("***** " + requestID);
+                                updateRequest(requestID, query, listener, SET_ARRIVED_TAG);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            listener.onFailure("Error getting documents: " + task.getException(),
+                                    SET_ARRIVED_TAG);
                         }
                     }
                 });

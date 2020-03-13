@@ -26,6 +26,8 @@ public interface OnGetRequestDataListener {
 
     void onPickedUpNotification(Request request);
 
+    void onArrivedNotification(Request request);
+
     void onCancelNotification();
 
     void onCompleteNotification();

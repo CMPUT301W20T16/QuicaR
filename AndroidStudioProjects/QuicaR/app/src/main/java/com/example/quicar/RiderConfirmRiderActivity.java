@@ -90,7 +90,9 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
                 /**
                  *    new request's cost is hard coded for now
                   */
-                Request request = new Request(start_location, end_location, newUser, new User(), 20.0f);
+                Request request = new Request(start_location, "start address name",
+                        end_location, "end address name",
+                        newUser, new User(), 20.0f);
 
                 RequestDataHelper.getInstance().addNewRequest(request, listener);
 
@@ -198,6 +200,11 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     @Override
     public void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public  void onArrivedNotification(Request request) {
 
     }
 

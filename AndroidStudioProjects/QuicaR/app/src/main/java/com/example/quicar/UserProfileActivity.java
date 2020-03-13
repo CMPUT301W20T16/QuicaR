@@ -15,13 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.IOException;
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
@@ -157,30 +155,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
                 }
 
-
-
-//                //!!!!!@ update correct user here
-//
-//
-//
-////
-////                UserDataHelper.updateUserProfile(user,listener);
-//
-//                // need to be change here
-//
-////                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-////                    @Override
-////                    public void onComplete(@NonNull Task<AuthResult> task) {
-////                        if (task.isSuccessful()) {
-////                            Toast.makeText(UserProfile.this, "Login successful", Toast.LENGTH_SHORT).show();
-////                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-////                        } else {
-////                            Toast.makeText(UserProfile.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
-////                        }
-////                    }
-////                });
-
-
             }
         });
 
@@ -207,8 +181,8 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 } catch (ParseException e) {
                     e.printStackTrace();
                     birthDate = null;
-                    System.out.println("Teemo");
-                    System.out.println(birthDate);
+//                    System.out.println("Teemo");
+//                    System.out.println(birthDate);
                 }
             }
             //change later
@@ -233,7 +207,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
             if(this.lastNameLayout.getEditText().getText()!= null){
                 lastName = this.lastNameLayout.getEditText().getText().toString();
-                System.out.println(lastName);
+//                System.out.println(lastName);
             }
             if (this.spinnerGender.getSelectedItem()!= null){
 //            if (this.genderLayout.getEditText().getText()!= null){
@@ -245,9 +219,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
         }
         // ???
-        System.out.println(birthDate);
+//        System.out.println(birthDate);
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
-        System.out.println(user.getAccountInfo().getBirthDate());
+//        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }
