@@ -10,6 +10,7 @@
         android:text="@string/add_card_name"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:textSize="18sp"/>
 
     <ImageView
@@ -21,37 +22,41 @@
 
     <EditText
         android:id="@+id/name_on"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:layout_marginStart="140dp"
+        android:background="@null"
         android:inputType="text"
         android:hint="@null"/>
 
     <EditText
         android:id="@+id/card_num"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="78dp"
         android:layout_marginStart="75dp"
+        android:background="@null"
         android:inputType="number"
         android:hint="@null"/>
 
     <EditText
         android:id="@+id/expiry_date"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="119dp"
         android:layout_marginStart="95dp"
+        android:background="@null"
         android:inputType="date"
         android:hint="@null"/>
 
     <EditText
         android:id="@+id/ccv"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="119dp"
         android:layout_marginStart="259dp"
+        android:background="@null"
         android:inputType="number"
         android:hint="@null"/>
 
