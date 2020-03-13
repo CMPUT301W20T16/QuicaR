@@ -327,7 +327,7 @@ public class DatabaseHelper {
         if (request.getRider().getName().equals(getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
                 RequestDataHelper.getInstance().notifyActive(request);
-                sendPopUpNotification("Hey" + getCurrentUserName(),
+                sendPopUpNotification("Hey " + getCurrentUserName(),
                         "your request is accepted by " + request.getDriver().getName());
                 userState.setActive(Boolean.TRUE);
                 System.out.println("-------- Accept Notification sent --------");
@@ -348,7 +348,7 @@ public class DatabaseHelper {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
                 RequestDataHelper.getInstance().notifyPickedUp(request);
-                sendPopUpNotification("Hey" + getCurrentUserName(),
+                sendPopUpNotification("Hey " + getCurrentUserName(),
                         "you are picked up by " + request.getDriver().getName());
                 userState.setOnGoing(Boolean.TRUE);
                 System.out.println("-------- Picked up Notification sent --------");
@@ -363,7 +363,7 @@ public class DatabaseHelper {
             if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
                     && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
                 RequestDataHelper.getInstance().notifyArrived(request);
-                sendPopUpNotification("Hey" + getCurrentUserName(),
+                sendPopUpNotification("Hey " + getCurrentUserName(),
                         "you have arrived your destination");
                 userState.setOnArrived(Boolean.TRUE);
             }
@@ -392,7 +392,7 @@ public class DatabaseHelper {
             }
         }
         if (!found) {
-            sendPopUpNotification("Hey" + getCurrentUserName(), "this request is canceled");
+            sendPopUpNotification("Hey " + getCurrentUserName(), "this request is canceled");
             RequestDataHelper.getInstance().notifyCancel();
             userState.setOnGoing(Boolean.FALSE);
             System.out.println("-------- Cancel Notification sent --------");
@@ -413,7 +413,7 @@ public class DatabaseHelper {
             if (record.getRequest().getRider().getName().equals(getCurrentUserName())
                     && getCurrentMode().equals("rider")  && userState.getOnGoing()) {
                 // might want to check if userstate.getOngoing is updated
-                sendPopUpNotification("Hey" + getCurrentUserName(), "your ride is completed");
+                sendPopUpNotification("Hey " + getCurrentUserName(), "your ride is completed");
                 userState.setActive(Boolean.FALSE);
                 userState.setOnGoing(Boolean.FALSE);
                 RequestDataHelper.getInstance().notifyComplete();
