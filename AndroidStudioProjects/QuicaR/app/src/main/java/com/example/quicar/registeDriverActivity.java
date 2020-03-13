@@ -98,9 +98,4 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
 
     }
 
-    @Override
-    public  void  onUserExists(Boolean exists, String tag){
-
-    }
-
 }
