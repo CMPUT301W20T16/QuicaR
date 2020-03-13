@@ -168,6 +168,73 @@
             android:entries="@array/gender_array"
             android:prompt="@string/gender_prompt" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profile_driver_plateNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_validate_plate_number"
+            app:errorTextAppearance="@style/error"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:focusable="false"
+                android:singleLine="true"
+                android:layout_margin="10dp"
+                android:maxLength="7"
+                android:background="@drawable/rounded_background" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profile_driver_license_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_driver_license_number"
+            app:errorTextAppearance="@style/error"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:focusable="false"
+                android:singleLine="true"
+                android:layout_margin="10dp"
+                android:maxLength="7"
+                android:background="@drawable/rounded_background" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profile_driver_sin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_driver_sin"
+            app:errorTextAppearance="@style/error"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:focusable="false"
+                android:singleLine="true"
+                android:layout_margin="10dp"
+                android:maxLength="7"
+                android:background="@drawable/rounded_background" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="324dp"
             android:layout_height="77dp">
