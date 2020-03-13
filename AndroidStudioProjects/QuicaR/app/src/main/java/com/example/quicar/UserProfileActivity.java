@@ -83,11 +83,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 ////        this.licenseLayout.setVisibility(TextInputLayout.GONE);
 ////        this.sinNumberLayout.setVisibility(TextInputLayout.GONE);
         // user is not driver
-        if(!(user.isDriver())) {
-            closeDriverInfo();
-        }
 
 
+        closeDriverInfo();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -128,6 +126,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
+        if (user != null) {
+            if((user.isDriver())) {
+                openDriverInfo();
+            }
+        }
+
 
 
         spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
@@ -170,12 +174,21 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
     /**
-     *Run when you are driver, show driver info
+     *Run when you are not driver, do not show driver info
      */
     private  void closeDriverInfo() {
-        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
-        this.licenseLayout.setVisibility(TextInputLayout.GONE);
-        this.sinNumberLayout.setVisibility(TextInputLayout.GONE);
+        this.plateNumberLayout.setVisibility(View.GONE);
+        this.licenseLayout.setVisibility(View.GONE);
+        this.sinNumberLayout.setVisibility(View.GONE);
+
+    }
+    /**
+     *Run when you are driver, show driver info
+     */
+    private  void openDriverInfo (){
+        this.plateNumberLayout.setVisibility(View.VISIBLE);
+        this.licenseLayout.setVisibility(View.VISIBLE);
+        this.sinNumberLayout.setVisibility(View.VISIBLE);
 
     }
 
