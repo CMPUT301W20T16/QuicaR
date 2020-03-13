@@ -338,13 +338,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         }
 
         if(user.isDriver()){
-            if(!validateDriverlicense()){
+            if(!validateDriverLicense()){
                 flag = false;
             }
             if(!validateDriverPlate()){
                 flag = false;
             }
-            if(!validateDriversin()){
+            if(!validateDriverSin()){
                 flag = false;
             }
         }
@@ -449,7 +449,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid driver license number
      */
-    private boolean validateDriverlicense() {
+    private boolean validateDriverLicense() {
         String license = licenseLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(license)) {
             this.licenseLayout.setError("Field can't be empty");
@@ -464,7 +464,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     /**
      * for check valid driver sin number
      */
-    private boolean validateDriversin() {
+    private boolean validateDriverSin() {
         String sin = sinNumberLayout.getEditText().getText().toString();
         if (TextUtils.isEmpty(sin)) {
             this.sinNumberLayout.setError("Field can't be empty");
