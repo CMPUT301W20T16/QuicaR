@@ -1,6 +1,5 @@
 package com.example.quicar;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
-
-import static com.example.quicar.App.CHANNEL_1_ID;
 
 
 /**
@@ -29,7 +24,7 @@ import static com.example.quicar.App.CHANNEL_1_ID;
  * (rider can only cancel ride in a reasonable amount of time)
  */
 
-public class RiderWaitingRideActivity extends BaseActivity implements OnGetRequestDataListener{
+public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener{
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
@@ -44,22 +39,20 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
     Button EmailButton;
     Button CancelButton;
 
-    private NotificationManagerCompat notificationManager;
+    Request currentRequest = null;
 
+    /**
+     * 问题：
+     * 1.目前只有一个default bottom sheet，没法区分是否被接单
+     * 1.目前还不能更新bottom sheet的detail
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
-
-//        Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver!!!", Toast.LENGTH_SHORT).show();
-        System.out.println("****** enter");
-        RequestDataHelper.setOnNotifyListener(this);
-
-
-        notificationManager = NotificationManagerCompat.from(this);
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
@@ -68,12 +61,31 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
+        CancelButton = linearLayout.findViewById(R.id.cancel_button);
 
         // set TextView
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
         driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
+
+        Intent intent = getIntent();
+        currentRequest = (Request) intent.getSerializableExtra("current request");
+
+//        String driverEmailStr = currentRequest.getDriver().getAccountInfo().getEmail();
+//        String driverNameStr = currentRequest.getDriver().getAccountInfo().getUserName();
+//        String driverPhoneStr = currentRequest.getDriver().getAccountInfo().getPhone();
+//
+//        driverEmail.setText(driverEmailStr);
+//        driverName.setText(driverNameStr);
+//        driverPhone.setText(driverPhoneStr);
+
+
+        // get activated request from firebase
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+//        RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "rider", this);
+
+
 
 
         // set on click listener for buttons
@@ -91,50 +103,69 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
         //send email需要拿到user的email，格式类似上面打电话
 
+        // if user tries to cancel the ride while driver is on their way
+        // call cancelRequest so ride will be deleted in the database
+        // user back to the main screen
         /**
-         * if successfully matched, call sendOnChannel1
-         * While driver is browsing for open requests
+         * 问题：还不能确定允许cancel的时间
          */
+        CancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (currentRequest != null) {
+                    RequestDataHelper
+                            .getInstance()
+                            .cancelRequest(currentRequest.getRid(), RiderWaitingRideActivity.this);
+                }
+                Toast.makeText(RiderWaitingRideActivity.this, "rider request cancelled successfully!", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
 
     }
 
-        // used to send one notification
-        public void sendOnChannel1(View v) {
-            String title = "Get Ready!";
-            String message = "Your driver is on the way!";
-
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                    .setSmallIcon(R.drawable.ic_cancel)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .build();
-
-            notificationManager.notify(1, notification);
-        }
-
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-
-
     }
 
     @Override
     public void onActiveNotification(Request request) {
-        Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver!!!", Toast.LENGTH_SHORT).show();
-       DatabaseHelper.sendPopUpNotification("active request notification","testing",this);
+        System.out.println("\n\n"+currentRequest.getRid()+"  "+request.getRid());
+        System.out.println("------------- rider request updated to active -----------------");
+        //DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Ride is being accepted");
+//        Intent intent = getIntent();
+//        Request currentRequest = (Request) intent.getSerializableExtra("current request");
+       if (currentRequest.getRid().equals(request.getRid())) {
 
+           String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
+           String driverNameStr = request.getDriver().getAccountInfo().getUserName();
+           String driverPhoneStr = request.getDriver().getAccountInfo().getPhone();
+
+           driverEmail.setText(driverEmailStr);
+           driverName.setText(driverNameStr);
+           driverPhone.setText(driverPhoneStr);
+           Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+       }
 
     }
 
     @Override
-    public  void onPickedUpNotification(Request request) {
+    public void onPickedUpNotification(Request request) {
+        System.out.println("------------- rider has been picked up -----------------");
+        Toast.makeText(RiderWaitingRideActivity.this, "rider is picked up by driver", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onCancelNotification() {
+        System.out.println("------------- rider has been canceled -----------------");
+        Toast.makeText(RiderWaitingRideActivity.this, "rider is canceled by driver", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -146,9 +177,5 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
     @Override
     public void onFailure(String errorMessage, String tag) {
 
-
     }
-
-
-
 }

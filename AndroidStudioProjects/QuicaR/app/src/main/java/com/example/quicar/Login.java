@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,44 +19,96 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.regex.Pattern;
 
-public class Login extends AppCompatActivity {
-    private TextInputLayout email, pwd;
+
+public class Login extends AppCompatActivity implements OnGetUserDataListener {
+    private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
     FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    FirebaseUser currentUser;
+
+    /* added by Jeremy */
+    OnGetUserDataListener listener = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        this.email = findViewById(R.id.sign_in_email);
+        this.userID = findViewById(R.id.sign_in_email);
         this.pwd = findViewById(R.id.sign_in_password);
         loginButton = findViewById(R.id.sign_in_button);
         signUpButton = findViewById(R.id.signUpText);
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String myEmail = email.getEditText().getText().toString().trim();
-                final String mypwd = pwd.getEditText().getText().toString();
-                if (!validateEmail(myEmail) | !validatePassword(mypwd)) {
+                String myID = userID.getEditText().getText().toString().trim();
+                String mypwd = pwd.getEditText().getText().toString();
+                if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
-                mAuth.signInWithEmailAndPassword(myEmail, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
-                            DatabaseHelper.setCurrentUserName("new User");
-                            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                if (!checkUserNameOrEmail(myID)){
+                    String getEmail = retrieveEmail();
+                    mAuth.signInWithEmailAndPassword(getEmail, mypwd)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                /* added by Jeremy */
+                                UserDataHelper.getInstance().getUser(myID, listener);
+                                ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                pgsBar.setVisibility(v.VISIBLE);
+                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            } else {
+                                Toast.makeText(Login.this,
+                                        "Login failed" + task.getException(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+
+                    mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+
+                                currentUser = mAuth.getInstance().getCurrentUser();
+                                retrieveUsername();
+                                if (currentUser != null) {
+                                    for (UserInfo profile : currentUser.getProviderData()) {
+                                        String name = profile.getDisplayName();
+                                        /* added by Jeremy */
+                                        UserDataHelper.getInstance().getUser(name, listener);
+                                        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                        pgsBar.setVisibility(v.VISIBLE);
+                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(Login.this, "Login failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -69,10 +123,10 @@ public class Login extends AppCompatActivity {
 
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
-            this.email.setError("Field can't be empty");
+            this.userID.setError("Field can't be empty");
             return false ;
         } else {
-            this.email.setError(null);
+            this.userID.setError(null);
             return true;
         }
     }
@@ -85,5 +139,70 @@ public class Login extends AppCompatActivity {
             this.pwd.setError(null);
             return true;
         }
+    }
+
+    public boolean checkUserNameOrEmail(String id) {
+
+//        if (id.contains("@")) {
+//            return true;
+//        }
+//        return false;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (id == null)
+            return false;
+        return pat.matcher(id).matches();
+
+    }
+
+    public String retrieveEmail() {
+        String email = mAuth.getInstance().getCurrentUser().getEmail().toString();
+        return email;
+    }
+
+
+    public void retrieveUsername() {
+        currentUser = mAuth.getInstance().getCurrentUser();
+        DatabaseReference myRef = database.getInstance().getReference("User");
+
+        myRef.child(currentUser.getUid()).
+                child("accountInfo").child("userName").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String username = dataSnapshot.getValue().toString();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(username).build();
+                currentUser.updateProfile(profileUpdates);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+        if (tag == UserDataHelper.GET_USER_TAG) {
+            DatabaseHelper.getInstance().setCurrentUser(user);
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
+            startActivity(homeIntent);
+        }
+    }
+
+    @Override
+    public void onUserExists(Boolean exists, String tag) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
     }
 }

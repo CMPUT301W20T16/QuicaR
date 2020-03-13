@@ -17,21 +17,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/logTokenButton"
-        android:text="logToken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="162dp"
-        android:layout_marginTop="218dp"
-        android:layout_marginEnd="162dp"
-        android:layout_marginBottom="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <Button
         android:id="@+id/setActive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +49,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="99dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="99dp"
         android:layout_marginBottom="21dp"
         android:ems="10"
@@ -73,7 +57,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logTokenButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/complete"

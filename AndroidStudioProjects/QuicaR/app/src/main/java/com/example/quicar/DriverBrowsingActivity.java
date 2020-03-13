@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quicar.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -28,25 +29,29 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Request> requestList;
 
-    private OnGetRequestDataListener listener;
-
     private int currentPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHelper.setCurrentMode("driver");
+        DatabaseHelper.getInstance().setCurrentMode("driver");
+
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_browsing, frameLayout);
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_open_requests);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+
+        /* added by Jeremy */
+        RequestDataHelper.getInstance().queryAllOpenRequests(this);
+
+        System.out.println("-------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
 
         requestList = new ArrayList<>();
         buildRecyclerView();
 
-        RequestDataHelper.queryAllOpenRequests(this);
 
     }
 
@@ -61,6 +66,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+
         mAdapter.setOnItemClickListener(new RequestAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -73,8 +79,6 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
                  */
                 new DriverAcceptRideDialogue().show(getSupportFragmentManager(), "DELETE");
 
-
-
             }
         });
     }
@@ -85,7 +89,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         if (tag == RequestDataHelper.ALL_REQs_TAG) {
             if (requests.size() > 0) {
                 //  always check if the return value is valid
-                System.out.println("------------ active request obtained -----------");
+                System.out.println("------------ open request obtained -----------");
 
                 // update newly added open requests to RecyclerView adapter
                 for (Request request: requests){
@@ -99,10 +103,15 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
             }
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
-            RequestDataHelper.queryAllOpenRequests(this);
-            RequestDataHelper.queryUserRequest("new Driver", "driver", this);
-            Toast.makeText(this, "rider request updated to active successfully", Toast.LENGTH_SHORT).show();
+//            RequestDataHelper.queryAllOpenRequests(this);
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                            "driver", this);
+            Toast.makeText(this, "rider request updated to active successfully",
+                    Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -133,17 +142,17 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
     @Override
     public void onOkPressed() {
-        User newDriver = new User();
-        newDriver.setName("new Driver");
+//        User newDriver = new User();
+//        newDriver.setName("new Driver");
         // testing
 //                DatabaseHelper.setCurrentUserName("Name");
         Request request = (Request)requestList.get(currentPosition);
-
-
-
-        RequestDataHelper.setRequestActive(request.getRid(), newDriver, request.getEstimatedCost(), DriverBrowsingActivity.this);
+        RequestDataHelper
+                .getInstance()
+                .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
+                        request.getEstimatedCost(), DriverBrowsingActivity.this);
         Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
         startActivity(intent);
+        finish();
     }
 }
-

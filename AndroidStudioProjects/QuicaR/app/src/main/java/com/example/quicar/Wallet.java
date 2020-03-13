@@ -1,18 +1,13 @@
 package com.example.quicar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import com.google.firebase.firestore.PropertyName;
 import java.util.Date;
 
-public class Wallet {
+public class Wallet implements Serializable {
 
-    @PropertyName("qrGenerator")
-    private QR qrGenrator;
-
-    @PropertyName("balance")
     private Float balance;
-
-    @PropertyName("bankAccountList")
     private ArrayList<BankAccount> bankAccountArrayList;
 
 
@@ -23,7 +18,6 @@ public class Wallet {
 
 
     public Wallet() {
-        this.qrGenrator = new QR();
         this.balance = 0.f;
         this.bankAccountArrayList = new ArrayList<>();
     }
@@ -51,19 +45,21 @@ public class Wallet {
 
 
 
-    public void setQrGenrator(QR qrGenrator) {
-        this.qrGenrator = qrGenrator;
-    }
+//    public void setQrGenrator(QR qrGenrator) {
+//        this.qrGenrator = qrGenrator;
+//    }
 
 //    public ArrayList<BankAccount> getBankAccountarrayList() {
 //        return bankAccountArrayList;
 //    }
 
 
+    @PropertyName("bankAccountList")
     public ArrayList<BankAccount> getBankAccountArrayList() {
         return bankAccountArrayList;
     }
 
+    @PropertyName("bankAccountList")
     public void setBankAccountArrayList(ArrayList<BankAccount> bankAccountArrayList) {
         this.bankAccountArrayList = bankAccountArrayList;
     }
@@ -72,8 +68,8 @@ public class Wallet {
         return balance;
     }
 
-    public QR getQrGenrator() {
-        return qrGenrator;
-    }
+//    public QR getQrGenrator() {
+//        return qrGenrator;
+//    }
 
 }

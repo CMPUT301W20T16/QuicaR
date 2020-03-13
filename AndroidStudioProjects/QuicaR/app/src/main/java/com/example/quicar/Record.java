@@ -4,23 +4,16 @@ package com.example.quicar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import com.google.firebase.firestore.PropertyName;
 
 /**
  * This is the class that store completed request with date, time, payment and rating for the driver
  */
 public class Record {
-    @PropertyName("request")
+
     private Request request;
-
-    @PropertyName("date&time")
     private Date dateTime;
-
-    @PropertyName("payment")
     private Float payment;
-
-    @PropertyName("rating")
     private Float rating;
 
     /**
@@ -86,6 +79,7 @@ public class Record {
      * @return
      *  Value of payment
      */
+    @PropertyName("payment")
     public Float getReqPayment() {
         return payment;
     }
@@ -95,6 +89,7 @@ public class Record {
      * @param payment
      *  value of the payment
      */
+    @PropertyName("payment")
     public void setReqPayment(Float payment) {
         this.payment = payment;
     }
@@ -104,6 +99,7 @@ public class Record {
      * @return
      *  rating of the request or order
      */
+    @PropertyName("rating")
     public Float getReqRating() {
         return rating;
     }
@@ -113,6 +109,7 @@ public class Record {
      * @param rating
      *  rating of the request / order
      */
+    @PropertyName("rating")
     public void setRating(Float rating) {
         this.rating = rating;
     }

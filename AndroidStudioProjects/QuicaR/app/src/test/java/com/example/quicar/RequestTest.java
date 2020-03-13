@@ -18,6 +18,7 @@ public class RequestTest {
     public void testGetter() {
         Request request = mockNullRequest();
 
+        assertNull(request.getRid());
         assertNull(request.getAccepted());
         assertNull(request.getPickedUp());
         assertNull(request.getDestination());
@@ -30,6 +31,9 @@ public class RequestTest {
     @Test
     public void testSetter() {
         Request request = mockNullRequest();
+
+        request.setRid("asdfas8f7a8sd6f75as");
+        assertEquals("asdfas8f7a8sd6f75as", request.getRid());
 
         request.setEstimatedCost(40f);
         assertEquals(40f, (float)request.getEstimatedCost());

@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private static NotificationManager notificationManager;
     private final static AtomicInteger c = new AtomicInteger(0);
 
     /**
@@ -51,7 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         String title = notification.getTitle();
         String body = notification.getBody();
-        createNotification(title, body, new Intent(this, MainActivity.class));
+
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -76,6 +77,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+        sendNotification(title, body, new Intent(this, MainActivity.class));
     }
     // [END receive_message]
 
@@ -131,9 +133,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1410 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = getString(R.string.default_notification_channel_id);
+        String CHANNEL_ID = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId )
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID )
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("FCM Message")
                 .setAutoCancel(true)
@@ -146,24 +148,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(1410 /* ID of notification */, notificationBuilder.build());
     }
 
-
-    private void createNotification(String aTitle, String aMessage, Intent goToIntent) {
+    /**
+     * This method send a pop up notification to the device by building a notification and
+     * set the title, body and intent of the notification
+     * @param aTitle
+     *  title of the notification
+     * @param aMessage
+     *  message body of the notification
+     * @param goToIntent
+     *  intent that will lead to when notification is clicked
+     */
+    private void sendNotification(String aTitle, String aMessage, Intent goToIntent) {
         final int NOTIFY_ID = c.incrementAndGet();
-        String name = "user_channel"; // They are hardcoded only for show it's just strings
-        String id = "user_channel_1"; // The user-visible name of the channel.
-        String description = "user_first_channel"; // The user-visible description of the channel.
+        String CHANNEL_ID = getString(R.string.default_notification_channel_id);
+        String CHANNEL_NAME = "user_channel"; // They are hardcoded only for show it's just strings
+        String CHANNEL_DESCR = "user_first_channel"; // The user-visible description of the channel.
 
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
 
-        NotificationManager notifManager = null;
+//        NotificationManager notifManager = null;
 
-        if (notifManager == null) {
-            notifManager =
-                    (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        }
+//        if (notifManager == null) {
+//            notifManager =
+//                    (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//        }
+        if (notificationManager == null)
+            notificationManager = getSystemService(NotificationManager.class);
 
-        builder = new NotificationCompat.Builder(this, id);
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID);
 
         goToIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, goToIntent, 0);
@@ -171,6 +184,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setContentTitle(aTitle)  // required
                 .setContentText(aMessage)  // required
                 .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
@@ -179,19 +193,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = notifManager.getNotificationChannel(id);
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(CHANNEL_ID);
             if (mChannel == null) {
-                mChannel = new NotificationChannel(id, name, importance);
-                mChannel.setDescription(description);
+                mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+                mChannel.setDescription(CHANNEL_DESCR);
                 mChannel.enableVibration(true);
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                notifManager.createNotificationChannel(mChannel);
+                notificationManager.createNotificationChannel(mChannel);
             }
-
         }
 
         Notification notification = builder.build();
-        notifManager.notify(NOTIFY_ID, notification);
+        notificationManager.notify(NOTIFY_ID, notification);
     }
 }
 

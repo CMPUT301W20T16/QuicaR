@@ -22,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
+public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
 
     private OnGetRequestDataListener listener = this;
 
@@ -32,17 +32,19 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     Button confirmButton;
     Button cancelButton;
+    Request currentRequest = null;
 
-    Location start_location, end_location;
+//    Location start_location, end_location;
 
 
-    private MarkerOptions start, destination;
-    private Polyline currentPolyline;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+//    private MarkerOptions start, destination;
+//    private Polyline currentPolyline;
+//    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_confirm_ride, frameLayout);
 
@@ -85,18 +87,23 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                  *   instantiate a new User class for current user
                   */
                 User newUser = new User();
-                newUser.setName(DatabaseHelper.getCurrentUserName());
+                newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
                 /**
                  *    new request's cost is hard coded for now
                   */
                 Request request = new Request(start_location, end_location, newUser, new User(), 20.0f);
+                currentRequest = request;
 
-                RequestDataHelper.addNewRequest(request, listener);
+
+                RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
 
                 Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
+                intent.putExtra("current request", currentRequest);
+
                 startActivity(intent);
 
             }
@@ -109,12 +116,23 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
             @Override
             public void onClick(View v) {
-                finish();
+//                if(currentRequest != null){
+//                    String requestIdStr = currentRequest.getRid();
+//                    RequestDataHelper.getInstance().cancelRequest(requestIdStr,listener);
+//
+//                }
+                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+                startActivity(intent);
+
             }
         });
 
 
     }
+
+    /**
+     * Draw route methods
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -123,7 +141,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         showAllMarkers();
     }
 
-    private void showAllMarkers() {
+    public void showAllMarkers() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (MarkerOptions m : markerOptionsList) {
@@ -140,7 +158,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     }
 
-    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         String mode = "mode=" + directionMode;
@@ -150,9 +168,22 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                 + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
 
 
-        return url;
+        return url;    }
 
-    }
+
+//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        String mode = "mode=" + directionMode;
+//        String parameter = str_origin + "&" + str_dest + "&" + mode;
+//        String format = "json";
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+//
+//
+//        return url;
+//
+//    }
 
 
     @Override
@@ -162,6 +193,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
+
 
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {

@@ -13,14 +13,16 @@
         android:src="@drawable/ic_launcher_foreground"/>
 
     <TextView
+        android:id="@+id/userName_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/userEmail_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sampleemail@email.com"/>
+        android:text="sampleemail@email.com" />
 
 </LinearLayout>

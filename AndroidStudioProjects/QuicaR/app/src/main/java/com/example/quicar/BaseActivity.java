@@ -10,7 +10,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.quicar.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -70,6 +71,12 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // set framelayout so the children of base activity can inflate its own content
         frameLayout = (FrameLayout) findViewById(R.id.container);
+        //View view = View.inflate(this,R.layout.nav_header,null);
+
+
+
+        //Toast.makeText(this, userEmailStr, Toast.LENGTH_LONG).show();
+
 
 
         // set up the action tool bar
@@ -81,6 +88,21 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         drawer.requestDisallowInterceptTouchEvent(true);
+
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView userName_textView = headerView.findViewById(R.id.userName_textView);
+        TextView userEmail_textView = headerView.findViewById(R.id.userEmail_textView);
+
+        User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+        String userEmailStr =currentUser.getAccountInfo().getEmail();
+        String userNameStr = currentUser.getAccountInfo().getUserName();
+
+
+        userName_textView.setText(userNameStr);
+        userEmail_textView.setText(userEmailStr);
+
 
         // connect navigation drawer to tool bar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -281,21 +303,33 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                // change here
+                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 
 
             case R.id.nav_driver_mode:
-                if(DatabaseHelper.getCurrentMode() == "rider") {
+                if(DatabaseHelper.getInstance().getCurrentMode() == "rider") {
 
-                    Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
-                    startActivity(intent2);
+                    User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+                    if(currentUser.isDriver()){
+                        Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
+                        startActivity(intent2);
+
+                    }
+
+                    else{
+                        Intent intent2 = new Intent(getApplicationContext(), registeDriverActivity.class);
+                        startActivity(intent2);
+                    }
+
                 }
                 break;
 
             case R.id.rider_mode:
-                if(DatabaseHelper.getCurrentMode() == "driver") {
+                if(DatabaseHelper.getInstance().getCurrentMode() == "driver") {
                     //Toast.makeText(this, "Enter if statement!", Toast.LENGTH_LONG).show();
 
 
@@ -303,8 +337,10 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                     startActivity(intent3);
                 }
                 break;
-
-
+            case R.id.nav_wallet:
+                Intent intent3 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
+                startActivity(intent3);
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);

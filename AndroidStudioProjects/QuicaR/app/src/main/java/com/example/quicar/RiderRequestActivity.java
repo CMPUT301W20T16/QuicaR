@@ -1,12 +1,11 @@
 package com.example.quicar;
 
-
-
 import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quicar.R;
@@ -28,10 +27,24 @@ public class RiderRequestActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHelper.setCurrentMode("rider");
+        DatabaseHelper.getInstance().setCurrentMode("rider");
+
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_request, frameLayout);
 
         setTitle("rider map");
+
+
+
+//       TextView userName_textView = findViewById(R.id.userName_textView);
+//       TextView userEmail_textView = findViewById(R.id.userEmail_textView);
+//
+//       User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+//       String userEmailStr =currentUser.getAccountInfo().getEmail();
+//       String userNameStr = currentUser.getAccountInfo().getUserName();
+//
+//       userName_textView.setText(userNameStr);
+//       userEmail_textView.setText(userEmailStr);
+
 
         // set up EditText and button
         startLocation = findViewById(R.id.start_location);
@@ -43,21 +56,16 @@ public class RiderRequestActivity extends BaseActivity {
         startLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mLastLocation == null){
-                    Toast.makeText(RiderRequestActivity.this, "need to choose destination!", Toast.LENGTH_SHORT);
-
+                String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                if (current_address != null) {
+                    Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
+                    intent.putExtra("current pos", current_address);
+                    intent.putExtra("current location", new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    //startActivityForResult(intent, 1);
+                    startActivity(intent);
                 }
                 else {
-                    String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    if (current_address != null) {
-                        Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
-                        intent.putExtra("current pos", current_address);
-                        intent.putExtra("current location", new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                        //startActivityForResult(intent, 1);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT);
-                    }
+                    Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -85,61 +93,4 @@ public class RiderRequestActivity extends BaseActivity {
 
     }
 
-
-
-
-    /**
-     *     database method
-
-     @Override
-     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-     }
-
-     @Override
-     public void onSuccessRiderOpenRequest(Request request) {
-     if (request != null) {
-     //  always check if the return value is valid
-     System.out.println("---------------" + request.getRider().getName() + "---------------");
-     }
-     }
-
-     @Override
-     public void onSuccessAllOpenRequests(ArrayList<Request> requests) {
-     if (requests.size() > 0) {
-     //  always check if the return value is valid
-     System.out.println("------------ active request obtained -----------");
-     }
-     else {
-     System.out.println("------------ empty list obtained -----------");
-     }
-     }
-
-     @Override
-     public void onSuccessDriverActiveRequest(Request request) {
-     if (request != null) {
-     //  always check if the return value is valid
-     System.out.println("---------------" + request.getDriver().getName() + "---------------");
-     }
-     }
-
-
-     @Override
-     public void onSuccessSetActive() {
-     System.out.println("------------ request is set to active -----------");
-     //        DatabaseHelper.queryAllOpenRequests(new Location(), this);
-     //        DatabaseHelper.queryDriverActiveRequest("new Driver", this);
-     }
-
-     @Override
-     public void onSuccessDelete() {
-     System.out.println("------------ request is deleted -----------");
-     }
-
-     @Override
-     public void onFailure(String errorMessage) {
-     System.out.println("-----------" + errorMessage + "-----------");
-
-     }
-     */
 }
