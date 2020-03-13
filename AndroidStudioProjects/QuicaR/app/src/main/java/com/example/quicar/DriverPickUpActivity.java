@@ -50,24 +50,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
                         "driver", this);
 
-        if ( mRequest != null) {
-            System.out.println("request not null----------: "+ mRequest);
-            start_location = mRequest.getStart();
-            end_location = mRequest.getDestination();
-
-            System.out.println("start location" + start_location.getLat() + start_location.getLon());
-            System.out.println("end location" + end_location.getLat() + end_location.getLon());
-
-            start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
-            destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-
-            new FetchURL(this)
-                    .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
-
-        } else {
-            System.out.println("--------request is null--------");
-        }
-
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +57,8 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                         .getInstance()
                         .setRequestPickedUp(mRequest.getRid(),
                                 DriverPickUpActivity.this);
+
+                System.out.println("Request id-------------" + mRequest.getRid());
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
                 startActivity(intent);
             }
@@ -98,6 +82,19 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 for (Request request: requests) {
                     if (request.getAccepted()) {
                         mRequest = request;
+
+                        start_location = mRequest.getStart();
+                        end_location = mRequest.getDestination();
+
+                        System.out.println("start location" + start_location.getLat() + start_location.getLon());
+                        System.out.println("end location" + end_location.getLat() + end_location.getLon());
+
+                        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
+                        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
+
+                        new FetchURL(this)
+                                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
                     }
                 }
             }
