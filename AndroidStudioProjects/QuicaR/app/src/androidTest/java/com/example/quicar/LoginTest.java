@@ -1,17 +1,20 @@
 package com.example.quicar;
 
+import android.util.Log;
+import android.widget.EditText;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.robotium.solo.Solo;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public class LoginTest {
     private Solo solo;
