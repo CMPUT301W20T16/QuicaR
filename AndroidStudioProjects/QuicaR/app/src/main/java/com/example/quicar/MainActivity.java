@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         //  database setup
         DatabaseHelper.getInstance().setCurrentMode("rider");
-        DatabaseHelper.getInstance().setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
 //        //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "hello");
+        //DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "hello");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver",
                 Toast.LENGTH_SHORT).show();
     }
