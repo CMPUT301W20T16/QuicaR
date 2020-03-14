@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class AccountInfo {
     /**
-     This java class Account
+    This java class Account
      */
 
     private DriverInfo driverInfo;

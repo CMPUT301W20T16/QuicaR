@@ -137,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
     @Override
     public  void onPickedUpNotification(Request request) {
-        Toast.makeText(MainActivity.this, "rider request updated to picked up by driver",
-                Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
