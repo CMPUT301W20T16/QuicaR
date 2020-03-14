@@ -33,6 +33,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
     String currentBalance;
     User user;
 
+
     // every 30 seconds refresh the qr code 1 time
     private Runnable runnable = new Runnable() {
         public void run() {
@@ -59,6 +60,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
             }
         }
     };
+
     @Override
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -103,6 +105,17 @@ public class WalletOverviewActivity extends AppCompatActivity {
         handler.removeCallbacks(runnable);
         super.onDestroy();
     }
+
+    // every 30 seconds refresh the qr code 1 time
+    private Runnable runnable = new Runnable() {
+        public void run() {
+            this.update();
+            handler.postDelayed(runnable, 1000 * 30);
+        }
+        void update() {
+            generate_qr(qr_code);
+        }
+    };
 
     protected void generate_qr(ImageView qr_code) {
         String time = LocalDateTime.now().toString();

@@ -33,7 +33,7 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
         String info = ScanTransferActivity.result.getText();
         String username = info.split("\n")[1];
 
-        // read the user object from the
+        // read the user object from the gson string
         Gson gson = new Gson();
         if (username != null){
             toUser = gson.fromJson(username, User.class);
@@ -54,6 +54,7 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
                 DatabaseHelper.getInstance().setCurrentUser(toUser);
                 DatabaseHelper.getInstance().setCurrentUser(fromUser);
+
                 // finally should be connected with the password enter
                 startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
 
