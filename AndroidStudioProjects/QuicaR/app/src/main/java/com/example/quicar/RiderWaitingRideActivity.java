@@ -41,7 +41,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     /**
      * 问题：
-     * 1.目前只有一个default bottom sheet，没法区分是否被接单
      * 1.目前还不能更新bottom sheet的detail
      * @param savedInstanceState
      */
@@ -69,7 +68,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-//        RequestDataHelper.queryUserRequest(DatabaseHelper.getCurrentUserName(), "rider", this);
+//        RequestDataHelper.getInstance().queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(), "rider", this);
 
 
         // set on click listener for buttons
@@ -91,7 +90,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         // call cancelRequest so ride will be deleted in the database
         // user back to the main screen
         /**
-         * 问题：还不能确定允许cancel的时间
+         * 问题：1.
+         * 还不能确定允许cancel的时间
          */
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +103,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                 }
                 Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
                 startActivity(intent);
-
+                finish();
             }
         });
 
@@ -116,18 +116,18 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     @Override
     public void onActiveNotification(Request request) {
-        System.out.println("------------- rider request updated to active -----------------");
-        //DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Ride is being accepted");
-        mRequest = request;
-        Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onPickedUpNotification(Request request) {
         System.out.println("------------- rider has been picked up -----------------");
+        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Rider is being picked up");
         Toast.makeText(RiderWaitingRideActivity.this, "rider is picked up by driver", Toast.LENGTH_SHORT).show();
 
+        Intent intent = new Intent(RiderWaitingRideActivity.this, RiderOnGoingRequestActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
