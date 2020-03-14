@@ -23,21 +23,7 @@ import java.util.Locale;
 
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
-//???
-// need to change later on solve validate input for gender, password, image select;l
-// .............................................................???
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_user_profile);
-//        setTitle("User Profile");
-//
-//        // add back button on action bar
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//
-//    }
+
 
 
     private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout,passwordLayout;
@@ -126,7 +112,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
-        System.out.println("ji");
 
 //
 //        if (user != null) {
