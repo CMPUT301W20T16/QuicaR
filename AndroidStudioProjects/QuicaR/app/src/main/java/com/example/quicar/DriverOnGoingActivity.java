@@ -60,7 +60,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
     }
 
     /**
-     *
+     * when add new request, following will be executed automatically
      * @param requests
      * @param tag
      */

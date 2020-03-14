@@ -24,6 +24,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         void onItemClick(int position);
     }
 
+    /**
+     * set listner
+     * @param listener
+     */
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }

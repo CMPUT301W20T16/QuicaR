@@ -13,6 +13,10 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     ProgressDialog mProgressDialog;
 
+    /**
+     * when user confirm a request then goes to matching activity
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +37,11 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
 
     }
+
+    /**
+     * over ride to fit unique notification process
+     * @param request
+     */
 
     @Override
     public void onActiveNotification(Request request) {

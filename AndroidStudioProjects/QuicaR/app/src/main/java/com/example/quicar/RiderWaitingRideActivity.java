@@ -119,12 +119,16 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onSuccess(ArrayList<Request> requests, String tag) {
     }
 
+    /**
+     * execute following when an request becomes active (matches a driver successfully)
+     * @param request
+     */
     @Override
     public void onActiveNotification(Request request) {
-        System.out.println("!!!id!!!!!========="+request.getRid());
+        //System.out.println("!!!id!!!!!========="+request.getRid());
 
         if (currentRequest.getRid().equals(request.getRid())) {
-            System.out.println("!!!id!!!!!========="+request.getRid());
+            //System.out.println("!!!id!!!!!========="+request.getRid());
             DatabaseHelper.getInstance().sendPopUpNotification("Notification", "Rider is matched for your current request!");
             String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
             String driverNameStr = request.getDriver().getAccountInfo().getUserName();
@@ -142,6 +146,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     }
 
+    /**
+     * execute when the correspond driver cliks picked up rider
+     * @param request
+     */
     @Override
     public void onPickedUpNotification(Request request) {
         //System.out.println("------------- rider has been picked up -----------------");

@@ -41,7 +41,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 //    private Polyline currentPolyline;
 //    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
-
+    /**
+     * after rider chosen start and end, this activity shows up
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,9 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
          */
         // if user selected confirm button
         // add new request to database
+        /**
+         * when click confirm button, following will be executed
+         */
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,7 +183,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 //
 //    }
 
-
+    /**
+     * overide helper function for drawing a route
+     * @param values
+     */
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null)
@@ -186,7 +195,11 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
 
-
+    /**
+     * automatically executed
+     * @param requests
+     * @param tag
+     */
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.ADD_REQ_TAG) {

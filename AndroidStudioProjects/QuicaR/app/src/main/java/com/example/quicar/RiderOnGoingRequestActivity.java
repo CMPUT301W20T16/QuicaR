@@ -57,6 +57,11 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
 
     }
 
+    /**
+     * execute following when the state is arrived the destination
+     * @param request
+     */
+
     @Override
     public void onArrivedNotification(Request request) {
         System.out.println("------------- ride is arrived -----------------");
