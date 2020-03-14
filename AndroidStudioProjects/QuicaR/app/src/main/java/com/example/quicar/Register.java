@@ -214,6 +214,11 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
     }
 
     @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
 
     }

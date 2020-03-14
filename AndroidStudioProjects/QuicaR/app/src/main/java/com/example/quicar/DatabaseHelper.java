@@ -142,6 +142,7 @@ public class DatabaseHelper {
                             User user = doc.toObject(User.class);
                             //  check if there is an update on current user
                             if (user.getName().equals(getCurrentUserName())) {
+                                setCurrentUser(user);
                                 UserDataHelper.getInstance().notifyUpdate(user);
                                 break;
                             }
