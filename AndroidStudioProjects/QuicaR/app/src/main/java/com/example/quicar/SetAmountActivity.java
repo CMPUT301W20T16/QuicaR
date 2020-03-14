@@ -32,7 +32,6 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
 
         String info = ScanTransferActivity.result.getText();
         String username = info.split("\n")[1];
-        System.out.println("11111111111111111111111111111111111111111111111111111111111111111" + username);
 
         // read the user object from the
         Gson gson = new Gson();
@@ -50,13 +49,11 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 money = Float.valueOf(amount.getText().toString());
                 fromUser = DatabaseHelper.getInstance().getCurrentUser();
                 fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
-                System.out.println("333333333333333333333333333333333333333333333333333333333333333333333" + toUser.getAccountInfo().getWallet().getBalance());
                 toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
-                System.out.println("222222222222222222222222222222222222222222222222222222222222222222222" + toUser.getAccountInfo().getWallet().getBalance());
                 UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
                 UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
-//                UserDataHelper.getInstance().setCurrentUser(toUser);
-//                UserDataHelper.getInstance().setCurrentUser(fromUser);
+                DatabaseHelper.getInstance().setCurrentUser(toUser);
+                DatabaseHelper.getInstance().setCurrentUser(fromUser);
                 // finally should be connected with the password enter
                 startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
 
