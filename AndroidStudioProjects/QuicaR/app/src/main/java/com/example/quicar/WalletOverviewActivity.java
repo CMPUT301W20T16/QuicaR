@@ -29,6 +29,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
     ImageView qr_code;
     TextView balance;
     Handler handler = new Handler();
+    User user;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -45,7 +46,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 1000 * 30);
         generate_qr(qr_code);
 
-        User user = DatabaseHelper.getInstance().getCurrentUser();
+        user = DatabaseHelper.getInstance().getCurrentUser();
         if(user.getAccountInfo().getWallet() == null) {
 
             System.out.println(user.getAccountInfo().getUserName());
@@ -83,6 +84,9 @@ public class WalletOverviewActivity extends AppCompatActivity {
         }
         void update() {
             generate_qr(qr_code);
+            String currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+            balance.setText(currentBalance);
+            balance.bringToFront();
         }
     };
 
@@ -106,5 +110,4 @@ public class WalletOverviewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

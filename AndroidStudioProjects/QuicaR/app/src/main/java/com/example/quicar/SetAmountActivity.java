@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-
+// the activity that let the user set the transfer amount
 public class SetAmountActivity extends AppCompatActivity implements OnGetUserDataListener{
     TextView toUsername;
     EditText amount;
@@ -30,9 +30,11 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
         amount = (EditText)findViewById(R.id.amount);
         confirm = (Button)findViewById(R.id.pay_confirm);
 
-        String info = ScanTransferActivity.result.getText().toString();
+        String info = ScanTransferActivity.result.getText();
         String username = info.split("\n")[1];
+        System.out.println("11111111111111111111111111111111111111111111111111111111111111111" + username);
 
+        // read the user object from the
         Gson gson = new Gson();
         if (username != null){
             toUser = gson.fromJson(username, User.class);
@@ -48,7 +50,9 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 money = Float.valueOf(amount.getText().toString());
                 fromUser = DatabaseHelper.getInstance().getCurrentUser();
                 fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
-                toUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() + money);
+                System.out.println("333333333333333333333333333333333333333333333333333333333333333333333" + toUser.getAccountInfo().getWallet().getBalance());
+                toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
+                System.out.println("222222222222222222222222222222222222222222222222222222222222222222222" + toUser.getAccountInfo().getWallet().getBalance());
                 UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
                 UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
 //                UserDataHelper.getInstance().setCurrentUser(toUser);
@@ -65,11 +69,6 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
     public void onSuccess(User user, String tag) {
         startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
     }
-//
-//    @Override
-//    public void onUserExists(Boolean exists, String tag) {
-//
-//    }
 
     @Override
     public void onFailure(String errorMessage) {
