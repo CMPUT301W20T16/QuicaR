@@ -75,8 +75,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         holder.riderName.setText("Rider: " + currentItem.getRider().getName());
         //getStart and getEnd currently return lat and lng, need address
-        holder.startAdresse.setText("From: " + currentItem.getStart().getLat() + currentItem.getStart().getLon().toString());
-        holder.endAdresse.setText("To: " + currentItem.getDestination().getLat().toString() + currentItem.getDestination().getLon().toString());
+        holder.startAdresse.setText("From: " + currentItem.getStartAddrName());
+        holder.endAdresse.setText("To: " + currentItem.getDestAddrName());
 
         holder.estimateFare.setText("Estimated Fare: " + currentItem.getEstimatedCost().toString());
     }

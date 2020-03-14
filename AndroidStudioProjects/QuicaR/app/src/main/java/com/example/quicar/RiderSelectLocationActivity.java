@@ -187,6 +187,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
 
+
+
 //                        if ( marker != null){
 //                            marker.remove();
 //                        }
@@ -210,6 +212,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                                         .getView()
                                         .findViewById(R.id.places_autocomplete_search_input);
                                 etPlace.setHint(place.getAddress());
+
+                                //set address in Location object
+                                location.setAddressName(place.getAddress());
                                 //System.out.println(destinationAutoComplete);
 
 

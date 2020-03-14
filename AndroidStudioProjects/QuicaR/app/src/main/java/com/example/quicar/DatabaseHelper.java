@@ -128,6 +128,29 @@ public class DatabaseHelper {
             }
         });
 
+        collectionReferenceUser.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for request");
+                    if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            //  check if there is an update on current user
+                            if (user.getName().equals(getCurrentUserName())) {
+                                UserDataHelper.getInstance().notifyUpdate(user);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         // Get token
         // [START retrieve_current_token]
         FirebaseInstanceId.getInstance().getInstanceId()

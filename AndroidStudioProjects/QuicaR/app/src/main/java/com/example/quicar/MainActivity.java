@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,14 +32,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         //  database setup
         DatabaseHelper.getInstance().setCurrentMode("rider");
 
 //        //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
 //        finish();
-//
-          // test map view
+
+////           test map view
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
@@ -128,14 +130,15 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        //DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "hello");
+        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "hello");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver",
                 Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public  void onPickedUpNotification(Request request) {
-
+        Toast.makeText(MainActivity.this, "rider request updated to picked up by driver",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

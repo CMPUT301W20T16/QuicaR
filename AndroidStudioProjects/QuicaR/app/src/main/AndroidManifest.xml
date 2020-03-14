@@ -79,9 +79,11 @@
 
         <activity android:name=".DriverPickUpActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RiderOnGoingRequest"
+        <activity android:name=".RiderOnGoingRequestActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".DriverOnGoingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderMatchingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
