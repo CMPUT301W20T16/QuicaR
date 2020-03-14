@@ -10,7 +10,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -77,7 +79,22 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        drawer.requestDisallowInterceptTouchEvent(true);
+
+
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView userName_textView = headerView.findViewById(R.id.userName_textView);
+        TextView userEmail_textView = headerView.findViewById(R.id.userEmail_textView);
+
+        User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+        String userEmailStr =currentUser.getAccountInfo().getEmail();
+        String userNameStr = currentUser.getAccountInfo().getUserName();
+
+
+        userName_textView.setText(userNameStr);
+        userEmail_textView.setText(userEmailStr);
+
 
         // connect navigation drawer to tool bar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -288,8 +305,18 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_driver_mode:
                 if(DatabaseHelper.getInstance().getCurrentMode() == "rider") {
 
-                    Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
-                    startActivity(intent2);
+                    User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+                    if(currentUser.isDriver()){
+                        Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
+                        startActivity(intent2);
+
+                    }
+
+                    else{
+                        Intent intent2 = new Intent(getApplicationContext(), registeDriverActivity.class);
+                        startActivity(intent2);
+                    }
+
                 }
                 break;
 

@@ -2,7 +2,9 @@ package com.example.quicar;
 
 import com.google.firebase.firestore.PropertyName;
 
-public class DriverInfo {
+import java.io.Serializable;
+
+public class DriverInfo implements Serializable {
 
     private Double rating = 0.;
     private Integer orderNumber = 0;

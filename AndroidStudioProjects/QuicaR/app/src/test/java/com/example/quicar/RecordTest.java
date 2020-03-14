@@ -47,6 +47,7 @@ public class RecordTest {
         record.setReqPayment(888.f);
         assertEquals(888f, (float)record.getReqPayment());
 
+
         Request request = new Request();
         record.setRequest(request);
         assertEquals(request, record.getRequest());

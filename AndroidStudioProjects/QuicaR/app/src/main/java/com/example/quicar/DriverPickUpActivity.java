@@ -27,13 +27,20 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     BottomSheetBehavior bottomSheetBehavior;
 
     Button confirmButton;
+    Request currentRequest;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_pick_up, frameLayout);
+
+
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_pick_up);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
