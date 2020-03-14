@@ -76,7 +76,7 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
         }
     }
 
-    private void validate (View v){
+    private void Validate (View v){
         if (!validateLicenseNumberLayout() |!validateBirthDate()|!validateBirthDate()| !validatePlateNumber()) {
             return;
         }

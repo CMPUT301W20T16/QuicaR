@@ -32,6 +32,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     Button confirmButton;
     Button cancelButton;
+    Request currentRequest = null;
 
 //    Location start_location, end_location;
 
@@ -94,11 +95,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
                         end_location, end_location.getAddressName(),
                         newUser, new User(), 20.0f);
 
+                currentRequest = request;
+
                 RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
 
-                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+                intent.putExtra("current request", currentRequest);
                 startActivity(intent);
 
             }

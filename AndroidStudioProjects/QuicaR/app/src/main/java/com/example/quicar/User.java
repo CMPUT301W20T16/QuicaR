@@ -3,9 +3,10 @@ package com.example.quicar;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
 
     private AccountInfo accountInfo;
 

@@ -31,6 +31,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
 
+
     }
 
     @Override

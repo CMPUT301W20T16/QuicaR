@@ -1,10 +1,11 @@
 package com.example.quicar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import com.google.firebase.firestore.PropertyName;
 import java.util.Date;
 
-public class Wallet {
+public class Wallet implements Serializable {
 
     private Float balance;
     private ArrayList<BankAccount> bankAccountArrayList;

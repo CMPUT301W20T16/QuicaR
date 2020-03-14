@@ -78,6 +78,7 @@
         <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
         <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
         <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
+        <activity android:name=".registeDriverActivity" android:parentActivityName=".RiderRequestActivity"/>
 
 
 

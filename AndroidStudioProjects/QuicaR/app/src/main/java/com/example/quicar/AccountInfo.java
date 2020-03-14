@@ -1,8 +1,9 @@
 package com.example.quicar;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AccountInfo {
+public class AccountInfo implements Serializable {
     /**
     This java class Account
      */
