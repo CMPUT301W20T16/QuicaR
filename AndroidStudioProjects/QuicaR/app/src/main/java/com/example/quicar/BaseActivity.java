@@ -118,6 +118,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * This is executed when the map is drawing on the UI
+     *
+     *
+     *
+     */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -290,6 +297,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     // enable user to select item from navigation drawer
+
+    /**
+     * This is executed when the one item is selected
+     *
+     *
+     *
+     */
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

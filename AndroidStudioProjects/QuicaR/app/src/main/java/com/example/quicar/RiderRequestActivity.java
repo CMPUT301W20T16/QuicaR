@@ -23,6 +23,12 @@ public class RiderRequestActivity extends BaseActivity {
     private LatLng pickupLocation;
     private LatLng destinationLocation;
 
+
+    /**
+     * activity displayed as soon as user logged in as a default activity
+     * rider in this activity can go to selection act which allows to choose start and end
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,13 @@ public class RiderRequestActivity extends BaseActivity {
         });
 
     }
+
+    /**
+     * helper function for address of selected location
+     * @param lat
+     * @param lng
+     * @return
+     */
 
     // get address name in String from lat and long
     public String findAddress(double lat, double lng) {

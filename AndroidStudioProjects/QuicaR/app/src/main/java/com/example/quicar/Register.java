@@ -40,6 +40,11 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         void callback(boolean data);
     }
 
+    /**
+     * register activity
+     * @param savedInstanceState
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

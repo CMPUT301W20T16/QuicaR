@@ -66,7 +66,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
 
-
+    /**
+     * activity for riders to select start and destination
+     * use google autocomplete fragment to help
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +125,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
     }
 
+    /**
+     * helper function makes user more convenient when browsing result items
+     */
     public void buildRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.history_loc_list);
         mRecyclerView.setHasFixedSize(true);
@@ -153,7 +160,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         });
     }
 
-
+    /**
+     * execute as soon as they click the auto complete fragment and begin to enter
+     * @param autocompleteSupportFragment
+     * @param location
+     */
     public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
@@ -254,6 +265,12 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
+
+    /**
+     * execute when an result item of google autocomplete fragment is clicked
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
