@@ -77,6 +77,9 @@
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
         <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
+        <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
+
+
 
         <activity android:name=".DriverPickUpActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
