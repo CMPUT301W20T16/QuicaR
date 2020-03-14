@@ -33,7 +33,6 @@ public class WalletOverviewActivity extends AppCompatActivity {
     String currentBalance;
     User user;
 
-
     // every 30 seconds refresh the qr code 1 time
     private Runnable runnable = new Runnable() {
         public void run() {
