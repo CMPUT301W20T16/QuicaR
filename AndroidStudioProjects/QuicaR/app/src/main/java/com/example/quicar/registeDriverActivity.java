@@ -76,21 +76,39 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
         }
     }
 
-    private void Validate (View v){
-        if (!validateLicenseNumberLayout() |!validateBirthDate()|!validateBirthDate()| !validatePlateNumber()) {
+    public void Validate (View v){
+        if (!validateLicenseNumberLayout() || !validateBirthDate()|| !validateBirthDate() || !validatePlateNumber()) {
             return;
         }
 
-        String input = "Teemo" ;
-        Toast.makeText(this,input,Toast.LENGTH_SHORT).show();
+        /**
+         * delete birthday in here
+         */
+
+
+        User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+        currentUser.getAccountInfo().getDriverInfo().setLicense(licenseNumberLayout.getEditText().getText().toString());
+        currentUser.getAccountInfo().getDriverInfo().setPlateNumber(plate_numberLayout.getEditText().getText().toString());
+        currentUser.setDriver(true);
+
+        DatabaseHelper.getInstance().setCurrentUser(currentUser);
+
+        UserDataHelper.getInstance().updateUserProfile(currentUser,this);
+
+
+
+
+        //String input = "Teemo" ;
+        //Toast.makeText(this,input,Toast.LENGTH_SHORT).show();
+
 
     }
 
 
     @Override
     public void onSuccess(User user, String tag) {
-        if (tag == UserDataHelper.ADD_USER_TAG)
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        if (tag == UserDataHelper.UPDATE_USER_TAG)
+            startActivity(new Intent(getApplicationContext(), DriverBrowsingActivity.class));
     }
 
     @Override
