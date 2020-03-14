@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 //        //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
 //        finish();
-
-////           test map view
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
