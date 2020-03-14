@@ -613,6 +613,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     }
 
     @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
         System.out.println("isFalse");
         System.out.println(errorMessage);

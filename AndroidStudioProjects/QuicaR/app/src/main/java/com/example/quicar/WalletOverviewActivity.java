@@ -106,17 +106,6 @@ public class WalletOverviewActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    // every 30 seconds refresh the qr code 1 time
-    private Runnable runnable = new Runnable() {
-        public void run() {
-            this.update();
-            handler.postDelayed(runnable, 1000 * 30);
-        }
-        void update() {
-            generate_qr(qr_code);
-        }
-    };
-
     protected void generate_qr(ImageView qr_code) {
         String time = LocalDateTime.now().toString();
         Gson gson = new Gson();
