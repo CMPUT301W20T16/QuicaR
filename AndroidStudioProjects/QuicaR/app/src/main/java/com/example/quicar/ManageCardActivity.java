@@ -88,11 +88,11 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
         Toast.makeText(ManageCardActivity.this,
                 "Successfully add a new card", Toast.LENGTH_SHORT).show();
     }
-//
-//    @Override
-//    public void onUserExists(Boolean exists, String tag) {
-//
-//    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+
+    }
 
     @Override
     public void onFailure(String errorMessage) {

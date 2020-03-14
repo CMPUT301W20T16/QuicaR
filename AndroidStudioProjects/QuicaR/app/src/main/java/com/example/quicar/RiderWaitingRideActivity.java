@@ -38,6 +38,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     Button CallButton;
     Button EmailButton;
     Button CancelButton;
+    Request currentRequest = null;
 
     /**
      * 问题：
@@ -49,6 +50,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        currentRequest = (Request) intent.getSerializableExtra("current request");
+
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
@@ -116,14 +121,33 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     @Override
     public void onActiveNotification(Request request) {
+        System.out.println("!!!id!!!!!========="+request.getRid());
+
+        if (currentRequest.getRid().equals(request.getRid())) {
+            System.out.println("!!!id!!!!!========="+request.getRid());
+            DatabaseHelper.getInstance().sendPopUpNotification("Notification", "Rider is matched for your current request!");
+            String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
+            String driverNameStr = request.getDriver().getAccountInfo().getUserName();
+            String driverPhoneStr = request.getDriver().getAccountInfo().getPhone();
+
+            driverEmail.setText(driverEmailStr);
+            driverName.setText(driverNameStr);
+            driverPhone.setText(driverPhoneStr);
+            Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+
 
     }
 
     @Override
     public void onPickedUpNotification(Request request) {
-        System.out.println("------------- rider has been picked up -----------------");
-        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Rider is being picked up");
+        //System.out.println("------------- rider has been picked up -----------------");
+
         Toast.makeText(RiderWaitingRideActivity.this, "rider is picked up by driver", Toast.LENGTH_SHORT).show();
+
 
         Intent intent = new Intent(RiderWaitingRideActivity.this, RiderOnGoingRequestActivity.class);
         startActivity(intent);

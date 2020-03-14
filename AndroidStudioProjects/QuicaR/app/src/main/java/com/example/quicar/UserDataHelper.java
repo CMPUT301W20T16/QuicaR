@@ -27,6 +27,7 @@ public class UserDataHelper {
     public static String UPDATE_USER_TAG = "update user";
     public static String GET_USER_TAG = "get user";
 
+    private OnGetUserDataListener notifyListener;
     private CollectionReference collectionReferenceUser;
     private FirebaseFirestore db;
 
@@ -50,6 +51,20 @@ public class UserDataHelper {
         if (userDataHelper == null)
             userDataHelper = new UserDataHelper();
         return userDataHelper;
+    }
+
+    void setOnNotifyListener(OnGetUserDataListener listener) {
+        notifyListener = listener;
+    }
+
+    /**
+     * This method notify the listener when user account is updated
+     * @param user
+     *  updated user object
+     */
+    void notifyUpdate(User user) {
+        if (notifyListener != null)
+            notifyListener.onUpdateNotification(user);
     }
 
     /**

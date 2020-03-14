@@ -94,6 +94,11 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
     }
 
     @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
 
     }

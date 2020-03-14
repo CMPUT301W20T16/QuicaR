@@ -69,6 +69,11 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
     }
 
     @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
 
     }

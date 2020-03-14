@@ -259,7 +259,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         switch (item.getItemId()) {
             case R.id.confirm_button:
                 // check if inputs are left blank
-                if (start_location == null || end_location == null){
+                if (start_location.getLat() == null || end_location.getLat() == null){
                     Toast.makeText(this, "One or more fields is empty!", Toast.LENGTH_SHORT).show();
                     return false;
                 }
