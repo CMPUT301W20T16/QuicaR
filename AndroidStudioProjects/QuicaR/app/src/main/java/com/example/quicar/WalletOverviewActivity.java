@@ -29,6 +29,37 @@ public class WalletOverviewActivity extends AppCompatActivity {
     ImageView qr_code;
     TextView balance;
     Handler handler = new Handler();
+    Handler handler2 = new Handler();
+    String currentBalance;
+    User user;
+
+
+    // every 30 seconds refresh the qr code 1 time
+    private Runnable runnable = new Runnable() {
+        public void run() {
+            this.update();
+            handler.postDelayed(runnable, 1000 * 30);
+        }
+        void update() {
+            generate_qr(qr_code);
+        }
+    };
+
+    // every 30 seconds refresh the qr code 1 time
+    private Runnable runnable2 = new Runnable() {
+        public void run() {
+            this.update();
+            handler2.postDelayed(runnable2, 1000 * 2);
+        }
+        void update() {
+            if (user != null) {
+                user = DatabaseHelper.getInstance().getCurrentUser();
+                currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+                balance.setText(currentBalance);
+                balance.bringToFront();
+            }
+        }
+    };
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -45,9 +76,9 @@ public class WalletOverviewActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 1000 * 30);
         generate_qr(qr_code);
 
-        User user = DatabaseHelper.getInstance().getCurrentUser();
+        handler2.postDelayed(runnable2, 1000 * 2);
+        user = DatabaseHelper.getInstance().getCurrentUser();
         if(user.getAccountInfo().getWallet() == null) {
-
             System.out.println(user.getAccountInfo().getUserName());
         }
         String currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
@@ -106,5 +137,4 @@ public class WalletOverviewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

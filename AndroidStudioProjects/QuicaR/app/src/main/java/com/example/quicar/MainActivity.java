@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         //  database setup
         DatabaseHelper.getInstance().setCurrentMode("rider");
+
 //        DatabaseHelper.getInstance().setOldServerKey(getString(R.string.OLD_SERVER_KEY));
 
 //        //  test adding new user in register page
