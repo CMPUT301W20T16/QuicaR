@@ -98,7 +98,7 @@
             android:layout_marginStart="9dp"
             android:layout_marginEnd="9dp"
             android:layout_marginTop="715dp"
-            android:background="@drawable/card_information"
+            android:background="@drawable/change_pocket"
             android:visibility="visible"/>
 
     </RelativeLayout>

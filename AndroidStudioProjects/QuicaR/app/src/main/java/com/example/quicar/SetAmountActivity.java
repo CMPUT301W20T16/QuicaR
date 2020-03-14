@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-
+// the activity that let the user set the transfer amount
 public class SetAmountActivity extends AppCompatActivity implements OnGetUserDataListener{
     TextView toUsername;
     EditText amount;
@@ -30,9 +30,10 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
         amount = (EditText)findViewById(R.id.amount);
         confirm = (Button)findViewById(R.id.pay_confirm);
 
-        String info = ScanTransferActivity.result.getText().toString();
+        String info = ScanTransferActivity.result.getText();
         String username = info.split("\n")[1];
 
+        // read the user object from the gson string
         Gson gson = new Gson();
         if (username != null){
             toUser = gson.fromJson(username, User.class);
@@ -48,11 +49,12 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 money = Float.valueOf(amount.getText().toString());
                 fromUser = DatabaseHelper.getInstance().getCurrentUser();
                 fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
-                toUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() + money);
+                toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
                 UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
                 UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
-//                UserDataHelper.getInstance().setCurrentUser(toUser);
-//                UserDataHelper.getInstance().setCurrentUser(fromUser);
+                DatabaseHelper.getInstance().setCurrentUser(toUser);
+                DatabaseHelper.getInstance().setCurrentUser(fromUser);
+
                 // finally should be connected with the password enter
                 startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
 
@@ -65,11 +67,6 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
     public void onSuccess(User user, String tag) {
         startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
     }
-//
-//    @Override
-//    public void onUserExists(Boolean exists, String tag) {
-//
-//    }
 
     @Override
     public void onFailure(String errorMessage) {
