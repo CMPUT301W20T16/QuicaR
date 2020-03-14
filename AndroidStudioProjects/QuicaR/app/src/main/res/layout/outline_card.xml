@@ -7,7 +7,8 @@
         android:layout_height="100dp"
         android:background="@drawable/card_outline"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="9dp"/>
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"/>
 
     <TextView
         android:id="@+id/card_type"
@@ -26,6 +27,5 @@
         android:layout_marginStart="165dp"
         android:textColor="@color/white"
         android:textSize="20sp"/>
-
 
 </RelativeLayout>
