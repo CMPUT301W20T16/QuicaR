@@ -22,6 +22,10 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
 
     Button confirmButton;
 
+    /**
+     * when going to this activity, following is executed automatically
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +59,11 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         });
     }
 
+    /**
+     *
+     * @param requests
+     * @param tag
+     */
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.USER_REQ_TAG) {

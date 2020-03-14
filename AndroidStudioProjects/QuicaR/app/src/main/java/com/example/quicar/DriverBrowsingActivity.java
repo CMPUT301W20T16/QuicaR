@@ -55,7 +55,9 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
     }
 
-
+    /**
+     * build a RecyclerView for later use
+     */
     public void buildRecyclerView() {
         mRecyclerView = (RecyclerView) linearLayout.findViewById(R.id.open_requests_list);
         mRecyclerView.setHasFixedSize(true);
