@@ -109,11 +109,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 //        String userName = DatabaseHelper.getCurrentUserName();
         //Test
-        //String userName = DatabaseHelper.getInstance().getCurrentUserName();
+        String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
-        user = DatabaseHelper.getInstance().getCurrentUser();
-        setDefault();
-        //UserDataHelper.getInstance().getUser(userName,this);
+        UserDataHelper.getInstance().getUser(userName,this);
 
 //
 //        if (user != null) {
@@ -192,7 +190,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     private void updateUser() {
         String email,username,phone,firstName,lastName,gender,password,accNo;
-        Wallet wallet = user.getAccountInfo().getWallet();
+        Wallet wallet = null;
         accNo = email = username = phone = firstName = lastName = gender = password = null;
         String sbirthDate = null;
         Date birthDate;
