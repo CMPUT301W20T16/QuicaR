@@ -190,7 +190,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     private void updateUser() {
         String email,username,phone,firstName,lastName,gender,password,accNo;
-        Wallet wallet = null;
+        Wallet wallet = user.getAccountInfo().getWallet();
         accNo = email = username = phone = firstName = lastName = gender = password = null;
         String sbirthDate = null;
         Date birthDate;
