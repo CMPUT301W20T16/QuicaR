@@ -722,6 +722,9 @@ public class RequestDataHelper {
         if (databaseHelper.getCurrentUserName() == null)
             return;
 
+        if (databaseHelper.getUserState().getCurrentRequest() == null)
+            return;
+
         UserState userState = databaseHelper.getUserState();
         if (request.getRider().getName().equals(databaseHelper.getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
@@ -750,6 +753,9 @@ public class RequestDataHelper {
         if (databaseHelper.getCurrentUserName() == null)
             return;
 
+        if (databaseHelper.getUserState().getCurrentRequest() == null)
+            return;
+
         UserState userState = databaseHelper.getUserState();
         if (request.getRid().equals(userState.getRequestID())) {
             if (request.getAccepted() &&  request.getPickedUp()
@@ -770,6 +776,9 @@ public class RequestDataHelper {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 
         if (databaseHelper.getCurrentUserName() == null)
+            return;
+
+        if (databaseHelper.getUserState().getCurrentRequest() == null)
             return;
 
         UserState userState = databaseHelper.getUserState();
@@ -804,6 +813,9 @@ public class RequestDataHelper {
         if (!userState.getOnGoing()) {
             return;
         }
+
+        if (databaseHelper.getUserState().getCurrentRequest() == null)
+            return;
 
         boolean found = false;
 
