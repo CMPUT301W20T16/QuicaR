@@ -3,6 +3,7 @@ package com.example.quicar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -11,8 +12,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -36,16 +39,49 @@ public class RequestDataHelper {
 
     private OnGetRequestDataListener notifyListener;
     private CollectionReference collectionReferenceReq;
-    private FirebaseFirestore db;
-
     private static RequestDataHelper requestDataHelper;
 
     /**
      * This is the constructor of RequestDataHelper
      */
     private RequestDataHelper() {
-        collectionReferenceReq = DatabaseHelper.getInstance().getCollectionReferenceReq();
-        db = DatabaseHelper.getInstance().getDb();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        collectionReferenceReq = db.collection("Requests");
+
+        collectionReferenceReq.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for requests");
+                    if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
+                        ArrayList<Request> requests = new ArrayList<>();
+                        ArrayList<Request> openRequests = new ArrayList<>();
+
+                        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Request request = doc.toObject(Request.class);
+                            //  check if there is a change in the request status of current user
+                            if (databaseHelper.getCurrentMode() == "rider") {
+                                checkActiveNotification(request);
+                                checkPickedUpNotification(request);
+                                checkArrivedNotification(request);
+                            }
+                            requests.add(request);
+                            if (!request.getAccepted())
+                                openRequests.add(request);
+                        }
+                        if (databaseHelper.getCurrentMode() == "driver") {
+                            notifyAllOpenRequests(openRequests);
+                            checkCancelNotification(requests);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -130,8 +166,6 @@ public class RequestDataHelper {
      *  listener for notification
      */
     private void addRequest(final Request newRequest, final OnGetRequestDataListener listener) {
-        ArrayList<Request> requests = new ArrayList<Request>();
-        requests.add(newRequest);
         collectionReferenceReq
                 .document(newRequest.getRid())
                 .set(newRequest)
@@ -139,6 +173,8 @@ public class RequestDataHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG,  " request addition successful");
+                        ArrayList<Request> requests = new ArrayList<Request>();
+                        requests.add(newRequest);
                         listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
@@ -164,7 +200,14 @@ public class RequestDataHelper {
             listener.onFailure("invalid parameters", ADD_REQ_TAG);
             return;
         }
-        String id = db.collection("collection_name").document().getId();
+
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("driver")) {
+            System.out.println("Current user is not in rider mode, unable to add new request");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String id = db.collection("Requests").document().getId();
         newRequest.setRid(id);
         addRequest(newRequest, listener);
     }
@@ -183,19 +226,26 @@ public class RequestDataHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
-                        if (mode == "cancel")
+                        if (mode == "cancel") {
+                            // update user state of rider
+                            DatabaseHelper.getInstance().getUserState().setActive(false);
                             listener.onSuccess(null, CANCEL_REQ_TAG);
-                        else if (mode == "complete")
+                        } else if (mode == "complete") {
+                            // update user state of driver
+                            DatabaseHelper.getInstance().getUserState().setActive(false);
+                            DatabaseHelper.getInstance().getUserState().setOnGoing(false);
+                            DatabaseHelper.getInstance().getUserState().setOnArrived(false);
                             listener.onSuccess(null, COMPLETE_REQ_TAG);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, requestID + " deletion failed" + e.toString());
-                        if (mode == "cancel")
+                        if (mode.equals(CANCEL_REQ_TAG))
                             listener.onFailure(requestID + " deletion failed", CANCEL_REQ_TAG);
-                        else if (mode == "complete")
+                        else if (mode.equals(COMPLETE_REQ_TAG))
                             listener.onFailure(requestID + " deletion failed", COMPLETE_REQ_TAG);
                     }
                 });
@@ -216,6 +266,7 @@ public class RequestDataHelper {
 
         final DocumentReference reqDocRef = collectionReferenceReq.document(requestID);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.runTransaction(new Transaction.Function<String>() {
           @Override
           public String apply(Transaction transaction) throws FirebaseFirestoreException {
@@ -234,13 +285,19 @@ public class RequestDataHelper {
         }).addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String docID) {
+                DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+                // set userstate of driver
                 Log.d(TAG, "Transaction success: " + docID);
-                if (updateMode == SET_ACTIVE_TAG)
+                if (updateMode == SET_ACTIVE_TAG) {
+                    databaseHelper.getUserState().setActive(true);
                     listener.onSuccess(null, SET_ACTIVE_TAG);
-                else if (updateMode == SET_PICKEDUP_TAG)
+                } else if (updateMode == SET_PICKEDUP_TAG) {
+                    databaseHelper.getUserState().setOnGoing(true);
                     listener.onSuccess(null, SET_PICKEDUP_TAG);
-                else if (updateMode == SET_ARRIVED_TAG)
+                } else if (updateMode == SET_ARRIVED_TAG) {
+                    databaseHelper.getUserState().setOnArrived(true);
                     listener.onSuccess(null, SET_ARRIVED_TAG);
+                }
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -312,6 +369,10 @@ public class RequestDataHelper {
      *  listener for notification and obtain return value
      */
     void queryAllOpenRequests(final OnGetRequestDataListener listener) {
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
+            System.out.println("Current user is not in driver mode, unable to query all open requests");
+            return;
+        }
 
         collectionReferenceReq
                 .whereEqualTo("isAccepted", false)
@@ -354,6 +415,9 @@ public class RequestDataHelper {
             return;
         } else if (driver == null || driver.getName() == null || driver.getName().length() == 0) {
             listener.onFailure("invalid parameters", SET_ACTIVE_TAG);
+            return;
+        } else if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
+            System.out.println("Current user is not in driver mode, unable to update request");
             return;
         }
 
@@ -411,6 +475,11 @@ public class RequestDataHelper {
             return;
         }
 
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
+            System.out.println("Current user is not in driver mode, unable to update request");
+            return;
+        }
+
         collectionReferenceReq
                 .whereEqualTo("requestID", requestID)
                 .get()
@@ -464,6 +533,11 @@ public class RequestDataHelper {
     public void setRequestArrived(final String requestID,  final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", SET_ARRIVED_TAG);
+            return;
+        }
+
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
+            System.out.println("Current user is not in driver mode, unable to update request");
             return;
         }
 
@@ -524,6 +598,12 @@ public class RequestDataHelper {
             listener.onFailure("invalid parameters", CANCEL_REQ_TAG);
             return;
         }
+
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("driver")) {
+            System.out.println("Current user is not in rider mode, unable to cancel request");
+            return;
+        }
+
         collectionReferenceReq
                 .whereEqualTo("requestID", requestID)
                 .get()
@@ -551,7 +631,7 @@ public class RequestDataHelper {
                                         requestID + " is an ongoing request", CANCEL_REQ_TAG);
                             } else {
                                 System.out.println("***** " + requestID);
-                                delRequest(requestID, listener, "cancel");
+                                delRequest(requestID, listener, CANCEL_REQ_TAG);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -581,6 +661,12 @@ public class RequestDataHelper {
             listener.onFailure("invalid parameters", COMPLETE_REQ_TAG);
             return;
         }
+
+        if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
+            System.out.println("Current user is not in driver mode, unable to complete a request");
+            return;
+        }
+
         collectionReferenceReq
                 .whereEqualTo("requestID", requestID)
                 .get()
@@ -608,7 +694,7 @@ public class RequestDataHelper {
                                         requestID + " is not an ongoing request", COMPLETE_REQ_TAG);
                             } else {
                                 System.out.println("***** " + requestID);
-                                delRequest(requestID, listener, "complete");
+                                delRequest(requestID, listener, COMPLETE_REQ_TAG);
                                 Record record = new Record(query, payment, rating);
                                 RecordDataHelper.getInstance().addRecord(record);
                                 listener.onSuccess( null, COMPLETE_REQ_TAG);
@@ -620,6 +706,125 @@ public class RequestDataHelper {
                         }
                     }
                 });
+    }
+
+
+
+    /**
+     * This is the method that check if there is a notification needed to be sent to the rider
+     * that there is a request set to active (a driver accepted the rider's request)
+     * @param request
+     *  candidate request
+     */
+    private void checkActiveNotification(Request request) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+
+        if (databaseHelper.getCurrentUserName() == null)
+            return;
+
+        UserState userState = databaseHelper.getUserState();
+        if (request.getRider().getName().equals(databaseHelper.getCurrentUserName())) {
+            if (request.getAccepted() && !userState.getActive()) {
+                notifyActive(request);
+                new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
+                        "your request is accepted by " + request.getDriver().getName())
+                        .build();
+                // update user state of rider
+                userState.setActive(Boolean.TRUE);
+                userState.setRequestID(request.getRid());
+                databaseHelper.setUserState(userState);
+                System.out.println("-------- Accept Notification sent --------");
+            }
+        }
+    }
+
+    /**
+     * This is the method that check if there is a notification needed to be sent to the rider
+     * that there is a request picked up by a driver
+     * @param request
+     *  candidate request
+     */
+    private void checkPickedUpNotification(Request request) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+
+        if (databaseHelper.getCurrentUserName() == null)
+            return;
+
+        UserState userState = databaseHelper.getUserState();
+        if (request.getRid().equals(userState.getRequestID())) {
+            if (request.getAccepted() &&  request.getPickedUp()
+                    && userState.getActive() && !userState.getOnGoing()) {
+                notifyPickedUp(request);
+                new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
+                        "you are picked up by " + request.getDriver().getName())
+                        .build();
+                // update user state of rider
+                userState.setOnGoing(Boolean.TRUE);
+                databaseHelper.setUserState(userState);
+                System.out.println("-------- Picked up Notification sent --------");
+            }
+        }
+    }
+
+    private void checkArrivedNotification(Request request) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+
+        if (databaseHelper.getCurrentUserName() == null)
+            return;
+
+        UserState userState = databaseHelper.getUserState();
+        if (request.getRid().equals(userState.getRequestID())) {
+            if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
+                    && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
+                notifyArrived(request);
+                new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
+                        "you have arrived your destination")
+                        .build();
+                // update user state of rider
+                userState.setOnArrived(Boolean.TRUE);
+                databaseHelper.setUserState(userState);
+                System.out.println("-------- Arrived Notification sent --------");
+            }
+        }
+    }
+
+    /**
+     * This method check if there is a notification needed to be sent to the driver
+     * that the request working on is canceled by the rider
+     * @param requests
+     *  candidate request
+     */
+    private void checkCancelNotification(ArrayList<Request> requests) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+
+        if (databaseHelper.getCurrentUserName() == null)
+            return;
+
+        UserState userState = databaseHelper.getUserState();
+        if (!userState.getOnGoing()) {
+            return;
+        }
+
+        boolean found = false;
+
+        for (Request request: requests) {
+            if (request.getRid().equals(userState.getRequestID())) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
+                    "this request is canceled")
+                    .build();
+            notifyCancel();
+            // update user state of driver
+            userState.setOnGoing(Boolean.FALSE);
+            userState.setRequestID(null);
+            databaseHelper.setUserState(userState);
+            System.out.println("-------- Cancel Notification sent --------");
+        }
+
     }
 
 }

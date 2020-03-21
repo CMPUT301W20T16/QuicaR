@@ -3,6 +3,7 @@ package com.example.quicar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -11,8 +12,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -29,8 +32,6 @@ public class UserDataHelper {
 
     private OnGetUserDataListener notifyListener;
     private CollectionReference collectionReferenceUser;
-    private FirebaseFirestore db;
-
     private static UserDataHelper userDataHelper;
 
 
@@ -38,8 +39,32 @@ public class UserDataHelper {
      * This is the constructor of UserDataHelper
      */
     private UserDataHelper() {
-        collectionReferenceUser = DatabaseHelper.getInstance().getCollectionReferenceUser();
-        db = DatabaseHelper.getInstance().getDb();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        collectionReferenceUser = db.collection("Users");
+
+        collectionReferenceUser.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for users");
+                    if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            //  check if there is an update on current user
+                            if (user.getName().equals(DatabaseHelper.getInstance().getCurrentUserName())) {
+                                DatabaseHelper.getInstance().setCurrentUser(user);
+                                notifyUpdate(user);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -129,6 +154,7 @@ public class UserDataHelper {
 
         final DocumentReference userDocRef = collectionReferenceUser.document(userID);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.runTransaction(new Transaction.Function<String>() {
             @Override
             public String apply(Transaction transaction) throws FirebaseFirestoreException {

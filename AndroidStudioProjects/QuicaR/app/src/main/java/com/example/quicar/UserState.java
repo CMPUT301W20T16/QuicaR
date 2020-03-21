@@ -10,6 +10,7 @@ public class UserState {
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
+    private String requestID;
     private String activityState;
 
     /**
@@ -159,5 +160,13 @@ public class UserState {
      */
     public void setActivityState(String activityState) {
         this.activityState = activityState;
+    }
+
+    public String getRequestID() {
+        return requestID;
+    }
+
+    public void setRequestID(String requestID) {
+        this.requestID = requestID;
     }
 }
