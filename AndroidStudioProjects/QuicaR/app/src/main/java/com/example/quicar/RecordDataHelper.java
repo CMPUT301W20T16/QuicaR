@@ -3,12 +3,17 @@ package com.example.quicar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,7 +33,31 @@ public class RecordDataHelper {
      * This is the constructor of RecordDataHelper
      */
     private RecordDataHelper() {
-        collectionReferenceRec = DatabaseHelper.getInstance().getCollectionReferenceRec();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        collectionReferenceRec = db.collection("Records");
+
+        collectionReferenceRec.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen error", e);
+                    return;
+                }
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for records");
+                    ArrayList<Record> records = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Record record = doc.toObject(Record.class);
+                        records.add(record);
+                    }
+                    checkCompleteNotification(records);
+                }
+            }
+        });
     }
 
     /**
@@ -138,5 +167,39 @@ public class RecordDataHelper {
                         }
                     }
                 );
+    }
+
+    /**
+     * This method check if there is a notification needed to be sent to the rider
+     * that the rider's request is completed
+     * @param records
+     *  list of records
+     */
+    private void checkCompleteNotification(ArrayList<Record> records) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+
+        if (databaseHelper.getCurrentUser() == null)
+            return;
+
+        UserState userState = databaseHelper.getUserState();
+        for (Record record: records) {
+            if (record.getRequest().getRider().getName().equals(databaseHelper.getCurrentUserName())
+                    && databaseHelper.getCurrentMode().equals("rider")
+                    && userState.getRequestID().equals(record.getRequest().getRid())) {
+                // might want to check if userstate.getOngoing is updated
+                new PopUpNotification("Hey " + databaseHelper.getCurrentUserName()
+                        , "your ride is completed")
+                        .build();
+                // update user state of rider
+                userState.setActive(Boolean.FALSE);
+                userState.setOnGoing(Boolean.FALSE);
+                userState.setOnArrived(Boolean.FALSE);
+                userState.setCurrentRequest(null);
+                databaseHelper.setUserState(userState);
+                RequestDataHelper.getInstance().notifyComplete();
+                System.out.println("-------- Notification sent --------");
+                break;
+            }
+        }
     }
 }

@@ -60,6 +60,10 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Edited by Jeremy */
+                if (mRequest == null)
+                    return;
+                /* End here */
                 RequestDataHelper
                         .getInstance()
                         .setRequestPickedUp(mRequest.getRid(),
@@ -87,7 +91,11 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 //  always check if the return value is valid
                 System.out.println("------------ all open request obtained -----------");
                 for (Request request: requests) {
-                    if (request.getAccepted()) {
+                    if (request.getAccepted()
+                            /* Edited by Jeremy */
+                            && request.getRid().equals(DatabaseHelper.getInstance().getUserState().getRequestID())
+                            /* End here */
+                    ) {
                         mRequest = request;
 
                         start_location = mRequest.getStart();

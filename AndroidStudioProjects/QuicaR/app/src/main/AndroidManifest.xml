@@ -19,6 +19,7 @@
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library android:name="com.google.android.maps" />
 
         <meta-data
             android:name="com.google.android.gms.version"

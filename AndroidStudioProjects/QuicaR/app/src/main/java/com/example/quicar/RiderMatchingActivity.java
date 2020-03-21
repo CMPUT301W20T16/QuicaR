@@ -46,7 +46,6 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Ride is being accepted");
 
         // dismiss progress dialog if rider has been successfully matched to a driver
         mProgressDialog.dismiss();
