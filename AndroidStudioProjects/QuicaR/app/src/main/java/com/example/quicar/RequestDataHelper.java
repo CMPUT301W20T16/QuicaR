@@ -831,6 +831,7 @@ public class RequestDataHelper {
                     .build();
             notifyCancel();
             // update user state of driver
+            userState.setActive(Boolean.FALSE);
             userState.setOnGoing(Boolean.FALSE);
             userState.setCurrentRequest(null);
             databaseHelper.setUserState(userState);
