@@ -1,5 +1,8 @@
 package com.example.quicar;
 
+import com.example.entity.Record;
+import com.example.entity.Request;
+
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;

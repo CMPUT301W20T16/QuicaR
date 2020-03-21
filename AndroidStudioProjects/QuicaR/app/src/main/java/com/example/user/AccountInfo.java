@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.user;
 
 import java.io.Serializable;
 import java.util.Date;

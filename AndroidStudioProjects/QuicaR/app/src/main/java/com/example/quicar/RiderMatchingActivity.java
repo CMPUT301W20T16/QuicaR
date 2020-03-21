@@ -7,6 +7,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
+
 import java.util.ArrayList;
 
 public class RiderMatchingActivity extends BaseActivity implements OnGetRequestDataListener {

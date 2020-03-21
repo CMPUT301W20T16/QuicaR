@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.user;
 
 import com.google.firebase.firestore.PropertyName;
 
@@ -12,7 +12,7 @@ public class DriverInfo implements Serializable {
     private String license;
     private String sinNumber;
 
-    protected DriverInfo(){
+    public DriverInfo(){
 //        this.rating = 0.0;
 //        this.orderNumber = 0;
 //        this.plateNumber = null;

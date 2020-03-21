@@ -1,10 +1,12 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -194,7 +196,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification (onSuccess, onFailure)
      */
-    void getUser(final String userName, final OnGetUserDataListener listener) {
+    public void getUser(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
         }
@@ -239,7 +241,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification
      */
-    void addNewUser(final User newUser, final OnGetUserDataListener listener) {
+    public void addNewUser(final User newUser, final OnGetUserDataListener listener) {
         if (newUser == null) {
             listener.onFailure("user provided is a null object");
             return;
@@ -283,7 +285,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification
      */
-    void updateUserProfile(final User user, final OnGetUserDataListener listener) {
+    public void updateUserProfile(final User user, final OnGetUserDataListener listener) {
         if (user == null || user.getName() == null || user.getName().length() == 0) {
             listener.onFailure("user name provided is a null or empty");
             return;

@@ -1,4 +1,6 @@
-package com.example.quicar;
+package com.example.listener;
+
+import com.example.user.User;
 
 /**
  * This is the interface that act as a listener when interacting with firebase

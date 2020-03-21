@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.entity;
 
 import java.io.Serializable;
 

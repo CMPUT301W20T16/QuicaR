@@ -9,18 +9,22 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Location;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
+import com.example.user.User;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
 

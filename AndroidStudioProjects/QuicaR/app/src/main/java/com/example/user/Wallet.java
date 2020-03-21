@@ -1,25 +1,26 @@
-package com.example.quicar;
+package com.example.user;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.example.entity.PayRecord;
 import com.google.firebase.firestore.PropertyName;
-import java.util.Date;
 
 public class Wallet implements Serializable {
 
     private Float balance;
     private ArrayList<BankAccount> bankAccountArrayList;
-
+//    private ArrayList<PayRecord> payRecordList;
 
 // no more these 3 attributes
 //    private String cardnumber;
 //    private Date expireDate;
 //    private String ccvCode;
 
-
     public Wallet() {
         this.balance = 0.f;
         this.bankAccountArrayList = new ArrayList<>();
+//        this.payRecordList = new ArrayList<>();
     }
 
     // may change it to add
@@ -39,20 +40,13 @@ public class Wallet implements Serializable {
         this.bankAccountArrayList.remove(pos);
     }
 
+    public Float getBalance() {
+        return balance;
+    }
+
     public void setBalance(Float balance) {
         this.balance = balance;
     }
-
-
-
-//    public void setQrGenrator(QR qrGenrator) {
-//        this.qrGenrator = qrGenrator;
-//    }
-
-//    public ArrayList<BankAccount> getBankAccountarrayList() {
-//        return bankAccountArrayList;
-//    }
-
 
     @PropertyName("bankAccountList")
     public ArrayList<BankAccount> getBankAccountArrayList() {
@@ -64,12 +58,11 @@ public class Wallet implements Serializable {
         this.bankAccountArrayList = bankAccountArrayList;
     }
 
-    public Float getBalance() {
-        return balance;
-    }
-
-//    public QR getQrGenrator() {
-//        return qrGenrator;
+//    public ArrayList<PayRecord> getPayRecordList() {
+//        return payRecordList;
 //    }
 
+//    public void setPayRecordList(ArrayList<PayRecord> payRecordList) {
+//        this.payRecordList = payRecordList;
+//    }
 }

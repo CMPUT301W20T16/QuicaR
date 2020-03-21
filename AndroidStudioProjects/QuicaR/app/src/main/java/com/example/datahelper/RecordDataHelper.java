@@ -1,10 +1,13 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.entity.Location;
+import com.example.listener.OnGetRecordDataListener;
+import com.example.entity.Record;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -126,7 +129,7 @@ public class RecordDataHelper {
      * @param listener
      *  listener for notification
      */
-    void queryHistoryLocation(final String userName, final Integer limit,
+    public void queryHistoryLocation(final String userName, final Integer limit,
                               final OnGetRecordDataListener listener) {
         collectionReferenceRec
                 .orderBy("dateTime", Query.Direction.DESCENDING)
