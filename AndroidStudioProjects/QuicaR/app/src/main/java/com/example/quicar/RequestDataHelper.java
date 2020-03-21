@@ -731,7 +731,7 @@ public class RequestDataHelper {
                         .build();
                 // update user state of rider
                 userState.setActive(Boolean.TRUE);
-                userState.setRequestID(request.getRid());
+                userState.setCurrentRequest(request);
                 databaseHelper.setUserState(userState);
                 System.out.println("-------- Accept Notification sent --------");
             }
@@ -820,7 +820,7 @@ public class RequestDataHelper {
             notifyCancel();
             // update user state of driver
             userState.setOnGoing(Boolean.FALSE);
-            userState.setRequestID(null);
+            userState.setCurrentRequest(null);
             databaseHelper.setUserState(userState);
             System.out.println("-------- Cancel Notification sent --------");
         }

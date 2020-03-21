@@ -194,7 +194,7 @@ public class RecordDataHelper {
                 userState.setActive(Boolean.FALSE);
                 userState.setOnGoing(Boolean.FALSE);
                 userState.setOnArrived(Boolean.FALSE);
-                userState.setRequestID(null);
+                userState.setCurrentRequest(null);
                 databaseHelper.setUserState(userState);
                 RequestDataHelper.getInstance().notifyComplete();
                 System.out.println("-------- Notification sent --------");

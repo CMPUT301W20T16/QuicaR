@@ -10,7 +10,7 @@ public class UserState {
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
-    private String requestID;
+    private Request currentRequest;
     private String activityState;
 
     /**
@@ -163,10 +163,14 @@ public class UserState {
     }
 
     public String getRequestID() {
-        return requestID;
+        return currentRequest.getRid();
     }
 
-    public void setRequestID(String requestID) {
-        this.requestID = requestID;
+    public Request getCurrentRequest() {
+        return currentRequest;
+    }
+
+    public void setCurrentRequest(Request currentRequest) {
+        this.currentRequest = currentRequest;
     }
 }

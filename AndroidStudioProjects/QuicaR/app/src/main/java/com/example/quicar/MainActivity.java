@@ -20,7 +20,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener {
+public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener, OnGetLocationDataListener {
     private final String TAG = "MainActivity";
     private OnGetRequestDataListener listener = this;
     private static int SPLASH_TIME_OUT = 0;
@@ -86,6 +86,16 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             @Override
             public void onClick(View v) {
                 RequestDataHelper.getInstance().completeRequest(requestID, 30.0f, 5.0f, listener);
+                Request testRequest = new Request();
+                User testUser = new User();
+                testUser.setName("test");
+                testRequest.setDriver(testUser);
+                DatabaseHelper.getInstance().getUserState().setCurrentRequest(testRequest);
+                LocationDataHelper
+                        .getInstance()
+                        .updateLocation(
+                                "new user testing"
+                                , new Location(123.d, 123.d));
             }
         });
 
@@ -182,5 +192,10 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdate(Location location) {
+        Toast.makeText(MainActivity.this, location.getLat().toString(), Toast.LENGTH_SHORT).show();
     }
 }
