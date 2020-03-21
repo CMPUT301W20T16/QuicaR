@@ -50,9 +50,9 @@ public class LocationDataHelper {
     }
 
     /**
-     * This method is the only static method that create a singleton for RequestDataHelper
+     * This method is the only static method that create a singleton for LocationDataHelper
      * @return
-     *  return the instance of RequestDataHelper singleton
+     *  return the instance of LocationDataHelper singleton
      */
     public static LocationDataHelper getInstance() {
         if (locationDataHelper == null)
