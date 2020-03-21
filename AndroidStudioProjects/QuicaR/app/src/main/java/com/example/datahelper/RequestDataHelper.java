@@ -1,10 +1,14 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.listener.OnGetRequestDataListener;
+import com.example.entity.Record;
+import com.example.entity.Request;
+import com.example.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -100,7 +104,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification
      */
-    void setOnNotifyListener(OnGetRequestDataListener listener) {
+    public void setOnNotifyListener(OnGetRequestDataListener listener) {
         notifyListener = listener;
     }
 
@@ -194,7 +198,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification
      */
-    void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
+    public void addNewRequest(final Request newRequest, final OnGetRequestDataListener listener) {
         if (newRequest == null || newRequest.getRider().getName() == null
                 || newRequest.getRider().getName().length() == 0) {
             listener.onFailure("invalid parameters", ADD_REQ_TAG);
@@ -324,7 +328,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    void queryUserRequest(final String userName, final String mode,
+    public void queryUserRequest(final String userName, final String mode,
                                              final OnGetRequestDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("invalid parameters", USER_REQ_TAG);
@@ -368,7 +372,7 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification and obtain return value
      */
-    void queryAllOpenRequests(final OnGetRequestDataListener listener) {
+    public void queryAllOpenRequests(final OnGetRequestDataListener listener) {
         if (DatabaseHelper.getInstance().getCurrentMode().equals("rider")) {
             System.out.println("Current user is not in driver mode, unable to query all open requests");
             return;
@@ -408,8 +412,8 @@ public class RequestDataHelper {
      * @param listener
      *  listener for notification
      */
-    void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
-                                        final OnGetRequestDataListener listener) {
+    public void setRequestActive(final String requestID, final User driver, final Float offeredPrice,
+                          final OnGetRequestDataListener listener) {
         if (requestID == null || requestID.length() == 0) {
             listener.onFailure("invalid parameters", SET_ACTIVE_TAG);
             return;

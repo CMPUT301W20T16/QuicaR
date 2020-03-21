@@ -1,4 +1,6 @@
-package com.example.quicar;
+package com.example.listener;
+
+import com.example.entity.Location;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,6 @@
-package com.example.quicar;
+package com.example.entity;
+
+import com.example.user.User;
 
 import java.util.Date;
 

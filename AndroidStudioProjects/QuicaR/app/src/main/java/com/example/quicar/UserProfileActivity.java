@@ -12,6 +12,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.DriverInfo;
+import com.example.user.User;
+import com.example.user.Wallet;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -34,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     FirebaseAuth mAuth;
 
     private Spinner spinnerGender;
-    private  User user ;
+    private User user ;
     private OnGetUserDataListener listener = this;
     final Calendar myCalendar = Calendar.getInstance();
 

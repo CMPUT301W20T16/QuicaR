@@ -1,19 +1,17 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.example.listener.OnGetPayDataListener;
+import com.example.entity.PayRecord;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -46,7 +44,7 @@ public class PayRecordDataHelper {
      * @param newRecord
      *  record to be added
      */
-    void addPayRecord(final PayRecord newRecord) {
+    public void addPayRecord(final PayRecord newRecord) {
         collectionReferencePay
                 .document()
                 .set(newRecord)
@@ -73,7 +71,7 @@ public class PayRecordDataHelper {
      * @param listener
      *  listener for notification
      */
-    void queryHistoryPayments(final String userName, final Integer limit,
+    public void queryHistoryPayments(final String userName, final Integer limit,
                               final OnGetPayDataListener listener) {
         collectionReferencePay
                 .orderBy("dateTime", Query.Direction.DESCENDING)

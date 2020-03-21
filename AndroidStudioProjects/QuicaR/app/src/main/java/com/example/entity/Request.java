@@ -1,5 +1,6 @@
-package com.example.quicar;
+package com.example.entity;
 
+import com.example.user.User;
 import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;

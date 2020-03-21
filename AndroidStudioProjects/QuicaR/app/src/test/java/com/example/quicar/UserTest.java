@@ -1,5 +1,9 @@
 package com.example.quicar;
 
+import com.example.user.AccountInfo;
+import com.example.user.User;
+import com.example.user.Wallet;
+
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

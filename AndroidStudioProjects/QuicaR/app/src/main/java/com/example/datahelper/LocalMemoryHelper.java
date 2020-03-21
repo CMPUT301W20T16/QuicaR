@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;

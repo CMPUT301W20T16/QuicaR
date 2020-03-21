@@ -1,7 +1,9 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.datahelper.DatabaseHelper;
 
 import org.json.JSONObject;
 

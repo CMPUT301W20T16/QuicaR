@@ -1,5 +1,7 @@
 package com.example.quicar;
 
+import com.example.entity.Location;
+
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,12 +22,12 @@ public class LocationTest {
     public void testSetter() {
         Location location = new Location();
         // test set latitude
-        assertEquals(0d, (double)location.getLat());
+        assertNull(location.getLat());
         location.setLat(110d);
         assertEquals(110d, (double)location.getLat());
 
         // test set longitude
-        assertEquals(0d, (double)location.getLon());
+        assertNull(location.getLon());
         location.setLon(110d);
         assertEquals(110d, (double)location.getLon());
     }
