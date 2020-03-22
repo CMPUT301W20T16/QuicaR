@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.user;
 
 import com.google.firebase.firestore.PropertyName;
 

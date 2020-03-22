@@ -1,9 +1,12 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -11,8 +14,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -29,8 +34,6 @@ public class UserDataHelper {
 
     private OnGetUserDataListener notifyListener;
     private CollectionReference collectionReferenceUser;
-    private FirebaseFirestore db;
-
     private static UserDataHelper userDataHelper;
 
 
@@ -38,8 +41,32 @@ public class UserDataHelper {
      * This is the constructor of UserDataHelper
      */
     private UserDataHelper() {
-        collectionReferenceUser = DatabaseHelper.getInstance().getCollectionReferenceUser();
-        db = DatabaseHelper.getInstance().getDb();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        collectionReferenceUser = db.collection("Users");
+
+        collectionReferenceUser.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    // notification for local and server update
+                    Log.d(TAG,"Got a " +
+                            (queryDocumentSnapshots.getMetadata().hasPendingWrites() ? "local" : "server")
+                            + " update for users");
+                    if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            //  check if there is an update on current user
+                            if (user.getName().equals(DatabaseHelper.getInstance().getCurrentUserName())) {
+                                DatabaseHelper.getInstance().setCurrentUser(user);
+                                notifyUpdate(user);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -129,6 +156,7 @@ public class UserDataHelper {
 
         final DocumentReference userDocRef = collectionReferenceUser.document(userID);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.runTransaction(new Transaction.Function<String>() {
             @Override
             public String apply(Transaction transaction) throws FirebaseFirestoreException {
@@ -168,7 +196,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification (onSuccess, onFailure)
      */
-    void getUser(final String userName, final OnGetUserDataListener listener) {
+    public void getUser(final String userName, final OnGetUserDataListener listener) {
         if (userName == null || userName.length() == 0) {
             listener.onFailure("user provided is a null object");
         }
@@ -213,7 +241,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification
      */
-    void addNewUser(final User newUser, final OnGetUserDataListener listener) {
+    public void addNewUser(final User newUser, final OnGetUserDataListener listener) {
         if (newUser == null) {
             listener.onFailure("user provided is a null object");
             return;
@@ -257,7 +285,7 @@ public class UserDataHelper {
      * @param listener
      *  listener for notification
      */
-    void updateUserProfile(final User user, final OnGetUserDataListener listener) {
+    public void updateUserProfile(final User user, final OnGetUserDataListener listener) {
         if (user == null || user.getName() == null || user.getName().length() == 0) {
             listener.onFailure("user name provided is a null or empty");
             return;

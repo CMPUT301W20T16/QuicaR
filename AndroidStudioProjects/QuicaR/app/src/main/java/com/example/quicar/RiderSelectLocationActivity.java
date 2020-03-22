@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,18 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.example.quicar.R;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RecordDataHelper;
+import com.example.entity.Location;
+import com.example.listener.OnGetRecordDataListener;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -40,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener{
+public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener {
     private EditText pickUp;
     private EditText destination;
     private Button confirmButton;

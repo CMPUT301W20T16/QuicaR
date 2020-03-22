@@ -7,6 +7,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
+
 import java.util.ArrayList;
 
 public class RiderMatchingActivity extends BaseActivity implements OnGetRequestDataListener {
@@ -46,7 +50,6 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "Ride is being accepted");
 
         // dismiss progress dialog if rider has been successfully matched to a driver
         mProgressDialog.dismiss();

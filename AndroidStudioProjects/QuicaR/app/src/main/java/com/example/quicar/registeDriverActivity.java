@@ -9,6 +9,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.DriverInfo;
+import com.example.user.User;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -17,7 +22,7 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
     private Button validateButton;
     FirebaseAuth auth;
 
-    private  User user ;
+    private User user ;
     private OnGetUserDataListener listener = this;
 
 

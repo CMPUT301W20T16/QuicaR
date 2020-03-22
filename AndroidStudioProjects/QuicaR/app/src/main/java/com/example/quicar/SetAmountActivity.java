@@ -10,10 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.User;
 import com.google.gson.Gson;
 
 // the activity that let the user set the transfer amount
-public class SetAmountActivity extends AppCompatActivity implements OnGetUserDataListener{
+public class SetAmountActivity extends AppCompatActivity implements OnGetUserDataListener {
     TextView toUsername;
     EditText amount;
     Button confirm;

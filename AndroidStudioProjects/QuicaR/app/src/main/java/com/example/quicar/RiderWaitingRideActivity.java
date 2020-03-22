@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
  * (rider can only cancel ride in a reasonable amount of time)
  */
 
-public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener{
+public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
@@ -129,7 +132,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         if (currentRequest.getRid().equals(request.getRid())) {
             //System.out.println("!!!id!!!!!========="+request.getRid());
-            DatabaseHelper.getInstance().sendPopUpNotification("Notification", "Rider is matched for your current request!");
             String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
             String driverNameStr = request.getDriver().getAccountInfo().getUserName();
             String driverPhoneStr = request.getDriver().getAccountInfo().getPhone();

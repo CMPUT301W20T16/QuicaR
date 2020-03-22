@@ -10,10 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quicar.R;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -89,20 +91,32 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.ALL_REQs_TAG) {
-            if (requests.size() > 0) {
+
+            /* Edited by Jeremy */
+
+//            if (requests.size() > 0) {
                 //  always check if the return value is valid
                 System.out.println("------------ open request obtained -----------");
 
                 // update newly added open requests to RecyclerView adapter
-                for (Request request: requests){
-                    if (!requestList.contains(request)) {
-                        requestList.add(request);
-                    }
-                }
+
+
+                requestList.clear();
+                requestList.addAll(requests);
+
+//                for (Request request: requests){
+//                    if (!requestList.contains(request)) {
+//                        requestList.add(request);
+//                    }
+//                }
+
                 mAdapter.notifyDataSetChanged();
-            } else {
-                System.out.println("------------ empty list obtained -----------");
-            }
+//            } else {
+//                System.out.println("------------ empty list obtained -----------");
+//            }
+
+            /* End here */
+
         } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
             System.out.println("------------ request is set to active -----------");
 //            RequestDataHelper.queryAllOpenRequests(this);

@@ -5,24 +5,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener{
+public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -65,6 +62,10 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Edited by Jeremy */
+                if (mRequest == null)
+                    return;
+                /* End here */
                 RequestDataHelper
                         .getInstance()
                         .setRequestPickedUp(mRequest.getRid(),
@@ -92,7 +93,11 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 //  always check if the return value is valid
                 System.out.println("------------ all open request obtained -----------");
                 for (Request request: requests) {
-                    if (request.getAccepted()) {
+                    if (request.getAccepted()
+                            /* Edited by Jeremy */
+                            && request.getRid().equals(DatabaseHelper.getInstance().getUserState().getRequestID())
+                            /* End here */
+                    ) {
                         mRequest = request;
 
                         start_location = mRequest.getStart();
