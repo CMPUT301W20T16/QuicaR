@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
 
         //  database setup
         DatabaseHelper.getInstance().setCurrentMode("rider");
-        // iniitialize data helper
+        // initialize data helper
         RequestDataHelper.getInstance();
         RecordDataHelper.getInstance();
         UserDataHelper.getInstance();

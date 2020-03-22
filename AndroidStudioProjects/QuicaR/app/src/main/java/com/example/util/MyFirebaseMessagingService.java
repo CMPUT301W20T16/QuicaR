@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.util;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,6 +13,8 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.quicar.MainActivity;
+import com.example.quicar.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

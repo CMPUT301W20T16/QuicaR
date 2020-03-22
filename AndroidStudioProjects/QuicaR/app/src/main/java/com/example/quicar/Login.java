@@ -1,10 +1,12 @@
 package com.example.quicar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
+import com.example.util.MyUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.regex.Pattern;
 
 
@@ -44,6 +48,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     /* added by Jeremy */
     OnGetUserDataListener listener = this;
+    AppCompatActivity appCompatActivity = this;
 
 
     @Override
@@ -63,6 +68,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
             public void onClick(View v) {
                 String myID = userID.getEditText().getText().toString().trim();
                 String mypwd = pwd.getEditText().getText().toString();
+
+                /* Added by Jeremy */
+                MyUtil.disableSoftInputFromAppearing(appCompatActivity);
+                /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
@@ -78,6 +87,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                         UserDataHelper.getInstance().getUser(myID, listener);
                                         ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
                                         pgsBar.setVisibility(v.VISIBLE);
+
                                         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     } else {
@@ -234,4 +244,5 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     public void onFailure(String errorMessage) {
 
     }
+
 }

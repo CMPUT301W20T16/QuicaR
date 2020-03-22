@@ -9,6 +9,7 @@ import com.example.listener.OnGetRequestDataListener;
 import com.example.entity.Record;
 import com.example.entity.Request;
 import com.example.user.User;
+import com.example.util.PopUpNotification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -724,9 +725,6 @@ public class RequestDataHelper {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 
         if (databaseHelper.getCurrentUserName() == null)
-            return;
-
-        if (databaseHelper.getUserState().getCurrentRequest() == null)
             return;
 
         UserState userState = databaseHelper.getUserState();
