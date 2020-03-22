@@ -52,6 +52,11 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         //get data from firebase
         System.out.println("------------------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
 
+
+        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
+        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
+
+
         RequestDataHelper
                 .getInstance()
                 .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
@@ -109,6 +114,25 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 System.out.println("------------ empty list obtained -----------");
             }
         }
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.addMarker(start);
+        mMap.addMarker(destination);
+        showAllMarkers();
+
+
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+//        if (currentPolyline != null)
+//            currentPolyline.remove();
+//
+//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
 
     }
 
