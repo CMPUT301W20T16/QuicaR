@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 String mypwd = pwd.getEditText().getText().toString();
 
                 /* Added by Jeremy */
-                MyUtil.disableSoftInputFromAppearing(appCompatActivity);
+                //MyUtil.disableSoftInputFromAppearing(appCompatActivity);
                 /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;

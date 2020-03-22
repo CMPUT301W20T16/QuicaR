@@ -140,13 +140,26 @@ public class WalletOverviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        //according to different click control different action
-        if (item.getItemId() == R.id.help){
-            finish();
-        }
-        if (item.getItemId() == R.id.pay_record){
-            finish();
+        super.onOptionsItemSelected(item);
+        switch(item.getItemId())//得到被点击的item的itemId
+        {
+            case R.id.help: //对应的ID就是在add方法中所设定的Id
+                startActivity(new Intent(getApplicationContext(), WalletIntro.class));
+                break;
+            case R.id.pay_record:
+                break;
+            case R.id.change_password:
+                break;
         }
         return true;
     }
+//        //according to different click control different action
+//        if (item.getItemId() == R.id.help){
+//            finish();
+//        }
+//        if (item.getItemId() == R.id.pay_record){
+//            finish();
+//        }
+//        return true;
+//    }
 }

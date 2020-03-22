@@ -75,6 +75,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderSelectLocationActivity"/>
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
