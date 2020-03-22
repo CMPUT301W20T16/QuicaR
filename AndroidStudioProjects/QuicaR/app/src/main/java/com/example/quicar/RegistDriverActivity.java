@@ -17,7 +17,7 @@ import com.example.user.User;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class registeDriverActivity extends AppCompatActivity implements OnGetUserDataListener {
+public class RegistDriverActivity extends AppCompatActivity implements OnGetUserDataListener {
     private TextInputLayout licenseLayout, sinNumberLayout, plateNumberLayout;
     private Button validateButton;
     FirebaseAuth auth;
@@ -52,13 +52,13 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
                 if (!validateFlag) {
                     ;
                     System.out.println("not validate");
-                    Toast.makeText(registeDriverActivity.this,
+                    Toast.makeText(RegistDriverActivity.this,
                             "Invalid input", Toast.LENGTH_SHORT).show();
                 } else {
                     updateDriver();
 
                     UserDataHelper.getInstance().updateUserProfile(user, listener);
-                    Toast.makeText(registeDriverActivity.this,
+                    Toast.makeText(RegistDriverActivity.this,
                             "register successfully", Toast.LENGTH_SHORT).show();
 
                 }
@@ -185,7 +185,7 @@ public class registeDriverActivity extends AppCompatActivity implements OnGetUse
         System.out.println("isFalse");
         System.out.println(errorMessage);
 
-        Toast.makeText(registeDriverActivity.this,
+        Toast.makeText(RegistDriverActivity.this,
                 "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }

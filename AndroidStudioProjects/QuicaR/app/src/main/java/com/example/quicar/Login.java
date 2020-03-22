@@ -17,6 +17,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
+import com.example.util.KeyboardUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -88,12 +89,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                 }
                             });
                 } else {
-
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-
                                 currentUser = mAuth.getInstance().getCurrentUser();
                                 retrieveUsername();
                                 if (currentUser != null) {
