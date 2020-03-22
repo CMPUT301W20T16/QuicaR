@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.example.entity.Location;
 import com.example.listener.OnGetRecordDataListener;
 import com.example.entity.Record;
+import com.example.util.PopUpNotification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
