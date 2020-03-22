@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -124,5 +126,25 @@ public class WalletOverviewActivity extends AppCompatActivity {
         } catch (WriterException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu wallet_menu)
+    {
+        getMenuInflater().inflate(R.menu.wallet_menu, wallet_menu);
+        return super.onCreateOptionsMenu(wallet_menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        //according to different click control different action
+        if (item.getItemId() == R.id.help){
+            finish();
+        }
+        if (item.getItemId() == R.id.pay_record){
+            finish();
+        }
+        return true;
     }
 }
