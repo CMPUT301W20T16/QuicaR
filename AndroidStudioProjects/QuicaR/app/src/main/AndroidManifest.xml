@@ -95,7 +95,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name="com.example.util.MyFirebaseMessagingService"
             android:exported="false"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>

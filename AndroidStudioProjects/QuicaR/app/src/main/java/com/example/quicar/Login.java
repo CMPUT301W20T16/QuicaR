@@ -19,6 +19,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
+import com.example.util.MyUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -47,6 +48,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     /* added by Jeremy */
     OnGetUserDataListener listener = this;
+    AppCompatActivity appCompatActivity = this;
 
 
     @Override
@@ -68,7 +70,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 String mypwd = pwd.getEditText().getText().toString();
 
                 /* Added by Jeremy */
-                disableSoftInputFromAppearing();
+                MyUtil.disableSoftInputFromAppearing(appCompatActivity);
                 /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
@@ -243,18 +245,4 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     }
 
-    /* Edited by Jeremy */
-
-    /**
-     * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
-     */
-    public void disableSoftInputFromAppearing() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    /* End here */
 }
