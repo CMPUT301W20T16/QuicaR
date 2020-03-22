@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
  * When rider is picked up by driver
  * rider is able to see their current location on google map
  */
-public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener{
+public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;

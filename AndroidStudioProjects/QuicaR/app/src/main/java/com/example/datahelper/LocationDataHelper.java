@@ -1,12 +1,13 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.entity.Location;
+import com.example.listener.OnGetLocationDataListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,11 +66,11 @@ public class LocationDataHelper {
      * @param listener
      *  listener for notification
      */
-    void setOnNotifyListener(OnGetLocationDataListener listener) {
+    public void setOnNotifyListener(OnGetLocationDataListener listener) {
         notifyListener = listener;
     }
 
-    void updateLocation(final String userName, final Location location) {
+    public void updateLocation(final String userName, final Location location) {
         final DocumentReference locDocRef = collectionReferenceLoc.document(userName);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -111,10 +112,10 @@ public class LocationDataHelper {
 
         if (currentMode.equals("rider")) {
             if (userName.equals(databaseHelper.getUserState().getCurrentRequest().getDriver().getName()))
-                notifyListener.onUpdate(location);
+                notifyUpdate(location);
         } else {
             if (userName.equals(databaseHelper.getUserState().getCurrentRequest().getRider().getName()))
-                notifyListener.onUpdate(location);
+                notifyUpdate(location);
         }
     }
 

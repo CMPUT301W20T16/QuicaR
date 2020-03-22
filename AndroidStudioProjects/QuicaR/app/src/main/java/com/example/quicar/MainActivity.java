@@ -1,21 +1,25 @@
 package com.example.quicar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.LocationDataHelper;
+import com.example.datahelper.RecordDataHelper;
+import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.entity.Location;
+import com.example.entity.Request;
+import com.example.listener.OnGetLocationDataListener;
+import com.example.listener.OnGetRecordDataListener;
+import com.example.listener.OnGetRequestDataListener;
+import com.example.user.User;
 
 import java.util.ArrayList;
 

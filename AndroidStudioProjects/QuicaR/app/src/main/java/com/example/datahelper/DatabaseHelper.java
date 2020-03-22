@@ -1,9 +1,10 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -117,7 +118,7 @@ public class DatabaseHelper {
      * @return
      *  current user object
      */
-    User getCurrentUser() {
+    public User getCurrentUser() {
         return userState.getCurrentUser();
     }
 
@@ -126,7 +127,7 @@ public class DatabaseHelper {
      * @param user
      *  candidate user object
      */
-    void setCurrentUser(User user) {
+    public void setCurrentUser(User user) {
         userState.setCurrentUser(user);
     }
 
@@ -134,7 +135,7 @@ public class DatabaseHelper {
      * This is the method that set the current mode of the user, either rider or driver mode
      * @return
      */
-    String getCurrentMode() {
+    public String getCurrentMode() {
         return userState.getCurrentMode();
     }
 
@@ -143,7 +144,7 @@ public class DatabaseHelper {
      * @param currentMode
      *  the current mode of the user
      */
-    void setCurrentMode(String currentMode) {
+    public void setCurrentMode(String currentMode) {
         if (currentMode != "rider" && currentMode != "driver")
             throw new IllegalArgumentException("user mode can only be rider or driver, but an alternative obtained!");
 

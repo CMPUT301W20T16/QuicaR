@@ -1,9 +1,10 @@
-package com.example.quicar;
+package com.example.datahelper;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.entity.ComplaintRecord;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,7 +36,7 @@ public class ComplaintDataHelper {
      * @param newRecord
      *  record to be added
      */
-    void addComplaint(final ComplaintRecord newRecord) {
+    public void addComplaint(final ComplaintRecord newRecord) {
         collectionReferenceCom
                 .document()
                 .set(newRecord)

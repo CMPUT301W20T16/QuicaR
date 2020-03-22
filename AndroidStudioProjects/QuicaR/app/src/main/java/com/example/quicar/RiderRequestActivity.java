@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.quicar.R;
+import com.example.datahelper.DatabaseHelper;
+import com.example.entity.Location;
 import com.google.type.LatLng;
 
 import java.io.IOException;

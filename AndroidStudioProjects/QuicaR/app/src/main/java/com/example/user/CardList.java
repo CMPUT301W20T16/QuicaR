@@ -1,4 +1,4 @@
-package com.example.quicar;
+package com.example.user;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.quicar.R;
+import com.example.user.BankAccount;
 
 import java.util.ArrayList;
 

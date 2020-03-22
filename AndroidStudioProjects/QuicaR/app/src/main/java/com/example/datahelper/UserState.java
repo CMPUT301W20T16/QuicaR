@@ -1,4 +1,7 @@
-package com.example.quicar;
+package com.example.datahelper;
+
+import com.example.entity.Request;
+import com.example.user.User;
 
 /**
  * This is an object that store the user's acitivity state for convenient

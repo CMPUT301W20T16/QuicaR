@@ -1,5 +1,8 @@
 package com.example.quicar;
 
+import com.example.user.AccountInfo;
+import com.example.user.Wallet;
+
 import org.junit.Test;
 
 import java.text.ParseException;

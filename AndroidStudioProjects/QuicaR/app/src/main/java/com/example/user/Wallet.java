@@ -1,15 +1,16 @@
-package com.example.quicar;
+package com.example.user;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.example.entity.PayRecord;
 import com.google.firebase.firestore.PropertyName;
-import java.util.Date;
 
 public class Wallet implements Serializable {
 
     private Float balance;
     private ArrayList<BankAccount> bankAccountArrayList;
-    private ArrayList<PayRecord> payRecordList;
+//    private ArrayList<PayRecord> payRecordList;
 
 // no more these 3 attributes
 //    private String cardnumber;
@@ -19,7 +20,7 @@ public class Wallet implements Serializable {
     public Wallet() {
         this.balance = 0.f;
         this.bankAccountArrayList = new ArrayList<>();
-        this.payRecordList = new ArrayList<>();
+//        this.payRecordList = new ArrayList<>();
     }
 
     // may change it to add
@@ -57,11 +58,11 @@ public class Wallet implements Serializable {
         this.bankAccountArrayList = bankAccountArrayList;
     }
 
-    public ArrayList<PayRecord> getPayRecordList() {
-        return payRecordList;
-    }
+//    public ArrayList<PayRecord> getPayRecordList() {
+//        return payRecordList;
+//    }
 
-    public void setPayRecordList(ArrayList<PayRecord> payRecordList) {
-        this.payRecordList = payRecordList;
-    }
+//    public void setPayRecordList(ArrayList<PayRecord> payRecordList) {
+//        this.payRecordList = payRecordList;
+//    }
 }

@@ -1,5 +1,9 @@
 package com.example.quicar;
 
+import com.example.entity.Location;
+import com.example.entity.Request;
+import com.example.user.User;
+
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

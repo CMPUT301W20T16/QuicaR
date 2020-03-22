@@ -10,9 +10,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.BankAccount;
+import com.example.user.CardList;
+import com.example.user.User;
+
 import java.util.ArrayList;
 
-public class ManageCardActivity extends AppCompatActivity implements OnGetUserDataListener{
+public class ManageCardActivity extends AppCompatActivity implements OnGetUserDataListener {
 
     User user;
     Button addCard;
