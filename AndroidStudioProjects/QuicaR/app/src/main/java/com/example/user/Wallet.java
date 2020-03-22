@@ -10,6 +10,8 @@ public class Wallet implements Serializable {
 
     private Float balance;
     private ArrayList<BankAccount> bankAccountArrayList;
+    private String payPassword;
+    private boolean open;
 //    private ArrayList<PayRecord> payRecordList;
 
 // no more these 3 attributes
@@ -20,6 +22,8 @@ public class Wallet implements Serializable {
     public Wallet() {
         this.balance = 0.f;
         this.bankAccountArrayList = new ArrayList<>();
+        this.payPassword = "";
+        this.open = false;
 //        this.payRecordList = new ArrayList<>();
     }
 
@@ -58,7 +62,23 @@ public class Wallet implements Serializable {
         this.bankAccountArrayList = bankAccountArrayList;
     }
 
-//    public ArrayList<PayRecord> getPayRecordList() {
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = true;
+    }
+
+    //    public ArrayList<PayRecord> getPayRecordList() {
 //        return payRecordList;
 //    }
 
