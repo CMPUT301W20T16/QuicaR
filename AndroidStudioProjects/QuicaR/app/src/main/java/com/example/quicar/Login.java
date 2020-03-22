@@ -1,10 +1,12 @@
 package com.example.quicar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.regex.Pattern;
 
 
@@ -63,6 +66,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
             public void onClick(View v) {
                 String myID = userID.getEditText().getText().toString().trim();
                 String mypwd = pwd.getEditText().getText().toString();
+
+                /* Added by Jeremy */
+                disableSoftInputFromAppearing();
+                /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
@@ -78,6 +85,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                         UserDataHelper.getInstance().getUser(myID, listener);
                                         ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
                                         pgsBar.setVisibility(v.VISIBLE);
+
                                         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     } else {
@@ -234,4 +242,19 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     public void onFailure(String errorMessage) {
 
     }
+
+    /* Edited by Jeremy */
+
+    /**
+     * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+     */
+    public void disableSoftInputFromAppearing() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    /* End here */
 }
