@@ -90,7 +90,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-        if (tag == RequestDataHelper.ALL_REQs_TAG) {
+        if (tag.equals(RequestDataHelper.ALL_REQs_TAG)) {
 
             /* Edited by Jeremy */
 
@@ -117,7 +117,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
             /* End here */
 
-        } else if (tag == RequestDataHelper.SET_ACTIVE_TAG) {
+        } else if (tag.equals(RequestDataHelper.SET_ACTIVE_TAG)) {
             System.out.println("------------ request is set to active -----------");
 //            RequestDataHelper.queryAllOpenRequests(this);
             RequestDataHelper
