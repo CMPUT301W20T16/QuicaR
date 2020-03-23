@@ -68,7 +68,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_overview);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         qr_code = (ImageView) findViewById(R.id.qr_code);
         change_pay = (Button)findViewById(R.id.change_pay);
         card_pay = (Button)findViewById(R.id.card_pay);
@@ -101,12 +101,6 @@ public class WalletOverviewActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), RiderSelectLocationActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -149,6 +143,9 @@ public class WalletOverviewActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId())//得到被点击的item的itemId
         {
+            case android.R.id.home:
+                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+                break;
             case R.id.help: //对应的ID就是在add方法中所设定的Id
                 startActivity(new Intent(getApplicationContext(), WalletIntro.class));
                 break;

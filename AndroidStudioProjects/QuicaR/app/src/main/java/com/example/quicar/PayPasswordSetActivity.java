@@ -7,13 +7,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
 import com.hanks.passcodeview.PasscodeView;
 
-public class PayPasswordSetActivity extends AppCompatActivity {
+public class PayPasswordSetActivity extends AppCompatActivity implements OnGetUserDataListener{
     //Initialize variables
-    PasscodeView passcodeView;
-    User user;
+    private PasscodeView passcodeView;
+    private User user;
+    private OnGetUserDataListener listener = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -37,6 +40,7 @@ public class PayPasswordSetActivity extends AppCompatActivity {
                 //System.out.println("2222222222222222222222222222222222222222222" + number);
                 user.getAccountInfo().getWallet().setPayPassword(number);
                 user.getAccountInfo().getWallet().setOpen(true);
+                UserDataHelper.getInstance().updateUserProfile(user, listener);
                 //System.out.println("3333333333333333333333333333333333333333333" + user.getAccountInfo().getWallet().getPayPassword());
                 startActivity(new Intent(PayPasswordSetActivity.this, WalletOverviewActivity.class));
             }
@@ -56,5 +60,20 @@ public class PayPasswordSetActivity extends AppCompatActivity {
 //                startActivity(new Intent(PayPasswordActivity.this, WalletOverviewActivity.class));
 //            }
 //        });
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
     }
 }
