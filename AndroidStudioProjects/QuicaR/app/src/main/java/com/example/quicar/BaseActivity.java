@@ -329,7 +329,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     else{
-                        Intent intent2 = new Intent(getApplicationContext(), RegistDriverActivity.class);
+                        Intent intent2 = new Intent(getApplicationContext(), RegisterDriverActivity.class);
                         startActivity(intent2);
                     }
 

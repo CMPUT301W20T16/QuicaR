@@ -60,7 +60,7 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 DatabaseHelper.getInstance().setCurrentUser(fromUser);
 
                 // finally should be connected with the password enter
-                startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PayPasswordEnterActivity.class));
 
             }
         });

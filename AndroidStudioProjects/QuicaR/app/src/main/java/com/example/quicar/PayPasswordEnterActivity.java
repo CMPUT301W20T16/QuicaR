@@ -34,6 +34,7 @@ public class PayPasswordEnterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String number) {
                 // If Password is correct
+                Toast.makeText(getApplicationContext(), "Pay successfully. Go to wallet page to check your balance", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(PayPasswordEnterActivity.this, WalletOverviewActivity.class));
             }
         });
