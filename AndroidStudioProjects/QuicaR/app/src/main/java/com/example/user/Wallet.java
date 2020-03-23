@@ -37,7 +37,6 @@ public class Wallet implements Serializable {
         this.bankAccountArrayList.add(bankAccount);
     }
 
-
     // remove
     public void removeBankAccount(BankAccount bankAccount) {
         int pos = this.bankAccountArrayList.indexOf(bankAccount);
@@ -75,7 +74,7 @@ public class Wallet implements Serializable {
     }
 
     public void setOpen(boolean open) {
-        this.open = true;
+        this.open = open;
     }
 
     //    public ArrayList<PayRecord> getPayRecordList() {

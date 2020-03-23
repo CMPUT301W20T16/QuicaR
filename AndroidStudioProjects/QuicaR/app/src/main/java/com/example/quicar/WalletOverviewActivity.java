@@ -17,6 +17,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
@@ -24,7 +26,7 @@ import com.google.zxing.WriterException;
 
 import java.time.LocalDateTime;
 
-public class WalletOverviewActivity extends AppCompatActivity {
+public class WalletOverviewActivity extends AppCompatActivity implements OnGetUserDataListener{
 
     Button change_pay;
     Button card_pay;
@@ -36,6 +38,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
     Handler handler2 = new Handler();
     String currentBalance;
     User user;
+    private OnGetUserDataListener listener = this;
 
     // every 30 seconds refresh the qr code 1 time
     private Runnable runnable = new Runnable() {
@@ -56,6 +59,7 @@ public class WalletOverviewActivity extends AppCompatActivity {
         }
         void update() {
             if (user != null) {
+                UserDataHelper.getInstance().updateUserProfile(user, listener);
                 user = DatabaseHelper.getInstance().getCurrentUser();
                 currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
                 balance.setText(currentBalance);
@@ -68,13 +72,14 @@ public class WalletOverviewActivity extends AppCompatActivity {
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_overview);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         qr_code = (ImageView) findViewById(R.id.qr_code);
         change_pay = (Button)findViewById(R.id.change_pay);
         card_pay = (Button)findViewById(R.id.card_pay);
         camera_scan = (Button)findViewById(R.id.camera_scan);
         card_info = (Button)findViewById(R.id.card_information);
         balance = (TextView)findViewById(R.id.balance);
+        UserDataHelper.getInstance().setOnNotifyListener(this);
 
         handler.postDelayed(runnable, 1000 * 30);
         generate_qr(qr_code);
@@ -143,6 +148,9 @@ public class WalletOverviewActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId())//得到被点击的item的itemId
         {
+            case android.R.id.home:
+                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+                break;
             case R.id.help: //对应的ID就是在add方法中所设定的Id
                 startActivity(new Intent(getApplicationContext(), WalletIntro.class));
                 break;
@@ -152,6 +160,25 @@ public class WalletOverviewActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+//        if (user != null) {
+//            currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+//            balance.setText(currentBalance);
+//            balance.bringToFront();
+//        }
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
     }
 //        //according to different click control different action
 //        if (item.getItemId() == R.id.help){
