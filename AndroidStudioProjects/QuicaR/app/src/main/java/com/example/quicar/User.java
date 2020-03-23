@@ -1,8 +1,9 @@
 package com.example.quicar;
 
 
-import java.util.Date;
 import com.google.firebase.firestore.PropertyName;
+
+import java.util.Date;
 
 public class User {
 
@@ -34,15 +35,9 @@ public class User {
     public void setDriver(boolean driver) {
         isDriver = driver;
     }
-    //    protected void setIsDriver(){
-//        this.isDriver = (this.accountinfo.getDriverInfo() != null);
-//    }
-//
-//    protected boolean getIsDriver(){
-//        return this.isDriver;
-//    }
-//
-    protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet){
+
+    //
+    protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet) {
         this.accountInfo.setAccNo(accNo);
         this.accountInfo.setFirstName(firstname);
         this.accountInfo.setLastName(lastname);
@@ -55,9 +50,10 @@ public class User {
         this.accountInfo.setWallet(wallet);
     }
 
-//    protected Accountinfo getAccountinfo(){
-//        return this.accountinfo;
-//    }
+
+    protected void setDriverInfo(Double rating, String plateNumber, String license, String sinNumber) {
+        this.accountInfo.setDriverInfo(rating, plateNumber, license, sinNumber);
+    }
 
     protected void setName(String name) {
         setAccountInfo(null, null, null, null, null, null, null, name, null, new Wallet());

@@ -14,7 +14,6 @@
     <!-- [START fcm_default_icon_string] -->
     <string name="default_notification_channel_name" translatable="true">Request</string>
     <!-- [END fcm_default_icon_string] -->
-    <string name="OLD_SERVER_KEY"> AIzaSyDKHMO4xM-b9y2-TMGR5KvPTvlT9jqGbYs </string>
 
     <string name="map_key" translatable="false">
     AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk
@@ -35,6 +34,8 @@
     <string name="profile_gender_hint">gender</string>
     <string name="save_button">save</string>
 
+
+    <string name="profile_driver_sin">sin number</string>
 
 
     <string name="gender_prompt">Choose a gender</string>

@@ -62,6 +62,9 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         signInText = findViewById(R.id.signInButtonText);
         auth = FirebaseAuth.getInstance();
 
+        // databaseReference = FirebaseDatabase.getInstance().getReference("User");
+
+
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +74,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                 String mConfirm_pwd = confirm_pwd.getEditText().getText().toString();
 
 
-                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateName | validateUserName(mUserName)) {
+                if (!validateEmail(mEmail) | !validatePassword(mPwd) | !validateConfirmPassword(mConfirm_pwd, mPwd) | !validateName) {
                     return;
                 }
 
@@ -81,13 +84,12 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // to check if the username is already exited in the database
                             Toast.makeText(Register.this, "Username exist", Toast.LENGTH_SHORT).show();
                             userName.setError("Duplicate username");
+                            // finishedCallBack.callback(false);
                         }  else {
                             // Toast.makeText(Register.this, "User not found", Toast.LENGTH_SHORT).show();
-                            // username is not in used
-                            // register process
+                            // finishedCallBack.callback(true);
                             auth.createUserWithEmailAndPassword(mEmail, mPwd).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -127,13 +129,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         });
     }
 
-    /**
-     * To validate user inputs username
-     * @param username
-     *      user inputs username
-     * @return
-     *      return if the user correctly inputs username
-     * */
     public boolean validateUserName(String username) {
 
         if (TextUtils.isEmpty(username)) {
@@ -145,13 +140,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-    /**
-     * To validate user inputs email
-     * @param email
-     *      user inputs email
-     * @return
-     *      return if the user correctly inputs email
-     * */
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             this.email.setError("Field can't be empty");
@@ -162,13 +150,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-    /**
-     * To validate user inputs password
-     * @param password
-     *      user inputs password
-     * @return
-     *      return if the user correctly inputs password
-     * */
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
@@ -179,15 +160,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
         }
     }
 
-    /**
-     * To validate user inputs password and re-entered password matches
-     * @param confirmPassword
-     *      user inputs password
-     * @param signPassword
-     *      user re-enters password
-     * @return
-     *      return if the user correctly inputs confirmed password
-     * */
     public boolean validateConfirmPassword(String confirmPassword, String signPassword) {
         if (TextUtils.isEmpty(confirmPassword)) {
             this.confirm_pwd.setError("Field can't be empty");
@@ -209,11 +181,6 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
             Intent homeIntent = new Intent(Register.this, RiderRequestActivity.class);
             startActivity(homeIntent);
         }
-    }
-
-    @Override
-    public void onUserExists(Boolean exists, String tag) {
-
     }
 
     @Override
