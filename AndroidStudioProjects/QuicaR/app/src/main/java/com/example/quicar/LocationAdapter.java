@@ -32,7 +32,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
 
 
-
         public LocationViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             startAdresse = itemView.findViewById(R.id.start_address);
@@ -70,7 +69,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         //getStart and getEnd currently return lat and lng, need address
         holder.startAdresse.setText("From: " + currentItem.getLat() + currentItem.getLon().toString());
         holder.endAdresse.setText("To: " + currentItem.getLat().toString() + currentItem.getLon().toString());
-
     }
 
     @Override

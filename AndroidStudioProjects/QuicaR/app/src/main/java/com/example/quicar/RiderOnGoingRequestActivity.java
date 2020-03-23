@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
+    TextView a;
 
 
     /**

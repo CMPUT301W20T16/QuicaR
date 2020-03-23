@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import com.example.entity.Location;
 
 public class RiderRequestActivity extends BaseActivity {
 
-    private EditText startLocation;
+    private Button startLocation;
 
 //    private EditText stopLocation;
 //    private Button confirmButton;

@@ -1,176 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<!--<LinearLayout-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:background="#fff"-->
+<!--    android:orientation="vertical"-->
+<!--    android:padding="5dp"-->
+<!--    android:layout_marginTop="10dp"-->
+<!--    android:layout_marginLeft="20dp"-->
+<!--    android:layout_marginRight="20dp"-->
+<!--    android:id="@+id/bottom_sheet_order_detail"-->
+<!--    app:behavior_hideable="true"-->
+<!--    app:behavior_peekHeight="70dp"-->
+<!--    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="#fff"
-    android:orientation="vertical"
-    android:padding="5dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
+    android:layout_height="match_parent"
+    tools:context="com.example.quicar.RiderConfirmRiderActivity"
     android:id="@+id/bottom_sheet_order_detail"
     app:behavior_hideable="true"
     app:behavior_peekHeight="70dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="2"
-            android:text="Order Details"
-            android:textSize="18dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="Order ID number" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="129dp">
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="46dp"
-            android:layout_height="49dp"
-            android:layout_marginStart="136dp"
-            android:layout_marginTop="4dp"
-            android:src="@drawable/ic_checked"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="12dp"
-            android:text="PICK UP LOCATION"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="45dp"
-            android:layout_height="47dp"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="4dp"
-            android:src="@drawable/ic_checked"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="8dp"
-            android:text="DESTINATION"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="--------------"
-            android:textColor="#882C383E"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintHorizontal_bias="0.684"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:weightSum="3">
+        android:layout_height="337dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="24dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="148dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/ic_checked"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.example.font.TextViewSFProDisplayRegular
+                android:id="@+id/start_address"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="24dp"
+                android:text="PICK UP LOCATION"
+                android:textSize="9dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="24dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/ic_checked"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.example.font.TextViewSFProDisplayRegular
+                android:id="@+id/end_address"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="40dp"
+                android:text="DESTINATION"
+                android:textSize="9dp"
+                app:layout_constraintStart_toEndOf="@+id/start_address"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <TextView
+                android:layout_width="147dp"
+                android:layout_height="61dp"
+                android:layout_marginTop="12dp"
+                android:text="--------------"
+                android:textColor="#882C383E"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="2"
-            android:text="Estimate Fare"
-            android:textSize="18dp"/>
+            android:layout_margin="15dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_weight="1"
-            android:text="$1111111"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="26dp"
+                android:orientation="horizontal">
 
+
+                <com.example.font.TextViewSFProDisplayMedium
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Estimate Distance"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.example.font.TextViewSFProDisplayRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5a595e"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="3.5dp"
+                android:layout_marginRight="26dp"
+                android:orientation="horizontal">
+
+
+                <com.example.font.TextViewSFProDisplayMedium
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fare"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.example.font.TextViewSFProDisplayRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5a595e"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="3.5dp"
+                android:layout_marginRight="26dp"
+                android:orientation="horizontal">
+
+
+                <com.example.font.TextViewSFProDisplayMedium
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Per minute wait time"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.example.font.TextViewSFProDisplayRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$1.07"
+                    android:textColor="#5a595e"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:background="#f1f1f1" />
+
+
+            <com.example.font.TextViewSFProDisplayRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginBottom="15dp"
+                android:letterSpacing="0.0325"
+                android:lineSpacingExtra="2dp"
+                android:text="Current fair is priced upon rough estimation, final fair is subjected to the rated provided after journey."
+                android:textColor="#838383"
+                android:textSize="12.5sp" />
+
+
+        </LinearLayout>
+
+        <com.example.font.Button_SF_Pro_Display_Medium
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/button_rect"
+            android:text="Confirm Ride"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:weightSum="3">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="2"
-            android:text="Estimate Travel Time"
-            android:textSize="18dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_weight="1"
-            android:text="111111min"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:weightSum="3">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm Request"
-            android:id="@+id/confirm_button"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel Request"
-            android:id="@+id/cancel_button"/>
-
-    </LinearLayout>
 
 
 
-
-</LinearLayout>
+</RelativeLayout>
