@@ -76,7 +76,7 @@
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" android:label="Wallet"/>
         <activity android:name=".PayPasswordSetActivity" android:parentActivityName=".RiderRequestActivity"/>
-        <activity android:name=".PayPasswordEnterActivity"/>
+        <activity android:name=".PayPasswordEnterActivity" android:parentActivityName=".SetAmountActivity"/>
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ValidateCardActivity" android:parentActivityName=".ManageCardActivity"/>

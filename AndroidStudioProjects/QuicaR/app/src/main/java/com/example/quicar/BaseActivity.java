@@ -348,7 +348,6 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_wallet:
                 User user = DatabaseHelper.getInstance().getCurrentUser();
                 if (user.getAccountInfo().getWallet().isOpen()){
-                    System.out.println("22222222222222222222222222222222222222222222");
                     Intent intent4 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
                     //Intent intent4 = new Intent(getApplicationContext(), PayPasswordEnterActivity.class);
                     startActivity(intent4);

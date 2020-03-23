@@ -22,8 +22,8 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
     EditText amount;
     Button confirm;
     public static float money;
-    User toUser;
-    User fromUser;
+    public static User toUser;
+    public static User fromUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +50,18 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //System.out.println("33333333333333333333333333333333333333");
+                // finally should be connected with the password enter
                 money = Float.valueOf(amount.getText().toString());
                 fromUser = DatabaseHelper.getInstance().getCurrentUser();
-                fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
-                toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
-                UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
-                UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
-                DatabaseHelper.getInstance().setCurrentUser(toUser);
-                DatabaseHelper.getInstance().setCurrentUser(fromUser);
-
-                // finally should be connected with the password enter
-                startActivity(new Intent(getApplicationContext(), PayPasswordEnterActivity.class));
+                startActivity(new Intent(SetAmountActivity.this, PayPasswordEnterActivity.class));
+//                System.out.println("33333333333333333333333333333333333333");
+//                fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
+//                toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
+//                UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
+//                UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
+//                System.out.println("444444444444444444444444444444444444444444");
+                //startActivity(new Intent(SetAmountActivity.this, WalletOverviewActivity.class));
 
             }
         });
