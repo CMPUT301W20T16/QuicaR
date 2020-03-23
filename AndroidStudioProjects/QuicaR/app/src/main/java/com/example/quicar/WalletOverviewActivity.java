@@ -65,6 +65,12 @@ public class WalletOverviewActivity extends AppCompatActivity {
     };
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), RiderSelectLocationActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_overview);

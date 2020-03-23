@@ -47,7 +47,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
                 Intent intent = new Intent();
                 BankAccount card = new BankAccount();
             // set from mainActivity we start secondaryActivity
-                intent.setClass(ManageCardActivity.this, ValidateCardAcitivity.class);
+                intent.setClass(ManageCardActivity.this, ValidateCardActivity.class);
             // put a value in the intent
                 intent.putExtra("card", card);
            // start the second activity
@@ -65,7 +65,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
 //            Intent intent = new Intent();
 //            BankAccount card = new BankAccount();
 //            // set from mainActivity we start secondaryActivity
-//            intent.setClass(ManageCardActivity.this, ValidateCardAcitivity.class);
+//            intent.setClass(ManageCardActivity.this, ValidateCardActivity.class);
 //            // put a value in the intent
 //            intent.putExtra("card", card);
 //            // start the second activity

@@ -75,11 +75,13 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".PayPasswordSetActivity" android:parentActivityName=".RiderSelectLocationActivity"/>
+        <activity android:name=".PayPasswordEnterActivity"/>
         <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderSelectLocationActivity"/>
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
-        <activity android:name=".ValidateCardAcitivity" android:parentActivityName=".ManageCardActivity"/>
+        <activity android:name=".ValidateCardActivity" android:parentActivityName=".ManageCardActivity"/>
         <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
         <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
         <activity android:name=".RegistDriverActivity" android:parentActivityName=".RiderRequestActivity"/>
