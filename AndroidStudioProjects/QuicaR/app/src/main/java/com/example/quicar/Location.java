@@ -10,8 +10,6 @@ public class Location implements Serializable {
     private Double lon;
 
     public Location() {
-        lat = 0.d;
-        lon = 0.d;
     }
 
     /**

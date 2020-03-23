@@ -32,8 +32,6 @@ import java.util.ArrayList;
  */
 public class DatabaseHelper {
     final String TAG = "quicarDB";
-
-    private String oldServerKey;
     private FirebaseFirestore db;
     private CollectionReference collectionReferenceRec;
     private CollectionReference collectionReferenceReq;
@@ -262,25 +260,6 @@ public class DatabaseHelper {
     }
 
     /**
-     * This is the method that return the old server key of quicar firebase
-     * @return
-     *  the old server key of quicar firebase
-     */
-    private String getOldServerKey() {
-        return oldServerKey;
-    }
-
-    /**
-     * This is the method that set the value of old server key in DatabaseHelper
-     * @param oldServerKey
-     *  value of old server key in DatabaseHelper
-     */
-    void setOldServerKey(String oldServerKey) {
-        oldServerKey = oldServerKey;
-    }
-
-
-    /**
      * This is the method that return the current user name stored locally
      * @return
      *  current user name
@@ -337,42 +316,6 @@ public class DatabaseHelper {
     }
 
     /**
-     * This is the method that return the first location selected by rider
-     * @return
-     *  first location selected by rider
-     */
-    public Location getFirstLocation() {
-        return userState.getFirstSelectedLocation();
-    }
-
-    /**
-     * This is the method that set the value of first location selected by rider
-     * @param location
-     *  first location selected by rider
-     */
-    public void setFirstLocation(Location location) {
-        userState.setFirstSelectedLocation(location);
-    }
-
-    /**
-     * This is the method that return the second location selected by rider
-     * @return
-     *  second location selected by rider
-     */
-    public Location getSecondLocation() {
-        return userState.getSecondSelectedLocation();
-    }
-
-    /**
-     * This is the method that set the value of second location in DatabaseHelper
-     * @param location
-     *  value of second location in DatabaseHelper
-     */
-    public void setSecondLocation(Location location) {
-        userState.setSecondSelectedLocation(location);
-    }
-
-    /**
      * This is the method that check if there is a notification needed to be sent to the rider
      * that there is a request set to active (a driver accepted the rider's request)
      * @param request
@@ -384,7 +327,8 @@ public class DatabaseHelper {
         if (request.getRider().getName().equals(getCurrentUserName())) {
             if (request.getAccepted() && !userState.getActive()) {
                 RequestDataHelper.getInstance().notifyActive(request);
-                //sendPopUpNotification("request is accepted");
+                sendPopUpNotification("Hey" + getCurrentUserName(),
+                        "your request is accepted by " + request.getDriver().getName());
                 userState.setActive(Boolean.TRUE);
                 System.out.println("-------- Accept Notification sent --------");
             }
@@ -404,7 +348,8 @@ public class DatabaseHelper {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
                 RequestDataHelper.getInstance().notifyPickedUp(request);
-                sendPopUpNotification("Notification test", "rider is picked up");
+                sendPopUpNotification("Hey" + getCurrentUserName(),
+                        "you are picked up by " + request.getDriver().getName());
                 userState.setOnGoing(Boolean.TRUE);
                 System.out.println("-------- Picked up Notification sent --------");
             }
@@ -418,7 +363,8 @@ public class DatabaseHelper {
             if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
                     && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
                 RequestDataHelper.getInstance().notifyArrived(request);
-                sendPopUpNotification("Notification test", "rider is picked up");
+                sendPopUpNotification("Hey" + getCurrentUserName(),
+                        "you have arrived your destination");
                 userState.setOnArrived(Boolean.TRUE);
             }
         }
@@ -446,7 +392,7 @@ public class DatabaseHelper {
             }
         }
         if (!found) {
-            sendPopUpNotification("Notification test", "Request is canceled");
+            sendPopUpNotification("Hey" + getCurrentUserName(), "this request is canceled");
             RequestDataHelper.getInstance().notifyCancel();
             userState.setOnGoing(Boolean.FALSE);
             System.out.println("-------- Cancel Notification sent --------");
@@ -467,7 +413,7 @@ public class DatabaseHelper {
             if (record.getRequest().getRider().getName().equals(getCurrentUserName())
                     && getCurrentMode().equals("rider")  && userState.getOnGoing()) {
                 // might want to check if userstate.getOngoing is updated
-                sendPopUpNotification("Notification test", "ride is completed");
+                sendPopUpNotification("Hey" + getCurrentUserName(), "your ride is completed");
                 userState.setActive(Boolean.FALSE);
                 userState.setOnGoing(Boolean.FALSE);
                 RequestDataHelper.getInstance().notifyComplete();
@@ -486,7 +432,6 @@ public class DatabaseHelper {
     void sendPopUpNotification(final String title, final String msg) {
         System.out.println("_---------------- notify please");
         new Notify().execute(title, msg);
-
     }
 
 
@@ -511,7 +456,7 @@ public class DatabaseHelper {
                 conn.setRequestMethod("POST");
 
 
-                conn.setRequestProperty("Authorization", "key=" + DatabaseHelper.getInstance().getOldServerKey() );
+                conn.setRequestProperty("Authorization", "key=AIzaSyDKHMO4xM-b9y2-TMGR5KvPTvlT9jqGbYs");
                 conn.setRequestProperty("Content-Type", "application/json");
 
                 JSONObject json = new JSONObject();

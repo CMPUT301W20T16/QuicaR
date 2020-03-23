@@ -10,8 +10,6 @@ public class UserState {
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
-    private Location firstSelectedLocation;
-    private Location secondSelectedLocation;
     private String activityState;
 
     /**
@@ -143,43 +141,6 @@ public class UserState {
      */
     public void setOnArrived(Boolean onArrived) {
         this.onArrived = onArrived;
-    }
-
-
-    /**
-     * This method return the first selected location of the user (in rider selection activity)
-     * @return
-     *  location of first selected place
-     */
-    public Location getFirstSelectedLocation() {
-        return firstSelectedLocation;
-    }
-
-    /**
-     * This method set the value of first selected location of the user
-     * @param firstSelectedLocation
-     *  value of first selected location of the user
-     */
-    public void setFirstSelectedLocation(Location firstSelectedLocation) {
-        this.firstSelectedLocation = firstSelectedLocation;
-    }
-
-    /**
-     * This method return the second selected location of the user (in rider selection activity)
-     * @return
-     *  location of second selected place
-     */
-    public Location getSecondSelectedLocation() {
-        return secondSelectedLocation;
-    }
-
-    /**
-     * This method set the value of second selected location of the user
-     * @param secondSelectedLocation
-     *  value of second selected location of the user
-     */
-    public void setSecondSelectedLocation(Location secondSelectedLocation) {
-        this.secondSelectedLocation = secondSelectedLocation;
     }
 
     /**

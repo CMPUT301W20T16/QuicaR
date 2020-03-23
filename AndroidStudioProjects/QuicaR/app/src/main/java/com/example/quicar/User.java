@@ -36,8 +36,7 @@ public class User {
         isDriver = driver;
     }
 
-    //
-    protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet) {
+    protected void setAccountInfo(String accNo, String firstname, String lastname, Date birthDate, String gender, String phone, String email, String username, String password, Wallet wallet){
         this.accountInfo.setAccNo(accNo);
         this.accountInfo.setFirstName(firstname);
         this.accountInfo.setLastName(lastname);
@@ -51,8 +50,8 @@ public class User {
     }
 
 
-    protected void setDriverInfo(Double rating, String plateNumber, String license, String sinNumber) {
-        this.accountInfo.setDriverInfo(rating, plateNumber, license, sinNumber);
+    protected void setDriverInfo(Double rating, String plateNumber, String license, String sinNumber){
+        this.accountInfo.setDriverInfo( rating,  plateNumber,  license,  sinNumber);
     }
 
     protected void setName(String name) {
