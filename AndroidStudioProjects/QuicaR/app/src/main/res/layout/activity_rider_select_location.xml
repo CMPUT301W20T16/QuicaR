@@ -1,65 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="2"
-    >
+    android:background="@drawable/border_shadow"
+    android:paddingTop="18dp"
+    android:layout_weight="1.5"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical">
 
-
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/border_shadow"
-        android:paddingTop="18dp"
-        android:layout_weight="1.5">
+        android:layout_height="wrap_content">
 
-        <fragment
-            android:id="@+id/pick_up"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+<!--        <fragment-->
+<!--            android:id="@+id/pick_up"-->
+<!--            android:layout_marginTop="26dp"-->
+<!--            android:layout_marginLeft="6.5dp"-->
+<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"/>-->
+
+<!--        <fragment-->
+<!--            android:id="@+id/destination"-->
+<!--            android:layout_marginTop="26dp"-->
+<!--            android:layout_marginLeft="6.5dp"-->
+<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"/>-->
+
+
+        <LinearLayout
+            android:id="@+id/display_layout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="50dp" />
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="26dp"
+            android:layout_marginLeft="6.5dp"
+            android:paddingBottom="13sp"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-        <fragment
-            android:id="@+id/destination"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/pick_up"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="23dp"
-            android:layout_marginRight="50dp" />
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="2.5dp"
+                        android:layout_marginLeft="1dp"
+                        android:src="@drawable/ic_button"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
 
-    </RelativeLayout>
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <fragment
+                                    android:id="@+id/pick_up"
+                                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:visibility="invisible"/>
+
+                                <com.example.font.TextViewSFProDisplayRegular
+                                    android:id="@+id/start_tv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:text="PickUp Location"
+                                    android:background="@color/white"
+                                    android:textSize="13.5sp"/>
+
+
+
+                            </FrameLayout>
+
+
+                            <com.example.font.TextViewSFProDisplayRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:text="PickUp location"
+                                android:textColor="#b4b4b4"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="6.5sp"
+                            android:background="@color/view_line"/>
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginBottom="10sp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/ic_map_pin"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <fragment
+                                    android:id="@+id/destination"
+                                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"/>
+
+                                <com.example.font.TextViewSFProDisplayRegular
+                                    android:id="@+id/end_tv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:text="Destination"
+                                    android:background="@color/white"
+                                    android:textSize="14sp"/>
+
+
+                            </FrameLayout>
+
+
+                            <com.example.font.TextViewSFProDisplayRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:text="Destination"
+                                android:textColor="#b4b4b4"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="6.5sp"
+                            android:background="@color/view_line"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/swap_icon"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/ic_tripicon"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:clickable="true"/>
+
+
+
+        </LinearLayout>
+
+
+
+    </FrameLayout>
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="History Location"
-            android:gravity="center_horizontal"
-            android:textSize="15sp"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:text="History Location"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:textSize="15sp"/>-->
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f1f1f1"
+                android:paddingTop="4dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f1f1f1"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="17dp"
+                    android:src="@drawable/ic_houseoutline" />
+
+                <com.example.font.TextViewSFProDisplayMedium
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:padding="15dp"
+                    android:text="Add Home"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/history_loc_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/darker_gray"
             android:padding="4dp"
             android:scrollbars="vertical" />
 
     </LinearLayout>
 
-
+    </LinearLayout>
 </LinearLayout>
+
+

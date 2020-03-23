@@ -10,6 +10,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -86,7 +87,10 @@ dependencies {
     implementation 'com.google.maps:google-maps-services:0.1.20'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
-    
+    implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+
+
+
 }
 
 
