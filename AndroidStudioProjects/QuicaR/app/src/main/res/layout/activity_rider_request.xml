@@ -51,7 +51,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
             android:padding="16dp"
-            android:background="@drawable/button_rect"
+            android:background="@drawable/parrot_gradient"
             android:text="Select Location"
             android:textAllCaps="false"
             android:textColor="@color/white" />
