@@ -1,18 +1,16 @@
 package com.example.quicar;
 
 
-import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
+import com.example.entity.Request;
+
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder>  {
 
@@ -23,6 +21,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
+
+    /**
+     * set listner
+     * @param listener
+     */
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
@@ -75,8 +78,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         holder.riderName.setText("Rider: " + currentItem.getRider().getName());
         //getStart and getEnd currently return lat and lng, need address
-        holder.startAdresse.setText("From: " + currentItem.getStart().getLat() + currentItem.getStart().getLon().toString());
-        holder.endAdresse.setText("To: " + currentItem.getDestination().getLat().toString() + currentItem.getDestination().getLon().toString());
+        holder.startAdresse.setText("From: " + currentItem.getStartAddrName());
+        holder.endAdresse.setText("To: " + currentItem.getDestAddrName());
 
         holder.estimateFare.setText("Estimated Fare: " + currentItem.getEstimatedCost().toString());
     }

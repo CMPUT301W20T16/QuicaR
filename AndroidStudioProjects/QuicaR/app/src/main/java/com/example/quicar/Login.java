@@ -1,10 +1,12 @@
 package com.example.quicar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +15,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.User;
+import com.example.util.MyUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -25,7 +32,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.regex.Pattern;
 
 
@@ -40,6 +49,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     /* added by Jeremy */
     OnGetUserDataListener listener = this;
+    AppCompatActivity appCompatActivity = this;
 
 
     @Override
@@ -59,30 +69,55 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
             public void onClick(View v) {
                 String myID = userID.getEditText().getText().toString().trim();
                 String mypwd = pwd.getEditText().getText().toString();
+
+                /* Added by Jeremy */
+                MyUtil.disableSoftInputFromAppearing(appCompatActivity);
+                /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
                 if (!checkUserNameOrEmail(myID)){
-                    String getEmail = retrieveEmail();
-                    mAuth.signInWithEmailAndPassword(getEmail, mypwd)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser currentUser = mAuth.getCurrentUser();
-                                        /* added by Jeremy */
-                                        UserDataHelper.getInstance().getUser(myID, listener);
-                                        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
-                                        pgsBar.setVisibility(v.VISIBLE);
-                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                    } else {
-                                        Toast.makeText(Login.this,
-                                                "Login failed" + task.getException(),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                    // String getEmail = retrieveEmail();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    Query query = databaseReference.child("User").orderByChild("accountInfo/userName").equalTo(myID);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (!dataSnapshot.exists()) {
+                                userID.setError("username not found");
+                                return;
+                            }
+                            for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+                                User myUser = dataSnapshot1.getValue(User.class);
+                                String getEmail = myUser.getAccountInfo().getEmail();
+                                mAuth.signInWithEmailAndPassword(getEmail, mypwd)
+                                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                                                    /* added by Jeremy */
+                                                    UserDataHelper.getInstance().getUser(myID, listener);
+                                                    ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+                                                    pgsBar.setVisibility(v.VISIBLE);
+
+                                                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                } else {
+                                                    Toast.makeText(Login.this,
+                                                            "Login failed" + task.getException(),
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 } else {
 
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -121,6 +156,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     }
 
+    /**
+     * To validate user inputs email/username
+     * @param email
+     *      user inputs email/username
+     * @return
+     *      return if the user correctly inputs email/username
+     * */
     public boolean validateEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             this.userID.setError("Field can't be empty");
@@ -131,6 +173,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         }
     }
 
+    /**
+     * To validate user inputs password
+     * @param password
+     *      user inputs password
+     * @return
+     *      return if the user correctly inputs password
+     * */
     public boolean validatePassword(String password) {
         if (TextUtils.isEmpty(password)) {
             this.pwd.setError("Field can't be empty");
@@ -141,6 +190,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         }
     }
 
+    /**
+     * To validate user inputs email or username
+     * @param id
+     *      user inputs email/username
+     * @return
+     *      return whether user inputs email or username
+     * */
     public boolean checkUserNameOrEmail(String id) {
 
 //        if (id.contains("@")) {
@@ -160,11 +216,19 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     }
 
     public String retrieveEmail() {
+
         String email = mAuth.getInstance().getCurrentUser().getEmail().toString();
+
         return email;
+
     }
 
 
+    /**
+     * retrieve username according to
+     * the current user's uid
+     *
+     * */
     public void retrieveUsername() {
         currentUser = mAuth.getInstance().getCurrentUser();
         DatabaseReference myRef = database.getInstance().getReference("User");
@@ -197,7 +261,13 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     }
 
     @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
     public void onFailure(String errorMessage) {
 
     }
+
 }

@@ -12,6 +12,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.DriverInfo;
+import com.example.user.User;
+import com.example.user.Wallet;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,21 +29,7 @@ import java.util.Locale;
 
 public class UserProfileActivity extends AppCompatActivity implements OnGetUserDataListener {
 
-//???
-// need to change later on solve validate input for gender, password, image select;l
-// .............................................................???
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_user_profile);
-//        setTitle("User Profile");
-//
-//        // add back button on action bar
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//
-//    }
+
 
 
     private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout,passwordLayout;
@@ -48,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
     FirebaseAuth mAuth;
 
     private Spinner spinnerGender;
-    private  User user ;
+    private User user ;
     private OnGetUserDataListener listener = this;
     final Calendar myCalendar = Calendar.getInstance();
 
@@ -126,7 +118,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
-        System.out.println("ji");
 
 //
 //        if (user != null) {
@@ -205,7 +196,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
      */
     private void updateUser() {
         String email,username,phone,firstName,lastName,gender,password,accNo;
-        Wallet wallet = null;
+        Wallet wallet = user.getAccountInfo().getWallet();
         accNo = email = username = phone = firstName = lastName = gender = password = null;
         String sbirthDate = null;
         Date birthDate;
@@ -609,6 +600,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         }
         System.out.println(user);
         this.setDefault();
+
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
 
     }
 

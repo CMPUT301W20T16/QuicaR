@@ -8,10 +8,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.quicar.R;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
 import com.google.type.LatLng;
+
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import com.example.datahelper.DatabaseHelper;
+import com.example.entity.Location;
+
 
 public class RiderRequestActivity extends BaseActivity {
 
@@ -23,6 +34,12 @@ public class RiderRequestActivity extends BaseActivity {
     private LatLng pickupLocation;
     private LatLng destinationLocation;
 
+
+    /**
+     * activity displayed as soon as user logged in as a default activity
+     * rider in this activity can go to selection act which allows to choose start and end
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +48,10 @@ public class RiderRequestActivity extends BaseActivity {
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_request, frameLayout);
 
         setTitle("rider map");
+
+
+
+
 
         // set up EditText and button
         startLocation = findViewById(R.id.start_location);
@@ -58,6 +79,39 @@ public class RiderRequestActivity extends BaseActivity {
 
     }
 
+
+    /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
+     *
+     */
+
+    private GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+
+    /** end new part
+     -----------------------------------------------------------------------------
+     */
+
+
+
+
+
+
+    /**
+     * helper function for address of selected location
+     * @param lat
+     * @param lng
+     * @return
+     */
+
     // get address name in String from lat and long
     public String findAddress(double lat, double lng) {
         // set pick up location automatically as customer's current location
@@ -78,5 +132,11 @@ public class RiderRequestActivity extends BaseActivity {
         return null;
 
     }
+
+
+
+
+
+
 
 }

@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,18 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.example.quicar.R;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RecordDataHelper;
+import com.example.entity.Location;
+import com.example.listener.OnGetRecordDataListener;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -40,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener{
+public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener {
     private EditText pickUp;
     private EditText destination;
     private Button confirmButton;
@@ -66,7 +63,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
 
-
+    /**
+     * activity for riders to select start and destination
+     * use google autocomplete fragment to help
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +122,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
     }
 
+    /**
+     * helper function makes user more convenient when browsing result items
+     */
     public void buildRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.history_loc_list);
         mRecyclerView.setHasFixedSize(true);
@@ -153,7 +157,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         });
     }
 
-
+    /**
+     * execute as soon as they click the auto complete fragment and begin to enter
+     * @param autocompleteSupportFragment
+     * @param location
+     */
     public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
@@ -187,6 +195,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
 
+
+
 //                        if ( marker != null){
 //                            marker.remove();
 //                        }
@@ -210,6 +220,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                                         .getView()
                                         .findViewById(R.id.places_autocomplete_search_input);
                                 etPlace.setHint(place.getAddress());
+
+                                //set address in Location object
+                                location.setAddressName(place.getAddress());
                                 //System.out.println(destinationAutoComplete);
 
 
@@ -249,12 +262,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
+
+    /**
+     * execute when an result item of google autocomplete fragment is clicked
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.confirm_button:
                 // check if inputs are left blank
-                if (start_location == null || end_location == null){
+                if (start_location.getLat() == null || end_location.getLat() == null){
                     Toast.makeText(this, "One or more fields is empty!", Toast.LENGTH_SHORT).show();
                     return false;
                 }

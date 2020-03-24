@@ -1,5 +1,8 @@
 package com.example.quicar;
 
+import com.example.entity.Record;
+import com.example.entity.Request;
+
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +49,7 @@ public class RecordTest {
 
         record.setReqPayment(888.f);
         assertEquals(888f, (float)record.getReqPayment());
+
 
         Request request = new Request();
         record.setRequest(request);

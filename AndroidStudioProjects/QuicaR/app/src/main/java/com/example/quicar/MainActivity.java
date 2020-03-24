@@ -1,25 +1,30 @@
 package com.example.quicar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.LocationDataHelper;
+import com.example.datahelper.RecordDataHelper;
+import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.entity.Location;
+import com.example.entity.Request;
+import com.example.listener.OnGetLocationDataListener;
+import com.example.listener.OnGetRecordDataListener;
+import com.example.listener.OnGetRequestDataListener;
+import com.example.user.User;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener {
+public class MainActivity extends AppCompatActivity implements OnGetRequestDataListener, OnGetRecordDataListener, OnGetLocationDataListener {
     private final String TAG = "MainActivity";
     private OnGetRequestDataListener listener = this;
     private static int SPLASH_TIME_OUT = 0;
@@ -31,15 +36,19 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         //  database setup
         DatabaseHelper.getInstance().setCurrentMode("rider");
-        // DatabaseHelper.getInstance().setOldServerKey(getString(R.string.OLD_SERVER_KEY));
+        // initialize data helper
+        RequestDataHelper.getInstance();
+        RecordDataHelper.getInstance();
+        UserDataHelper.getInstance();
 
 //        //  test adding new user in register page
         startActivity(new Intent(getApplicationContext(), Login.class));
 //        finish();
-//
-        // test map view
+
+////           test map view
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
@@ -81,6 +90,16 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
             @Override
             public void onClick(View v) {
                 RequestDataHelper.getInstance().completeRequest(requestID, 30.0f, 5.0f, listener);
+                Request testRequest = new Request();
+                User testUser = new User();
+                testUser.setName("test");
+                testRequest.setDriver(testUser);
+                DatabaseHelper.getInstance().getUserState().setCurrentRequest(testRequest);
+                LocationDataHelper
+                        .getInstance()
+                        .updateLocation(
+                                "new user testing"
+                                , new Location(123.d, 123.d));
             }
         });
 
@@ -129,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     @Override
     public void onActiveNotification(Request request) {
         System.out.println("------------- rider request updated to active -----------------");
-        DatabaseHelper.getInstance().sendPopUpNotification("Notification test", "hello");
         Toast.makeText(MainActivity.this, "rider request updated to active by driver",
                 Toast.LENGTH_SHORT).show();
     }
@@ -178,5 +196,10 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     public void onFailure(String errorMessage) {
         System.out.println("-----------" + errorMessage + "-----------");
         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdate(Location location) {
+        Toast.makeText(MainActivity.this, location.getLat().toString(), Toast.LENGTH_SHORT).show();
     }
 }

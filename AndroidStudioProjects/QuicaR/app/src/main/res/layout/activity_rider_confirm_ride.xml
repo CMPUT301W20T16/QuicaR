@@ -15,48 +15,6 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/confirm_floating_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_checked"-->
-<!--        app:backgroundTint="#3F51B5"-->
-<!--        app:layout_anchor="@+id/bottom_sheet_order_detail"-->
-<!--        app:layout_anchorGravity="top|start" />-->
-
-
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/cancel_floating_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_cancel"-->
-<!--        app:backgroundTint="#3F51B5"-->
-<!--        app:layout_anchor="@+id/bottom_sheet_order_detail"-->
-<!--        app:layout_anchorGravity="top|end" />-->
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/buttons"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:baselineAligned="true"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_gravity="bottom">-->
-
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Confirm Request"-->
-<!--            android:id="@+id/confirm_button"/>-->
-
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Cancel Request"-->
-<!--            android:id="@+id/cancel_button"/>-->
-
-<!--    </LinearLayout>-->
-
 
 
 
