@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -52,7 +53,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     private OnGetRequestDataListener listener = this;
 
-    LinearLayout linearLayout;
+    RelativeLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
 
@@ -73,14 +74,12 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
 
         //set bottom sheet
-        linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_order_detail);
+        linearLayout = (RelativeLayout) findViewById(R.id.bottom_sheet_order_detail);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         // set Buttons
-        confirmButton = linearLayout.findViewById(R.id.confirm_button);
+        confirmButton = linearLayout.findViewById(R.id.confirm_ride);
         cancelButton = linearLayout.findViewById(R.id.cancel_button);
-
-
 
 
         //get data from intent, i.e., current address

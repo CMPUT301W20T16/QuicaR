@@ -51,9 +51,6 @@ public class RiderRequestActivity extends BaseActivity {
         setTitle("rider map");
 
 
-
-
-
         // set up EditText and button
         startLocation = findViewById(R.id.start_location);
 

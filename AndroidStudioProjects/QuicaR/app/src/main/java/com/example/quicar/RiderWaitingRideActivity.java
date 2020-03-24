@@ -59,11 +59,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
 
-        linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
+        //linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         // set Buttons
-        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
+        //DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
         CancelButton = linearLayout.findViewById(R.id.cancel_button);
@@ -72,7 +72,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
-        driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
+        //driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);

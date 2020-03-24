@@ -52,21 +52,21 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     };
 
     // every 30 seconds refresh the qr code 1 time
-    private Runnable runnable2 = new Runnable() {
-        public void run() {
-            this.update();
-            handler2.postDelayed(runnable2, 1000 * 2);
-        }
-        void update() {
-            if (user != null) {
-                UserDataHelper.getInstance().updateUserProfile(user, listener);
-                user = DatabaseHelper.getInstance().getCurrentUser();
-                currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
-                balance.setText(currentBalance);
-                balance.bringToFront();
-            }
-        }
-    };
+//    private Runnable runnable2 = new Runnable() {
+//        public void run() {
+//            this.update();
+//            handler2.postDelayed(runnable2, 1000 * 2);
+//        }
+//        void update() {
+//            if (user != null) {
+//                UserDataHelper.getInstance().updateUserProfile(user, listener);
+//                user = DatabaseHelper.getInstance().getCurrentUser();
+//                currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+//                balance.setText(currentBalance);
+//                balance.bringToFront();
+//            }
+//        }
+//    };
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -84,7 +84,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         handler.postDelayed(runnable, 1000 * 30);
         generate_qr(qr_code);
 
-        handler2.postDelayed(runnable2, 1000 * 2);
+        //handler2.postDelayed(runnable2, 1000 * 2);
         user = DatabaseHelper.getInstance().getCurrentUser();
         if(user.getAccountInfo().getWallet() == null) {
             System.out.println(user.getAccountInfo().getUserName());
@@ -169,11 +169,11 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
 
     @Override
     public void onUpdateNotification(User user) {
-//        if (user != null) {
-//            currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
-//            balance.setText(currentBalance);
-//            balance.bringToFront();
-//        }
+        if (user != null) {
+            currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+            balance.setText(currentBalance);
+            balance.bringToFront();
+        }
     }
 
     @Override
