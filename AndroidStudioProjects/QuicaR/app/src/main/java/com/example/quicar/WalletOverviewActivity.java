@@ -24,7 +24,9 @@ import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class WalletOverviewActivity extends AppCompatActivity implements OnGetUserDataListener{
 
@@ -38,6 +40,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     Handler handler2 = new Handler();
     String currentBalance;
     User user;
+    String time;
     private OnGetUserDataListener listener = this;
 
     // every 30 seconds refresh the qr code 1 time
@@ -115,7 +118,8 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     }
 
     protected void generate_qr(ImageView qr_code) {
-        String time = LocalDateTime.now().toString();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        time = df.format(LocalDateTime.now());
         Gson gson = new Gson();
         String json = gson.toJson(DatabaseHelper.getInstance().getCurrentUser());
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -171,7 +175,8 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     @Override
     public void onUpdateNotification(User user) {
         if (user != null) {
-            currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            currentBalance = "( $ " + decimalFormat.format(user.getAccountInfo().getWallet().getBalance()) + " )";
             balance.setText(currentBalance);
             balance.bringToFront();
         }

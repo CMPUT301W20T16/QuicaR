@@ -81,7 +81,7 @@
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ValidateCardActivity" android:parentActivityName=".ManageCardActivity"/>
-        <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
+        <activity android:name=".SetAmountActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
         <activity android:name=".RegisterDriverActivity" android:parentActivityName=".RiderRequestActivity"/>
 
