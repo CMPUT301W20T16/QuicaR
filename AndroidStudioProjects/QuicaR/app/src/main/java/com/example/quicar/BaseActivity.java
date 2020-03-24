@@ -365,7 +365,7 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     else{
-                        Intent intent2 = new Intent(getApplicationContext(), registeDriverActivity.class);
+                        Intent intent2 = new Intent(getApplicationContext(), RegisterDriverActivity.class);
                         startActivity(intent2);
                     }
 
@@ -382,8 +382,16 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 break;
             case R.id.nav_wallet:
-                Intent intent3 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
-                startActivity(intent3);
+                User user = DatabaseHelper.getInstance().getCurrentUser();
+                if (user.getAccountInfo().getWallet().isOpen()){
+                    Intent intent4 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
+                    //Intent intent4 = new Intent(getApplicationContext(), PayPasswordEnterActivity.class);
+                    startActivity(intent4);
+                }else{
+                    //Intent intent4 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
+                    Intent intent4 = new Intent(getApplicationContext(), PayPasswordSetActivity.class);
+                    startActivity(intent4);
+                }
                 break;
         }
 

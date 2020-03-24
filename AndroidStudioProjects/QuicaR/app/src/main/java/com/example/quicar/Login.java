@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -70,7 +71,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 String mypwd = pwd.getEditText().getText().toString();
 
                 /* Added by Jeremy */
-                MyUtil.disableSoftInputFromAppearing(appCompatActivity);
+                //MyUtil.disableSoftInputFromAppearing(appCompatActivity);
                 /* end here */
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
@@ -98,12 +99,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                 }
                             });
                 } else {
-
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-
                                 currentUser = mAuth.getInstance().getCurrentUser();
                                 retrieveUsername();
                                 if (currentUser != null) {
@@ -133,6 +132,17 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
             }
         });
 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
+            View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+            if (MyUtil.isShouldHideKeyboard(v, me)) { //判断用户点击的是否是输入框以外的区域
+                MyUtil.disableSoftInputFromAppearing(appCompatActivity);  //收起键盘
+            }
+        }
+        return super.dispatchTouchEvent(me);
     }
 
     /**

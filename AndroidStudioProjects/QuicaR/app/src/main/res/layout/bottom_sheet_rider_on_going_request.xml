@@ -11,13 +11,8 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="50dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    tools:context="com.example.quicar.RiderConfirmRiderActivity">
+    tools:context="com.example.quicar.RiderOnGoingRequestActivity">
 
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="388dp"-->
-    <!--        android:background="@color/white"-->
-    <!--        android:orientation="vertical">-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="344dp"
@@ -273,35 +268,14 @@
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="9dp"
-                        android:orientation="horizontal">
-
                         <com.example.font.TextViewSFProDisplayRegular
                             android:id="@+id/userEmail_textView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="sampleEmail@gmail.com"
                             android:textColor="#5a595e"
                             android:textSize="14sp" />
 
-                        <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@+id/email_driver_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:text="EMAIL DRIVER"
-                            android:textColor="@color/paymentBackground"
-                            android:textSize="14sp" />
-
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -323,39 +297,19 @@
                         <com.example.font.TextViewSFProDisplayMedium
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Phone Number"
+                            android:layout_weight="1"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="9dp"
-                        android:orientation="horizontal">
 
                         <com.example.font.TextViewSFProDisplayRegular
                             android:id="@+id/userPhone_textView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="5872255201"
                             android:textColor="#5a595e"
                             android:textSize="14sp" />
-
-                        <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@id/call_driver_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:text="CALL DRIVER"
-                            android:textColor="@color/paymentBackground"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -395,25 +349,14 @@
                 </LinearLayout>
 
 
-                <com.example.font.Button_SF_Pro_Display_Medium
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/parrot_gradient"
-                    android:text="Call Driver"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
-
-
-
+    </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
+
+
+
 
