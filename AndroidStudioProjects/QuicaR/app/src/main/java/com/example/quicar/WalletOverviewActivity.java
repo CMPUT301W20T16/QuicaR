@@ -157,6 +157,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
             case R.id.pay_record:
                 break;
             case R.id.change_password:
+                startActivity(new Intent(getApplicationContext(), PayPasswordChangeEnterActivity.class));
                 break;
         }
         return true;

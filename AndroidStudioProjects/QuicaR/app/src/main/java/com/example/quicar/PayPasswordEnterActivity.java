@@ -20,7 +20,7 @@ public class PayPasswordEnterActivity extends AppCompatActivity implements OnGet
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_password);
+        setContentView(R.layout.activity_pay_password_enter);
 
         System.out.println("222222222222222222222222222222");
 
