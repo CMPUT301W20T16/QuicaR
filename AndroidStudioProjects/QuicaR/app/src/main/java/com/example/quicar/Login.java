@@ -76,8 +76,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 if (!validateEmail(myID) | !validatePassword(mypwd)) {
                     return;
                 }
-                if (!checkUserNameOrEmail(myID)){
-                    // String getEmail = retrieveEmail();
+                if (!checkUserNameOrEmail(myID)) {
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                     Query query = databaseReference.child("User").orderByChild("accountInfo/userName").equalTo(myID);
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,14 +211,6 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         if (id == null)
             return false;
         return pat.matcher(id).matches();
-
-    }
-
-    public String retrieveEmail() {
-
-        String email = mAuth.getInstance().getCurrentUser().getEmail().toString();
-
-        return email;
 
     }
 
