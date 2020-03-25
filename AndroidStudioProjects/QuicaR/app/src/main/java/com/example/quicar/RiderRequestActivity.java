@@ -125,10 +125,13 @@ public class RiderRequestActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            if (address.length() != 0) {
-                return address;
+            if (addresses != null) {
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address.length() != 0) {
+                    return address;
+                }
             }
+
         }
         return null;
 

@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet_rider_on_going_request"
+    android:id="@+id/bottom_sheet_driver_on_going"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -11,7 +11,7 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="50dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    tools:context="com.example.quicar.RiderOnGoingRequestActivity">
+    tools:context="com.example.quicar.DriverOnGoingActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
