@@ -1,106 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_rider_on_going_request"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.example.quicar.RiderConfirmRiderActivity"
-    android:id="@+id/bottom_sheet_rider_on_going_request"
     app:behavior_hideable="true"
     app:behavior_peekHeight="50dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    tools:context="com.example.quicar.RiderOnGoingRequestActivity">
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="388dp"-->
-<!--        android:background="@color/white"-->
-<!--        android:orientation="vertical">-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="344dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_checked"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/the_line"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.font.TextViewSFProDisplayRegular
+            android:id="@+id/start_address"
+            android:layout_width="110dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="12dp"
+            android:text="10811 47 avenue, nw, Edmonton"
+            android:textSize="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_checked"
+            app:layout_constraintEnd_toStartOf="@+id/the_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.font.TextViewSFProDisplayRegular
+            android:id="@+id/end_address"
+            android:layout_width="110dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="40dp"
+            android:text="10811 47 avenue, nw, Edmonton"
+            android:textSize="9dp"
+            app:layout_constraintStart_toEndOf="@+id/gifImageView2"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/the_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="-----------------------"
+            android:textColor="#882C383E"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintHorizontal_bias="0.405"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="44dp"
-                android:layout_height="39dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_checked"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/the_line"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.example.font.TextViewSFProDisplayRegular
-                android:id="@+id/start_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="PICK UP\nLOCATION"
-                android:textSize="9dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2"
-                android:gravity="center_horizontal"/>
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="37dp"
-                android:layout_height="41dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/ic_checked"
-                app:layout_constraintEnd_toStartOf="@+id/the_line"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.example.font.TextViewSFProDisplayRegular
-                android:id="@+id/end_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="DESTINATION"
-                android:textSize="9dp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-            <TextView
-                android:id="@+id/the_line"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="24dp"
-                android:text="-----------------------"
-                android:textColor="#882C383E"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintHorizontal_bias="0.405"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <pl.droidsonroids.gif.GifImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/car"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gifImageView2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
     <LinearLayout
         android:id="@+id/linear"
-        android:layout_width="421dp"
-        android:layout_height="380dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -109,7 +104,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
 
 
             <LinearLayout
@@ -187,7 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
 
 
                 <LinearLayout
@@ -271,35 +268,14 @@
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="9dp"
-                        android:orientation="horizontal">
-
                         <com.example.font.TextViewSFProDisplayRegular
                             android:id="@+id/userEmail_textView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="sampleEmail@gmail.com"
                             android:textColor="#5a595e"
                             android:textSize="14sp" />
 
-                        <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@+id/email_driver_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:text="EMAIL DRIVER"
-                            android:textColor="@color/paymentBackground"
-                            android:textSize="14sp" />
-
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -321,39 +297,19 @@
                         <com.example.font.TextViewSFProDisplayMedium
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Phone Number"
+                            android:layout_weight="1"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="9dp"
-                        android:orientation="horizontal">
 
                         <com.example.font.TextViewSFProDisplayRegular
                             android:id="@+id/userPhone_textView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="5872255201"
                             android:textColor="#5a595e"
                             android:textSize="14sp" />
-
-                        <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@id/call_driver_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:text="CALL DRIVER"
-                            android:textColor="@color/paymentBackground"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -393,26 +349,14 @@
                 </LinearLayout>
 
 
-                <com.example.font.Button_SF_Pro_Display_Medium
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/parrot_gradient"
-                    android:text="Call Driver"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
-
-
-
+    </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
+
 
 
 

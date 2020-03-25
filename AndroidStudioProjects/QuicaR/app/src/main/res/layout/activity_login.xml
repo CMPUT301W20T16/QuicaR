@@ -24,14 +24,28 @@
             android:layout_gravity="center_horizontal"
             app:errorEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:background="@drawable/rounded_background"-->
+<!--                android:singleLine="true"-->
+<!--                android:inputType="textEmailAddress"-->
+<!--                android:hint="Email/Username" />-->
+
+            <com.example.font.EditTextSFProDisplayMedium
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:hint="Email/Username"
                 android:background="@drawable/rounded_background"
-                android:singleLine="true"
+                android:textColorHint="#6f6f6f"
+                android:textColor="@color/black"
                 android:inputType="textEmailAddress"
-                android:hint="Email/Username" />
+                android:padding="15dp"
+                android:textSize="15sp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="62dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -42,14 +56,28 @@
             app:passwordToggleEnabled="true"
             android:layout_gravity="center_horizontal">
 
-            <com.google.android.material.textfield.TextInputEditText
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:background="@drawable/rounded_background"-->
+<!--                android:singleLine="true"-->
+<!--                android:inputType="textPassword"-->
+<!--                android:hint="Password" />-->
+
+            <com.example.font.EditTextSFProDisplayMedium
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:hint="Password"
                 android:background="@drawable/rounded_background"
-                android:singleLine="true"
+                android:textColorHint="#6f6f6f"
+                android:textColor="@color/black"
                 android:inputType="textPassword"
-                android:hint="Password" />
+                android:padding="15dp"
+                android:textSize="15sp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="62dp"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -96,7 +124,7 @@
                 android:clickable="true"
                 android:onClick="SignUpText"
                 android:text="Sign up"
-                android:textColor="#E91E63"
+                android:textColor="@color/paymentBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
