@@ -43,41 +43,55 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="324dp"
-        android:layout_height="91dp">
+        android:layout_width="321dp"
+        android:layout_height="121dp">
 
         <Button
             android:id="@+id/sign_in_button"
-            android:layout_width="194dp"
-            android:layout_height="32dp"
+            android:layout_width="302dp"
+            android:layout_height="45dp"
             android:background="@drawable/rounded_background"
             android:onClick="@string/sign_in_button"
             android:text="@string/sign_in_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.048">
+            app:layout_constraintVertical_bias="0.434">
 
         </Button>
 
+        <CheckBox
+            android:id="@+id/rememberCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Remember me"
+            android:textColor="@color/places_autocomplete_prediction_secondary_text"
+            app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </CheckBox>
+
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="168dp"
             android:layout_height="19dp"
             android:text="Don't have an account?"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.44"
+            app:layout_constraintHorizontal_bias="0.405"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
-            app:layout_constraintVertical_bias="0.304" />
+            app:layout_constraintVertical_bias="0.44" />
 
         <TextView
             android:id="@+id/signUpText"
-            android:layout_width="98dp"
+            android:layout_width="70dp"
             android:layout_height="19dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="36dp"
             android:layout_marginBottom="14dp"
             android:clickable="true"
             android:onClick="SignUpText"
@@ -86,7 +100,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
-            app:layout_constraintVertical_bias="0.478" />
+            app:layout_constraintVertical_bias="1.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
