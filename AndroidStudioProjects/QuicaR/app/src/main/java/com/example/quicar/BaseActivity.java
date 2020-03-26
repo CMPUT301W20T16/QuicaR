@@ -160,6 +160,23 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
         }
 
+        mapRadar = new MapRadar(mMap, new LatLng(0, 0 ), this);
+        mapRadar.withDistance(2000);
+        mapRadar.withClockwiseAnticlockwiseDuration(2);
+        mapRadar.withOuterCircleFillColor(Color.parseColor("#12000000"));
+        mapRadar.withOuterCircleStrokeColor(Color.parseColor("#fccd29"));
+        mapRadar.withRadarColors(Color.parseColor("#00000000"), Color.parseColor("#ff000000"));  //starts from transparent to fuly black
+        mapRadar.withRadarColors(Color.parseColor("#00fccd29"), Color.parseColor("#fffccd29"));  //starts from transparent to fuly black
+        mapRadar.withOuterCircleStrokewidth(7);
+        mapRadar.withRadarSpeed(5);
+        mapRadar.withOuterCircleTransparency(0.5f);
+        mapRadar.withRadarTransparency(0.5f);
+        mapRadar.startRadarAnimation();      //in onMapReadyCallBack
+
+        mapRadar.withClockWiseAnticlockwise(true);
+
+
+
     }
 
 
@@ -214,18 +231,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        mapRadar = new MapRadar(mMap, latLng, this);
-        mapRadar.withClockWiseAnticlockwise(true);
-        mapRadar.withDistance(2000);
-        mapRadar.withClockwiseAnticlockwiseDuration(2);
-        mapRadar.withOuterCircleFillColor(Color.parseColor("#12000000"));
-        mapRadar.withOuterCircleStrokeColor(Color.parseColor("#fccd29"));
-        mapRadar.withRadarColors(Color.parseColor("#00000000"), Color.parseColor("#ff000000"));  //starts from transparent to fuly black
-        mapRadar.withRadarColors(Color.parseColor("#00fccd29"), Color.parseColor("#fffccd29"));  //starts from transparent to fuly black
-        mapRadar.withOuterCircleStrokewidth(7);
-        mapRadar.withRadarSpeed(5);
-        mapRadar.withOuterCircleTransparency(0.5f);
-        mapRadar.withRadarTransparency(0.5f);
+
+        //Initialize map radar
+        mapRadar.withLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+
+
+
+
 
 
 
@@ -316,6 +328,15 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mapRadar.isAnimationRunning()) {
+            mapRadar.stopRadarAnimation();
+        }
+    }
+
 
 
 
