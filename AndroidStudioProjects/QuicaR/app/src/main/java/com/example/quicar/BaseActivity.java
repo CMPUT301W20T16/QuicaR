@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,6 +27,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import com.arsy.maps_library.MapRadar;
+
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.user.User;
@@ -37,7 +41,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -52,10 +60,16 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Marker mCurrLocationMarker;
     protected Geocoder geocoder;
     protected List<Address> addresses;
+    MapRadar mapRadar;
+    CircleOptions circleOptions;
+    Circle mapCircle;
 
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
+
+    private double radius = 1000;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,7 +144,20 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //set map style
+        try {
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                System.out.println("-------------Style parsing failed");
+            } else {
+                System.out.println("------------Style success");
+            }
+        } catch(Resources.NotFoundException e) {
+            System.out.println("------------Can;t find style");
+        }
+
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -148,6 +175,38 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
+
+
+
+        //set up radar pin
+        mapRadar = new MapRadar(mMap, new LatLng(0, 0 ), this);
+        mapRadar.withDistance(2000);
+        mapRadar.withClockwiseAnticlockwiseDuration(2);
+        mapRadar.withOuterCircleFillColor(Color.parseColor("#12000000"));
+        mapRadar.withOuterCircleStrokeColor(Color.parseColor("#2e8b57"));
+        mapRadar.withRadarColors(Color.parseColor("#00000000"), Color.parseColor("#ff000000"));  //starts from transparent to fuly black
+        mapRadar.withRadarColors(Color.parseColor("#00fccd29"), Color.parseColor("#fffccd29"));  //starts from transparent to fuly black
+        mapRadar.withOuterCircleStrokewidth(7);
+        mapRadar.withRadarSpeed(5);
+        mapRadar.withOuterCircleTransparency(0.5f);
+        mapRadar.withRadarTransparency(0.5f);
+        mapRadar.startRadarAnimation();      //in onMapReadyCallBack
+
+        mapRadar.withClockWiseAnticlockwise(true);
+
+        circleOptions = new CircleOptions()
+                .center(new LatLng(0,0))
+                .radius(radius)
+                .strokeColor(Color.GREEN)
+                .strokeWidth(0f)
+                .fillColor(Color.parseColor("#802e8b57"));
+
+        mapCircle = mMap.addCircle(circleOptions);
+
+
+
+
 
     }
 
@@ -186,20 +245,26 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mLastLocation = location;
 
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-
-        //place a new marker for current location
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
+
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+
+        //update map radar
+        mapRadar.withLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+
+
+        //place a new circle behind map radar
+        if (mapCircle != null) {
+            mapCircle.remove();
+        }
+
+        circleOptions.center(latLng);
+        mapCircle = mMap.addCircle(circleOptions);
+
     }
 
 
@@ -280,6 +345,15 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mapRadar.isAnimationRunning()) {
+            mapRadar.stopRadarAnimation();
+        }
+    }
+
 
 
 
