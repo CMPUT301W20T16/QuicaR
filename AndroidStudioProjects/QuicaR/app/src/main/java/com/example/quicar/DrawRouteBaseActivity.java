@@ -118,6 +118,9 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
         if (results != null) {
+//            if (results.routes.length == 0)
+
+
             List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
             mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
             System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);

@@ -90,8 +90,8 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
-        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
+//        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
+//        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
 
 
 
@@ -109,7 +109,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .destination(end_address).departureTime(now)
                     .await();
 
 
@@ -138,28 +138,26 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         /**
          * when click confirm button, following will be executed
          */
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        confirmButton.setOnClickListener(v -> {
 
-                /**
-                 *   instantiate a new User class for current user
-                  */
-                User newUser = new User();
-                newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
+            /**
+             *   instantiate a new User class for current user
+              */
+            User newUser = new User();
+            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
-                /**
-                 *    new request's cost is hard coded for now
-                  */
-                Request request = new Request(start_location, start_location.getAddressName(),
-                        end_location, end_location.getAddressName(),
-                        newUser, new User(), 20.0f);
+            /**
+             *    new request's cost is hard coded for now
+              */
+            Request request = new Request(start_location, start_location.getAddressName(),
+                    end_location, end_location.getAddressName(),
+                    newUser, new User(), 20.0f);
 
-                currentRequest = request;
+            currentRequest = request;
 
 
-                /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
-                 */
+            /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
+             */
 
 //                DateTime now = new DateTime();
 //                try {
@@ -177,20 +175,19 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 //
 //                addMarkersToMap(directionsResult,mMap);
 
-                /** end new part
-                 -----------------------------------------------------------------------------
-                 */
+            /** end new part
+             -----------------------------------------------------------------------------
+             */
 
 
-                RequestDataHelper.getInstance().addNewRequest(request, listener);
+            RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
 
-                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
-                intent.putExtra("current request", currentRequest);
-                startActivity(intent);
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+            intent1.putExtra("current request", currentRequest);
+            startActivity(intent1);
 
-            }
         });
 
 
@@ -217,7 +214,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
-        addPolyline(directionsResult,mMap);
+        try {
+            addPolyline(directionsResult, mMap);
+        }catch (ArrayIndexOutOfBoundsException e){
+            Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+            startActivity(intent);
+
+        }
 //        System.out.println("----------Time---------- :"+ directionsResult.routes[0].legs[0].duration.humanReadable);
 //        System.out.println("----------Distance---------- :" + directionsResult.routes[0].legs[0].distance.humanReadable);
 

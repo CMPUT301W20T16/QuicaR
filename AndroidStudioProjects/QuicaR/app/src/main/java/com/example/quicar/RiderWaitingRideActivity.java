@@ -58,6 +58,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         Intent intent = getIntent();
         currentRequest = (Request) intent.getSerializableExtra("current request");
+        /** Added by Jeremy */
+        mRequest = currentRequest;
+        /** End here */
 
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
 
@@ -114,9 +117,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                             .getInstance()
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
                 }
-                Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -125,6 +125,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+            Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
