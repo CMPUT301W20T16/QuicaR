@@ -134,6 +134,26 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
     }
 
 
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 7.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*2.3;
+        }
+        else{
+            fare = (distance/1000)*2.0;
+        }
+
+
+        return fare;
+    }
+
+
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null)

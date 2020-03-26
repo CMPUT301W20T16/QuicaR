@@ -180,23 +180,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     }
 
 
-//     protected GeoApiContext getGeoContext() {
-//        GeoApiContext geoApiContext = new GeoApiContext();
-//        geoApiContext.setQueryRateLimit(3)
-//                .setApiKey(getString(R.string.map_key))
-//                .setConnectTimeout(1, TimeUnit.SECONDS)
-//                .setReadTimeout(1, TimeUnit.SECONDS)
-//                .setWriteTimeout(1, TimeUnit.SECONDS);
-//        return geoApiContext;
-//    }
-//
-//
-//     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-//        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-//        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-//    }
-
-
 
 
 
