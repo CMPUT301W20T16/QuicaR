@@ -231,11 +231,11 @@ public class RequestDataHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, requestID + " deletion successful");
-                        if (mode == "cancel") {
+                        if (mode == CANCEL_REQ_TAG) {
                             // update user state of rider
                             DatabaseHelper.getInstance().getUserState().setActive(false);
                             listener.onSuccess(null, CANCEL_REQ_TAG);
-                        } else if (mode == "complete") {
+                        } else if (mode == COMPLETE_REQ_TAG) {
                             // update user state of driver
                             DatabaseHelper.getInstance().getUserState().setActive(false);
                             DatabaseHelper.getInstance().getUserState().setOnGoing(false);
