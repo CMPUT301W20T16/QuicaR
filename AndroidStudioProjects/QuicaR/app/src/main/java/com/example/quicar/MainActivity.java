@@ -3,10 +3,12 @@ package com.example.quicar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.datahelper.DatabaseHelper;
@@ -20,6 +22,8 @@ import com.example.listener.OnGetLocationDataListener;
 import com.example.listener.OnGetRecordDataListener;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.user.User;
+import com.example.util.ConnectivityReceiver;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -202,4 +206,5 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
     public void onUpdate(Location location) {
         Toast.makeText(MainActivity.this, location.getLat().toString(), Toast.LENGTH_SHORT).show();
     }
+
 }

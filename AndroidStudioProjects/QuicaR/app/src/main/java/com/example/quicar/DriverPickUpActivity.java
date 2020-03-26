@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,7 +40,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
-    Button confirmButton;
+    Button_SF_Pro_Display_Medium confirmButton;
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
@@ -64,7 +65,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_pick_up);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        confirmButton = linearLayout.findViewById(R.id.pick_up);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
