@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.font.Button_SF_Pro_Display_Medium;
+import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -38,9 +40,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     TextView driverPhone;
 
     Button DetailButton;
-    Button CallButton;
-    Button EmailButton;
-    Button CancelButton;
+    TextViewSFProDisplayRegular CallButton;
+    TextViewSFProDisplayRegular EmailButton;
+    Button_SF_Pro_Display_Medium CancelButton;
     Request currentRequest = null;
 
     /**
@@ -75,7 +77,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
-//        driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
+//        driverDi›stance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);

@@ -57,14 +57,14 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
 
 
-        navigationView.inflateMenu(R.menu.drawer_menu_driver);
+        navigationView.inflateMenu(R.layout.activity_driver_pick_up);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_pick_up, frameLayout);
 
 
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_pick_up);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        confirmButton = linearLayout.findViewById(R.id.pick_up);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
@@ -84,6 +84,9 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
+        System.out.println("-----start address name-----"+start_address);
+        System.out.println("-----end address name-------"+end_address);
+
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
@@ -125,6 +128,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
                 System.out.println("Request id-------------" + currentRequest.getRid());
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
+                intent.putExtra("current accepted request", currentRequest);
                 startActivity(intent);
             }
         });
@@ -176,21 +180,21 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     }
 
 
-    private GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-    }
+//     protected GeoApiContext getGeoContext() {
+//        GeoApiContext geoApiContext = new GeoApiContext();
+//        geoApiContext.setQueryRateLimit(3)
+//                .setApiKey(getString(R.string.map_key))
+//                .setConnectTimeout(1, TimeUnit.SECONDS)
+//                .setReadTimeout(1, TimeUnit.SECONDS)
+//                .setWriteTimeout(1, TimeUnit.SECONDS);
+//        return geoApiContext;
+//    }
+//
+//
+//     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+//        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+//        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+//    }
 
 
 

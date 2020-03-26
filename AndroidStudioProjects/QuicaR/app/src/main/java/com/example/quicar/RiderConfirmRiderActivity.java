@@ -103,15 +103,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
+        System.out.println("-----start address name-----"+start_address);
+        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
                     .destination(end_address).departureTime(Instant.now())
                     .await();
-
-
-
 
 
         } catch (ApiException e) {
@@ -219,8 +218,8 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         mMap.addMarker(destination);
         showAllMarkers();
         addPolyline(directionsResult,mMap);
-        System.out.println("----------Time---------- :"+ directionsResult.routes[0].legs[0].duration.humanReadable);
-        System.out.println("----------Distance---------- :" + directionsResult.routes[0].legs[0].distance.humanReadable);
+//        System.out.println("----------Time---------- :"+ directionsResult.routes[0].legs[0].duration.humanReadable);
+//        System.out.println("----------Distance---------- :" + directionsResult.routes[0].legs[0].distance.humanReadable);
 
 //        addMarkersToMap(directionsResult,mMap);
 
@@ -267,15 +266,15 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
      *
      */
 
-    private GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
+//    private GeoApiContext getGeoContext() {
+//        GeoApiContext geoApiContext = new GeoApiContext();
+//        geoApiContext.setQueryRateLimit(3)
+//                .setApiKey(getString(R.string.map_key))
+//                .setConnectTimeout(1, TimeUnit.SECONDS)
+//                .setReadTimeout(1, TimeUnit.SECONDS)
+//                .setWriteTimeout(1, TimeUnit.SECONDS);
+//        return geoApiContext;
+//    }
 
 //   private GeoApiContext getGeoApiContext() {
 //       return new GeoApiContext.Builder()
@@ -294,10 +293,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
     }
 
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-    }
+//    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
+//        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+//        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+//    }
 
 
 
