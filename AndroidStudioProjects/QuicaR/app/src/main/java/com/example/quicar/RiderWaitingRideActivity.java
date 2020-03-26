@@ -59,7 +59,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         Intent intent = getIntent();
         currentRequest = (Request) intent.getSerializableExtra("current request");
         /** Added by Jeremy */
-        mRequest = currentRequest;
+        //mRequest = currentRequest;
         /** End here */
 
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
