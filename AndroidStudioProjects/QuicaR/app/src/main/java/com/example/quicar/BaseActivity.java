@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -26,8 +25,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.arsy.maps_library.MapRadar;
-
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.user.User;
@@ -40,8 +37,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -57,14 +52,10 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Marker mCurrLocationMarker;
     protected Geocoder geocoder;
     protected List<Address> addresses;
-    MapRadar mapRadar;
 
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
-
-    private double radius = 1000;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,8 +132,6 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-
-
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -206,36 +195,11 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-
-        mapRadar = new MapRadar(mMap, latLng, this);
-        mapRadar.withClockWiseAnticlockwise(true);
-        mapRadar.withDistance(2000);
-        mapRadar.withClockwiseAnticlockwiseDuration(2);
-        mapRadar.withOuterCircleFillColor(Color.parseColor("#12000000"));
-        mapRadar.withOuterCircleStrokeColor(Color.parseColor("#fccd29"));
-        mapRadar.withRadarColors(Color.parseColor("#00000000"), Color.parseColor("#ff000000"));  //starts from transparent to fuly black
-        mapRadar.withRadarColors(Color.parseColor("#00fccd29"), Color.parseColor("#fffccd29"));  //starts from transparent to fuly black
-        mapRadar.withOuterCircleStrokewidth(7);
-        mapRadar.withRadarSpeed(5);
-        mapRadar.withOuterCircleTransparency(0.5f);
-        mapRadar.withRadarTransparency(0.5f);
-
-
-
-        mMap.addCircle(new CircleOptions()
-                .center(new LatLng(location.getLatitude(), location.getLongitude()))
-                .radius(radius)
-                .strokeColor(Color.BLUE)
-                .strokeWidth(0f)
-                .fillColor(Color.parseColor("#500084d3")));
-
     }
 
 
