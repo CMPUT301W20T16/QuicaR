@@ -58,7 +58,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
 
 
-        navigationView.inflateMenu(R.layout.activity_driver_pick_up);
+        navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_pick_up, frameLayout);
 
 
