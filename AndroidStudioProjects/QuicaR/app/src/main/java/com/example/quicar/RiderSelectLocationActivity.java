@@ -13,12 +13,8 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.example.quicar.R;
@@ -63,9 +59,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private LocationAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Location> locationList;
-
-    ImageView swapIcon;
-    TextView start, end;
 
     AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
@@ -114,37 +107,17 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         destinationAutoComplete =
                 (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destination);
 
-        swapIcon = findViewById(R.id.swap_icon);
-        start = findViewById(R.id.start_tv);
-        end = findViewById(R.id.end_tv);
-
         //get data from intent, i.e., current address
         Intent intent = getIntent();
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
 
-//        pickUpAutoComplete.setHint(pick_up_address);
-//        destinationAutoComplete.setHint("Select Destination");
-        start.setText(pick_up_address);
 
-        onCreateAutoCompletion(pickUpAutoComplete, start_location, true);
-        onCreateAutoCompletion(destinationAutoComplete, end_location, false);
+        pickUpAutoComplete.setHint(pick_up_address);
+        destinationAutoComplete.setHint("Select Destination");
 
-        //enable user to swap start and end address
-        swapIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Location temp = new Location();
-                temp = start_location;
-                start_location = end_location;
-                end_location = temp;
-
-
-                start.setText(end_location.getAddressName());
-                end.setText(start_location.getAddressName());
-            }
-        });
+        onCreateAutoCompletion(pickUpAutoComplete, start_location);
+        onCreateAutoCompletion(destinationAutoComplete, end_location);
 
 
     }
@@ -189,7 +162,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      * @param autocompleteSupportFragment
      * @param location
      */
-    public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location, boolean isStart) {
+    public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
                         Place.Field.ID,
@@ -243,20 +216,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                                 locality = addresses.get(0).getLocality();
                                 //ystem.out.println("\n\n aaaaaaaaaaaa");
                                 //autocompleteSupportFragment.setText(locality);
-//                                EditText etPlace = (EditText) autocompleteSupportFragment
-//                                        .getView()
-//                                        .findViewById(R.id.places_autocomplete_search_input);
-//                                etPlace.setHint(place.getAddress());
-
+                                EditText etPlace = (EditText) autocompleteSupportFragment
+                                        .getView()
+                                        .findViewById(R.id.places_autocomplete_search_input);
+                                etPlace.setHint(place.getAddress());
 
                                 //set address in Location object
                                 location.setAddressName(place.getAddress());
                                 //System.out.println(destinationAutoComplete);
-                                if (isStart) {
-                                    start.setText(place.getAddress());
-                                } else {
-                                    end.setText(place.getAddress());
-                                }
 
 
                             }
