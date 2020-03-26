@@ -26,7 +26,7 @@ import com.example.entity.Location;
 
 public class RiderRequestActivity extends BaseActivity {
 
-    private EditText startLocation;
+    private Button_SF_Pro_Display_Medium startLocation;
 
 //    private EditText stopLocation;
 //    private Button confirmButton;
