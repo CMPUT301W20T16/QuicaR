@@ -112,6 +112,7 @@
 
 
                 <com.example.font.TextViewSFProDisplayMedium
+                    android:id="@+id/view_distance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -136,6 +137,7 @@
 
 
                 <com.example.font.TextViewSFProDisplayMedium
+                    android:id="@+id/view_fare"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -160,17 +162,17 @@
 
 
                 <com.example.font.TextViewSFProDisplayMedium
+                    android:id="@+id/view_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Per minute wait time"
+                    android:text="estimated travel time"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <com.example.font.TextViewSFProDisplayRegular
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$1.07"
+                    android:layout_height="match_parent"
                     android:textColor="#5a595e"
                     android:textSize="14sp" />
             </LinearLayout>
