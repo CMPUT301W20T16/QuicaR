@@ -77,7 +77,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
-//        driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
+//        driverDi›stance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);

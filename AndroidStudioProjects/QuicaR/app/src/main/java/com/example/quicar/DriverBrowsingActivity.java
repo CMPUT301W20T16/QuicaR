@@ -38,6 +38,8 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         super.onCreate(savedInstanceState);
         DatabaseHelper.getInstance().setCurrentMode("driver");
 
+
+
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_browsing, frameLayout);
 
