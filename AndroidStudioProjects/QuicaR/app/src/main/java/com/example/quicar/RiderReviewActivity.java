@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.example.datahelper.DatabaseHelper;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 
@@ -29,6 +30,7 @@ public class RiderReviewActivity extends AppCompatActivity {
         startAddress = findViewById(R.id.start_address);
         endAddress = findViewById(R.id.end_address);
         currentDate = findViewById(R.id.today_date);
+
 
         RatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
