@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.quicar.R;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
@@ -26,7 +27,7 @@ import com.example.entity.Location;
 
 public class RiderRequestActivity extends BaseActivity {
 
-    private EditText startLocation;
+    private Button_SF_Pro_Display_Medium startLocation;
 
 //    private EditText stopLocation;
 //    private Button confirmButton;
@@ -124,10 +125,13 @@ public class RiderRequestActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            if (address.length() != 0) {
-                return address;
+            if (addresses != null) {
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address.length() != 0) {
+                    return address;
+                }
             }
+
         }
         return null;
 

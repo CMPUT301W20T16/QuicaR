@@ -80,7 +80,7 @@ public class UserDataHelper {
         return userDataHelper;
     }
 
-    void setOnNotifyListener(OnGetUserDataListener listener) {
+    public void setOnNotifyListener(OnGetUserDataListener listener) {
         notifyListener = listener;
     }
 

@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.font.Button_SF_Pro_Display_Medium;
+import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -38,9 +40,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     TextView driverPhone;
 
     Button DetailButton;
-    Button CallButton;
-    Button EmailButton;
-    Button CancelButton;
+    TextViewSFProDisplayRegular CallButton;
+    TextViewSFProDisplayRegular EmailButton;
+    Button_SF_Pro_Display_Medium CancelButton;
     Request currentRequest = null;
 
     /**
@@ -56,6 +58,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         Intent intent = getIntent();
         currentRequest = (Request) intent.getSerializableExtra("current request");
+        /** Added by Jeremy */
+        //mRequest = currentRequest;
+        /** End here */
 
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_waiting_ride, frameLayout);
 
@@ -63,7 +68,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         // set Buttons
-        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
+        /**
+         * havent implement driver detail
+         */
+//        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
         CancelButton = linearLayout.findViewById(R.id.cancel_button);
@@ -72,7 +80,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
-        driverDistance = linearLayout.findViewById(R.id.driver_distance_tv);
+//        driverDi›stance = linearLayout.findViewById(R.id.driver_distance_tv);
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
@@ -109,9 +117,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                             .getInstance()
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
                 }
-                Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -120,6 +125,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+            Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**

@@ -6,10 +6,11 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.quicar"
-        minSdkVersion 25
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -82,11 +83,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
-
-    implementation 'com.google.maps:google-maps-services:0.1.20'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+    implementation 'com.google.maps:google-maps-services:0.1.20'
 
-    
+    implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    implementation 'com.hanks:passcodeview:0.1.2'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
+    implementation 'com.github.sujithkanna:smileyrating:1.6.8'
+
 }
-
-

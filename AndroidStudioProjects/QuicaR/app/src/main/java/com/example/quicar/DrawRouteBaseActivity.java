@@ -18,9 +18,13 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.GeoApiContext;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.model.DirectionsResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCallback{
 
@@ -98,6 +102,55 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
         return url;
 
+    }
+
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 7.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*2.3;
+        }
+        else{
+            fare = (distance/1000)*2.0;
+        }
+
+
+        return fare;
     }
 
 

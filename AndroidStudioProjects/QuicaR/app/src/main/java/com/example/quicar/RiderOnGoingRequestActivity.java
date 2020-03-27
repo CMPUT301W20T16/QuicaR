@@ -69,9 +69,10 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
     public void onArrivedNotification(Request request) {
         System.out.println("------------- ride is arrived -----------------");
         Toast.makeText(RiderOnGoingRequestActivity.this, "rider is picked up by driver", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(RiderOnGoingRequestActivity.this, QRPaymentActivity.class);
+        Intent intent = new Intent(RiderOnGoingRequestActivity.this, RiderReviewActivity.class);
         startActivity(intent);
         finish();
+
 
 
     }

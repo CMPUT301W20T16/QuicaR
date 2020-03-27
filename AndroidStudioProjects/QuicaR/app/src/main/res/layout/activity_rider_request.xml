@@ -12,21 +12,50 @@
     android:orientation="vertical"
     android:layout_width="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ENTER YOUR PICKUP LOCATION"
-        android:textSize="15sp"/>
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="ENTER YOUR PICKUP LOCATION"-->
+    <!--        android:textSize="15sp"/>-->
 
-    <EditText
-        android:layout_width="fill_parent"
+    <!--    <EditText-->
+    <!--        android:layout_width="fill_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:id="@+id/start_location"-->
+    <!--        android:hint="MY PICKUP LOCATION"-->
+    <!--        android:background="@drawable/rectangle_input"-->
+    <!--        android:focusableInTouchMode="false"-->
+    <!--        android:editable="false"-->
+    <!--        android:padding="5dip" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/start_location"
-        android:hint="MY PICKUP LOCATION"
-        android:background="@drawable/rectangle_input"
-        android:focusableInTouchMode="false"
-        android:editable="false"
-        android:padding="5dip" />
+        android:orientation="vertical">
+
+        <com.example.font.TextViewSFProDisplayRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="You can request a ride"
+            android:textColor="#8e8e93"
+            android:textSize="14sp"
+            android:letterSpacing="0.0265"/>
+
+        <com.example.font.Button_SF_Pro_Display_Medium
+            android:id="@+id/start_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:padding="16dp"
+            android:background="@drawable/parrot_gradient"
+            android:text="Select Location"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -35,6 +35,15 @@
             android:scaleType="centerInside"
             android:contentDescription="@string/qr_description" />
 
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="255dp"
+            android:layout_marginStart="180dp"
+            android:src="@drawable/car"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+
         <Button
             android:id="@+id/change_pay"
             android:layout_width="match_parent"
