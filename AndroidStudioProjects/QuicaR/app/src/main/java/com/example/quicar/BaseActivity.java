@@ -31,6 +31,7 @@ import com.arsy.maps_library.MapRadar;
 
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.entity.Request;
 import com.example.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,6 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     MapRadar mapRadar;
     CircleOptions circleOptions;
     Circle mapCircle;
+
+//    Request currentRequest = null;
 
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
