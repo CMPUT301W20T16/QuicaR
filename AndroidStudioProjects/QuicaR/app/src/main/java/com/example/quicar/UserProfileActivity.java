@@ -3,6 +3,7 @@ package com.example.quicar;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import com.example.listener.OnGetUserDataListener;
 import com.example.user.DriverInfo;
 import com.example.user.User;
 import com.example.user.Wallet;
+import com.example.util.MyUtil;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -119,19 +121,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         // get current user
         UserDataHelper.getInstance().getUser(userName,this);
 
-//
-//        if (user != null) {
-//            System.out.println("gu");
-//            if(user.isDriver()) {
-//                System.out.println("i am driver");
-//                openDriverInfo();
-//            }
-//        } else {
-//            System.out.println("null user");
-//        }
-
-
-
         spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -146,15 +135,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                             "Invalid input", Toast.LENGTH_SHORT).show();
                 } else {
                     ;
-//                    setDefault();
-//                    System.out.println("Good");
                     updateUser();
                     if(user.isDriver()) {
                         updateDriver();
                     }
 
-//                    System.out.println(user.getAccountInfo().getPhone());
-//                    System.out.println(user.getAccountInfo().getPhone());
                     UserDataHelper.getInstance().updateUserProfile(user,listener);
                     Toast.makeText(UserProfileActivity.this,
                             "Saved successfully", Toast.LENGTH_SHORT).show();
@@ -168,7 +153,25 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
 
+
+
     }
+
+
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
+            View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+            if (MyUtil.isShouldHideKeyboard(v, me)) { //判断用户点击的是否是输入框以外的区域
+                MyUtil.disableSoftInputFromAppearing(this);  //收起键盘
+            }
+        }
+        return super.dispatchTouchEvent(me);
+    }
+
+
 
 
     /**

@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
@@ -50,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
     //extends DrawRouteBaseActivity
 
     private OnGetRequestDataListener listener = this;
@@ -64,7 +65,13 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
-    TextViewSFProDisplayMedium view_distance, view_time, view_fare;
+    TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
+    String travelTime, travelDistance;
+    Float travelFare;
+
+    Location start_location, end_location;
+    MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     /**
@@ -88,6 +95,8 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         view_distance = linearLayout.findViewById(R.id.view_distance);
         view_time = linearLayout.findViewById(R.id.view_time);
         view_fare = linearLayout.findViewById(R.id.view_fare);
+        view_start = linearLayout.findViewById(R.id.start_address);
+        view_end = linearLayout.findViewById(R.id.end_address);
 
 
 
@@ -102,10 +111,13 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 //        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
 //        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
 
-
-
+        //add pins to map
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
+
+        //update start and end address on bottom sheet
+        view_start.setText(start_location.getAddressName());
+        view_end.setText(end_location.getAddressName());
 
 
         //mMap.clear();
@@ -130,14 +142,6 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
             e.printStackTrace();
         }
 
-//        addMarkersToMap(directionsResult,mMap);
-//        addPolyline(directionsResult,mMap);
-
-
-
-
-        /*new FetchURL(RiderConfirmRiderActivity.this)
-                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");*/
 
         /**
          * estimate cost function
@@ -160,7 +164,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
               */
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    newUser, new User(), 20.0f);
+                    newUser, new User(), travelFare);
 
             currentRequest = request;
 
@@ -170,9 +174,12 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
 
 
-            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
-            intent1.putExtra("current request", currentRequest);
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
+//            intent1.putExtra("current request", currentRequest);
             startActivity(intent1);
+            finish();
 
         });
 
@@ -202,7 +209,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         mMap.addMarker(destination);
         showAllMarkers();
         try {
-            addPolyline(directionsResult, mMap);
+            if (directionsResult != null)
+            {
+                addPolyline(directionsResult, mMap);
+            }
 
         }catch (ArrayIndexOutOfBoundsException e){
             success = false;
@@ -214,9 +224,9 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         if (success){
 
 
-            String travelTime =  directionsResult.routes[0].legs[0].duration.humanReadable;
-            String travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-            Double travelFare = estimateFare( directionsResult.routes[0].legs[0].distance.inMeters);
+            travelTime =  directionsResult.routes[0].legs[0].duration.humanReadable;
+            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
             view_distance.setText(travelDistance);
             view_time.setText(travelTime);
@@ -257,6 +267,56 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
 
         return url;    }
+
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 7.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*2.3;
+        }
+        else{
+            fare = (distance/1000)*2.0;
+        }
+
+
+        return fare;
+    }
+
 
 
     /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------

@@ -175,7 +175,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
                 .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
                         request.getEstimatedCost(), DriverBrowsingActivity.this);
         Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
-        intent.putExtra("current accepted request", request);
+//        intent.putExtra("current accepted request", request);
         startActivity(intent);
         finish();
     }

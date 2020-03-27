@@ -49,13 +49,15 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+//        Intent intent = getIntent();
+//        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
 
-        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
+//        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
 
 
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
@@ -67,7 +69,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
         confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
 
 
 //        mRequest = new Request();
@@ -129,7 +130,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
                 System.out.println("Request id-------------" + currentRequest.getRid());
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
-                intent.putExtra("current accepted request", currentRequest);
+//                intent.putExtra("current accepted request", currentRequest);
                 startActivity(intent);
             }
         });

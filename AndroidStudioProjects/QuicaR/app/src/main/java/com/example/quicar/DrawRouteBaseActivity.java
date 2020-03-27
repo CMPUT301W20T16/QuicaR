@@ -2,6 +2,7 @@ package com.example.quicar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,6 +14,7 @@ import com.example.entity.Request;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -88,7 +90,25 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
     }
 
+    @Override
+    public void onLocationChanged(android.location.Location location) {
 
+        mLastLocation = location;
+
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        //place a new marker for current location
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
+
+        mCurrLocationMarker = mMap.addMarker(markerOptions);
+
+    }
 
     public String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -122,7 +142,7 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
 
             List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
             System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
             System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
 
