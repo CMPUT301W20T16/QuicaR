@@ -346,13 +346,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mapRadar.isAnimationRunning()) {
-            mapRadar.stopRadarAnimation();
-        }
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (mapRadar.isAnimationRunning()) {
+//            mapRadar.stopRadarAnimation();
+//        }
+//    }
 
 
 
