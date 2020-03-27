@@ -174,10 +174,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
 
-            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
-//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
 
-            intent1.putExtra("current request", currentRequest);
+//            intent1.putExtra("current request", currentRequest);
             startActivity(intent1);
             finish();
 
@@ -209,7 +209,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         mMap.addMarker(destination);
         showAllMarkers();
         try {
-            addPolyline(directionsResult, mMap);
+            if (directionsResult != null)
+            {
+                addPolyline(directionsResult, mMap);
+            }
 
         }catch (ArrayIndexOutOfBoundsException e){
             success = false;

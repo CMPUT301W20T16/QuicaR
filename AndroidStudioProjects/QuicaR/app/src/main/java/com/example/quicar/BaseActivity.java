@@ -52,7 +52,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation = null;

@@ -56,8 +56,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current request");
+//        Intent intent = getIntent();
+//        currentRequest = (Request) intent.getSerializableExtra("current request");
         /** Added by Jeremy */
         //mRequest = currentRequest;
         /** End here */
@@ -140,7 +140,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onActiveNotification(Request request) {
         //System.out.println("!!!id!!!!!========="+request.getRid());
 
-        if (currentRequest.getRid().equals(request.getRid())) {
+//        if (currentRequest.getRid().equals(request.getRid())) {
             //System.out.println("!!!id!!!!!========="+request.getRid());
             String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
             String driverNameStr = request.getDriver().getAccountInfo().getUserName();
@@ -151,7 +151,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
             driverPhone.setText(driverPhoneStr);
             Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
 
-        }
+//        }
 
 
 
