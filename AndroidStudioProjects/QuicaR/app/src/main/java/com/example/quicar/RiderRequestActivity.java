@@ -66,9 +66,11 @@ public class RiderRequestActivity extends BaseActivity {
             public void onClick(View v) {
                 String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 if (current_address != null) {
+                    Location currentLocation = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    currentLocation.setAddressName(current_address);
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
                     intent.putExtra("current pos", current_address);
-                    intent.putExtra("current location", new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    intent.putExtra("current location", currentLocation);
                     //startActivityForResult(intent, 1);
                     startActivity(intent);
                 }
