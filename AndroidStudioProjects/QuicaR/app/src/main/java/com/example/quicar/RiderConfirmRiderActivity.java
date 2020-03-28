@@ -169,7 +169,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             currentRequest = request;
 
 
-
             RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
@@ -209,12 +208,26 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         mMap.addMarker(destination);
         showAllMarkers();
         try {
-            if (directionsResult != null)
-            {
+            if (directionsResult != null) {
                 addPolyline(directionsResult, mMap);
+                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+                if (directionsResult.routes[0].legs[0].distance.inMeters >= 100000){
+                    Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 100 km!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+                    startActivity(intent);
+
+
+                }
+
+                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+
+                view_distance.setText(travelDistance);
+                view_time.setText(travelTime);
+                view_fare.setText("$ " + travelFare);
             }
 
-        }catch (ArrayIndexOutOfBoundsException e){
+        }catch (Exception e){
             success = false;
             Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
@@ -223,15 +236,15 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         }
         if (success) {
 
-            if (directionsResult != null) {
-                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
-                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
-                view_distance.setText(travelDistance);
-                view_time.setText(travelTime);
-                view_fare.setText("$ " + travelFare);
-            }
+//            travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+//            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+//            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+//
+//            view_distance.setText(travelDistance);
+//            view_time.setText(travelTime);
+//            view_fare.setText("$ " + travelFare);
+
 
         }
 
