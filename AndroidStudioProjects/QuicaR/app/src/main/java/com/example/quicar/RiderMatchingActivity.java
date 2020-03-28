@@ -17,6 +17,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     ProgressDialog mProgressDialog;
 
+    Request currentRequest = null;
+
     /**
      * when user confirm a request then goes to matching activity
      * @param savedInstanceState
@@ -28,6 +30,11 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
+
+
+        //get request intent from riderconfirm activity
+        Intent intent = getIntent();
+        currentRequest = (Request) intent.getSerializableExtra("current request");
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Waiting for macthing...");
@@ -57,6 +64,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
         // go to the new activity
         Intent intent = new Intent(RiderMatchingActivity.this, RiderWaitingRideActivity.class);
+        intent.putExtra("current request", currentRequest);
         startActivity(intent);
         finish();
     }

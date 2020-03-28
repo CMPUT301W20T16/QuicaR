@@ -87,7 +87,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-
         currentRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         //set Text View
@@ -130,7 +129,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                     RequestDataHelper
                             .getInstance()
                             /***问题***/
-                            .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
+                            .cancelRequest(currentRequest.getRid(), RiderWaitingRideActivity.this);
                 }
             }
         });
@@ -142,6 +141,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
             Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
+            intent.putExtra("current request", currentRequest);
             startActivity(intent);
             finish();
         }

@@ -50,6 +50,9 @@ public class RiderRatingPopWindow extends Activity {
 
         SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
 
+//        smileRating.setSelectedSmile(BaseRating.GREAT, true);
+
+
         @BaseRating.Smiley int smiley = smileRating.getSelectedSmile();
         switch (smiley) {
             case SmileRating.BAD:
@@ -73,6 +76,7 @@ public class RiderRatingPopWindow extends Activity {
         }
 
         int level = smileRating.getRating(); // level is from 1 to 5
+
 
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
