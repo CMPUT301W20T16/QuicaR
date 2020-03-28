@@ -320,6 +320,7 @@ public class RequestDataHelper {
                     databaseHelper.getUserState().setOnArrived(true);
                     listener.onSuccess(null, SET_ARRIVED_TAG);
                 }
+                UserStateDataHelper.getInstance().recordState();
             }
         })
         .addOnFailureListener(new OnFailureListener() {
