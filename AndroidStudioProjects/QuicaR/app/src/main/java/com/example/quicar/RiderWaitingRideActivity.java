@@ -87,7 +87,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
-        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        mRequest =  DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         //set Text View
         driverName.setText(mRequest.getDriver().getName());
