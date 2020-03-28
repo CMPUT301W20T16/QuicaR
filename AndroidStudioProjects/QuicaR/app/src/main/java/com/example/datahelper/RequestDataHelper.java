@@ -182,6 +182,7 @@ public class RequestDataHelper {
                         requests.add(newRequest);
                         /*****added ********/
                         DatabaseHelper.getInstance().getUserState().setCurrentRequest(newRequest);
+                        UserStateDataHelper.getInstance().recordState();
                         listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
@@ -242,6 +243,7 @@ public class RequestDataHelper {
                             DatabaseHelper.getInstance().getUserState().setActive(false);
                             DatabaseHelper.getInstance().getUserState().setOnGoing(false);
                             DatabaseHelper.getInstance().getUserState().setOnArrived(false);
+                            UserStateDataHelper.getInstance().recordState();
                             listener.onSuccess(null, COMPLETE_REQ_TAG);
                         }
                     }
@@ -756,6 +758,7 @@ public class RequestDataHelper {
                 userState.setActive(Boolean.TRUE);
                 userState.setCurrentRequest(request);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Accept Notification sent --------");
             }
         }
@@ -787,6 +790,7 @@ public class RequestDataHelper {
                 // update user state of rider
                 userState.setOnGoing(Boolean.TRUE);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Picked up Notification sent --------");
             }
         }
@@ -812,6 +816,7 @@ public class RequestDataHelper {
                 // update user state of rider
                 userState.setOnArrived(Boolean.TRUE);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Arrived Notification sent --------");
             }
         }
@@ -855,6 +860,7 @@ public class RequestDataHelper {
             userState.setOnGoing(Boolean.FALSE);
             userState.setCurrentRequest(null);
             databaseHelper.setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
             System.out.println("-------- Cancel Notification sent --------");
         }
 

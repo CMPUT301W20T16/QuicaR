@@ -281,9 +281,9 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         if (!userState.getActive() && !userState.getOnGoing())
             directIntent = new Intent(Login.this, RiderRequestActivity.class);
         else if (userState.getActive() && !userState.getOnGoing())
-            directIntent = new Intent(Login.this, RiderWaitingRideActivity.class);
+            directIntent = new Intent(Login.this, RiderMatchingActivity.class);
         else if (userState.getActive() && userState.getOnGoing())
-            directIntent = new Intent(Login.this, RiderOnGoingRequestActivity.class);
+            directIntent = new Intent(Login.this, RiderWaitingRideActivity.class);
         else
             directIntent = new Intent(Login.this, RiderOnGoingRequestActivity.class);
         startActivity(directIntent);

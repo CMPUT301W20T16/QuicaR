@@ -10,6 +10,7 @@ public class UserState {
     private User currentUser = new User();
     private String currentMode;
     private String token;
+    private Boolean onMatching = Boolean.FALSE;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
@@ -90,6 +91,14 @@ public class UserState {
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Boolean getOnMatching() {
+        return onMatching;
+    }
+
+    public void setOnMatching(Boolean onMatching) {
+        this.onMatching = onMatching;
     }
 
     /**
