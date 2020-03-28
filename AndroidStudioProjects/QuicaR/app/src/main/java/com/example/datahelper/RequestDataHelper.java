@@ -180,6 +180,8 @@ public class RequestDataHelper {
                         Log.d(TAG,  " request addition successful");
                         ArrayList<Request> requests = new ArrayList<Request>();
                         requests.add(newRequest);
+                        /*****added ********/
+                        DatabaseHelper.getInstance().getUserState().setCurrentRequest(newRequest);
                         listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
@@ -279,11 +281,22 @@ public class RequestDataHelper {
                 System.out.println("docSnapshot---------" + snapshot);
                 Request requestTmp = snapshot.toObject(Request.class);
                 System.out.println( "request temp---------" + requestTmp);
-                if (!requestTmp.getAccepted()) {
+                boolean valid = false;
+                if (updateMode.equals(SET_ACTIVE_TAG)) {
+                    if (!requestTmp.getAccepted())
+                        valid = true;
+                } else if (updateMode.equals(SET_PICKEDUP_TAG)) {
+                    if (requestTmp.getAccepted() && !requestTmp.getPickedUp())
+                        valid = true;
+                } else if (updateMode.equals(SET_ARRIVED_TAG)) {
+                    if (requestTmp.getAccepted() && !requestTmp.getPickedUp())
+                        valid = true;
+                }
+                if (valid) {
                     transaction.set(reqDocRef, request);
                     return requestID;
                 } else {
-                    throw new FirebaseFirestoreException("Request has already been accepted",
+                    throw new FirebaseFirestoreException("Request has an invalid state",
                             FirebaseFirestoreException.Code.ABORTED);
                 }
             }
@@ -293,6 +306,10 @@ public class RequestDataHelper {
                 DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
                 // set userstate of driver
                 Log.d(TAG, "Transaction success: " + docID);
+                /***** add request to driver's current request*****/
+                databaseHelper.getUserState().setCurrentRequest(request);
+//                databaseHelper.getUserState().setCurrentRequest(request);
+
                 if (updateMode == SET_ACTIVE_TAG) {
                     databaseHelper.getUserState().setActive(true);
                     listener.onSuccess(null, SET_ACTIVE_TAG);

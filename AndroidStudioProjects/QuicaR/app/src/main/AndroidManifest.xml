@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.quicar">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -15,11 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".UpdateAccountActivity"></activity>
 
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <uses-library android:name="com.google.android.maps" />
 
         <meta-data
@@ -27,18 +25,15 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_key" />
-        <!--
- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more.
-        -->
+            android:value="@string/map_key"/>
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_ic_notification" />
-        <!--
- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more.
-        -->
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
@@ -49,85 +44,59 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Register"
-            android:parentActivityName=".Login" />
+        <activity android:name=".Register" android:parentActivityName=".Login"/>
         <activity android:name=".Login" /> <!-- [START firebase_service] -->
-        <activity
-            android:name=".UserProfileActivity"
-            android:parentActivityName=".RiderRequestActivity"></activity>
-        <activity
-            android:name=".RiderRequestActivity"
+
+        <activity android:name=".UserProfileActivity"
+            android:parentActivityName=".RiderRequestActivity">
+        </activity>
+
+        <activity android:name=".RiderRequestActivity"
             android:parentActivityName=".Login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".RiderSelectLocationActivity"
-            android:parentActivityName=".RiderRequestActivity" />
-        <activity
-            android:name=".BaseActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RiderConfirmRiderActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RiderWaitingRideActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".DriverBrowsingActivity"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- wen kai > -->
-        <activity
-            android:name=".WalletOverviewActivity"
-            android:parentActivityName=".RiderRequestActivity" />
-        <activity
-            android:name=".ScanTransferActivity"
-            android:parentActivityName=".WalletOverviewActivity" />
-        <activity
-            android:name=".WalletIntro"
-            android:label="Wallet"
-            android:parentActivityName=".WalletOverviewActivity" />
-        <activity
-            android:name=".PayPasswordSetActivity"
-            android:parentActivityName=".RiderRequestActivity" />
-        <activity
-            android:name=".PayPasswordEnterActivity"
-            android:parentActivityName=".SetAmountActivity" />
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".RiderSelectLocationActivity"
+            android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".RiderConfirmRiderActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderWaitingRideActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverBrowsingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--        wen kai >-->
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" android:label="Wallet"/>
+        <activity android:name=".PayPasswordSetActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".PayPasswordEnterActivity" android:parentActivityName=".SetAmountActivity"/>
         <activity android:name=".QRPaymentActivity" />
-        <activity
-            android:name=".ManageCardActivity"
-            android:parentActivityName=".WalletOverviewActivity" />
-        <activity
-            android:name=".ValidateCardActivity"
-            android:parentActivityName=".ManageCardActivity" />
-        <activity
-            android:name=".SetAmountActivity"
-            android:parentActivityName=".ScanTransferActivity" />
-        <activity
-            android:name=".ScanActivity"
-            android:parentActivityName=".DriverPickUpActivity" />
-        <activity
-            android:name=".RegisterDriverActivity"
-            android:parentActivityName=".RiderRequestActivity" />
-        <activity
-            android:name=".DriverPickUpActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RiderOnGoingRequestActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".DriverOnGoingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RiderMatchingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RiderReviewActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RiderRatingPopWindow" />
+        <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".ValidateCardActivity" android:parentActivityName=".ManageCardActivity"/>
+        <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
+        <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
+        <activity android:name=".RegisterDriverActivity" android:parentActivityName=".RiderRequestActivity"/>
+
+
+        <activity android:name=".DriverPickUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderOnGoingRequestActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DriverOnGoingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderMatchingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderReviewActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderRatingPopWindow"
+            android:theme="@style/AppTheme.PopMe"/>
+
 
         <service
             android:name="com.example.util.MyFirebaseMessagingService"
@@ -139,6 +108,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

@@ -32,7 +32,6 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
-    private Request currentRequest = null;
     private DirectionsResult directionsResult;
 
     Button confirmButton;
@@ -47,11 +46,12 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+//        mRequest = (Request) intent.getSerializableExtra("current accepted request");
+        mRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
 
-        start_location = currentRequest.getStart();
-        end_location = currentRequest.getDestination();
+        start_location = mRequest.getStart();
+        end_location = mRequest.getDestination();
 
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
@@ -89,7 +89,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_on_going);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        confirmButton = linearLayout.findViewById(R.id.complete);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 

@@ -125,6 +125,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
 
+        /*
+        Added something here to prevent error when re-selecting new location after invalid route
+         */
+
+        if (start_location == null) start_location = new Location();
+
+        /* End here */
+
 //        pickUpAutoComplete.setHint(pick_up_address);
 //        destinationAutoComplete.setHint("Select Destination");
         start.setText(pick_up_address);

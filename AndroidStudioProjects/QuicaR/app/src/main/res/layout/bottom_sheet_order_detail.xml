@@ -21,7 +21,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="344dp"
-            android:layout_height="109dp"
+            android:layout_height="115dp"
             android:layout_gravity="center_horizontal">
 
             <ImageView
@@ -39,13 +39,13 @@
             <com.example.font.TextViewSFProDisplayRegular
                 android:id="@+id/start_address"
                 android:layout_width="119dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="12dp"
                 android:text="10811 47 avenue, nw, Edmonton"
                 android:textSize="9dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -61,13 +61,13 @@
             <com.example.font.TextViewSFProDisplayRegular
                 android:id="@+id/end_address"
                 android:layout_width="119dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="24dp"
                 android:text="10811 47 avenue, nw, Edmonton"
                 android:textSize="9dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/gifImageView2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
             <TextView
                 android:id="@+id/the_line"
@@ -212,7 +212,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="3.5dp"
             android:layout_marginRight="26dp"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -222,7 +221,6 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/button_rect"
                 android:text="Confirm Ride"
                 android:textAllCaps="false"
@@ -242,7 +240,6 @@
                 android:id="@+id/cancel_button"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/button_rect"
                 android:text="Cancel Ride"

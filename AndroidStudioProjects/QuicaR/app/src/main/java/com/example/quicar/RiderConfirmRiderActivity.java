@@ -177,7 +177,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
 //            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
 
-            intent1.putExtra("current request", currentRequest);
+//            intent1.putExtra("current request", currentRequest);
             startActivity(intent1);
             finish();
 
@@ -209,7 +209,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         mMap.addMarker(destination);
         showAllMarkers();
         try {
-            addPolyline(directionsResult, mMap);
+            if (directionsResult != null)
+            {
+                addPolyline(directionsResult, mMap);
+            }
 
         }catch (ArrayIndexOutOfBoundsException e){
             success = false;
@@ -218,19 +221,17 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             startActivity(intent);
 
         }
-        if (success){
+        if (success) {
 
+            if (directionsResult != null) {
+                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
-            travelTime =  directionsResult.routes[0].legs[0].duration.humanReadable;
-            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
-
-            view_distance.setText(travelDistance);
-            view_time.setText(travelTime);
-            view_fare.setText("$ "+travelFare );
-
-
-
+                view_distance.setText(travelDistance);
+                view_time.setText(travelTime);
+                view_fare.setText("$ " + travelFare);
+            }
 
         }
 

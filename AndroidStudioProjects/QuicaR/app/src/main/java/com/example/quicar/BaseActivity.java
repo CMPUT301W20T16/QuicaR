@@ -31,6 +31,7 @@ import com.arsy.maps_library.MapRadar;
 
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.entity.Request;
 import com.example.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,7 +53,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation = null;
@@ -63,6 +64,8 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     MapRadar mapRadar;
     CircleOptions circleOptions;
     Circle mapCircle;
+
+//    Request currentRequest = null;
 
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
