@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="135dp"
+            android:background="@drawable/recharge"
+            android:adjustViewBounds="true"
+            android:maxHeight="42dp"
+            android:maxWidth="42dp"
+            android:contentDescription="@string/card_fragment"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="135dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/fifty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$50"
+                android:buttonTint="@color/addCardBackground"
+                android:textColor="@color/addCardBackground"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/one_hundred"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$100"
+                android:buttonTint="@color/addCardBackground"
+                android:textColor="@color/addCardBackground"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/two_hundreds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$200"
+                android:buttonTint="@color/addCardBackground"
+                android:textColor="@color/addCardBackground"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$"
+                android:buttonTint="@color/addCardBackground"
+                android:textColor="@color/addCardBackground"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/enter_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@color/addCardBackground"
+                android:background="@null"
+                android:textColor="@color/addCardBackground"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/card_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:layout_marginStart="80dp"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white" />
+
+        <EditText
+            android:id="@+id/expiry_date"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="97dp"
+            android:layout_marginStart="95dp"
+            android:background="@null"
+            android:inputType="date"
+            android:hint="@null"/>
+
+        <EditText
+            android:id="@+id/ccv"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="97dp"
+            android:layout_marginStart="259dp"
+            android:background="@null"
+            android:inputType="number"
+            android:hint="@null"/>
+
+        <ImageView
+            android:id="@+id/card_outline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/recharge_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginTop="145dp"
+        android:background="@drawable/confirm_button" />
+
+</RelativeLayout>
