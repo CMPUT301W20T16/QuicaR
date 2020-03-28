@@ -309,19 +309,21 @@ public class RequestDataHelper {
                 // set userstate of driver
                 Log.d(TAG, "Transaction success: " + docID);
                 /***** add request to driver's current request*****/
-                databaseHelper.getUserState().setCurrentRequest(request);
+                UserState userState = databaseHelper.getUserState();
+                userState.setCurrentRequest(request);
 //                databaseHelper.getUserState().setCurrentRequest(request);
 
                 if (updateMode == SET_ACTIVE_TAG) {
-                    databaseHelper.getUserState().setActive(true);
+                    userState.setActive(true);
                     listener.onSuccess(null, SET_ACTIVE_TAG);
                 } else if (updateMode == SET_PICKEDUP_TAG) {
-                    databaseHelper.getUserState().setOnGoing(true);
+                    userState.setOnGoing(true);
                     listener.onSuccess(null, SET_PICKEDUP_TAG);
                 } else if (updateMode == SET_ARRIVED_TAG) {
-                    databaseHelper.getUserState().setOnArrived(true);
+                    userState.setOnArrived(true);
                     listener.onSuccess(null, SET_ARRIVED_TAG);
                 }
+                DatabaseHelper.getInstance().setUserState(userState);
                 UserStateDataHelper.getInstance().recordState();
             }
         })
