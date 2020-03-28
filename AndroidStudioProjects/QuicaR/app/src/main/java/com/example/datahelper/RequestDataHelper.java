@@ -297,7 +297,7 @@ public class RequestDataHelper {
                 Log.d(TAG, "Transaction success: " + docID);
                 /***** add request to driver's current request*****/
                 databaseHelper.getUserState().setCurrentRequest(request);
-                databaseHelper.getUserState().setCurrentRequest(request);
+//                databaseHelper.getUserState().setCurrentRequest(request);
 
                 if (updateMode == SET_ACTIVE_TAG) {
                     databaseHelper.getUserState().setActive(true);

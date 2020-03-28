@@ -89,7 +89,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_on_going);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        confirmButton = linearLayout.findViewById(R.id.complete);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
