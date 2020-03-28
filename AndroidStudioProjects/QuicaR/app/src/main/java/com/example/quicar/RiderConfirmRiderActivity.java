@@ -78,6 +78,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
      * after rider chosen start and end, this activity shows up
      * @param savedInstanceState
      */
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +98,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         view_fare = linearLayout.findViewById(R.id.view_fare);
         view_start = linearLayout.findViewById(R.id.start_address);
         view_end = linearLayout.findViewById(R.id.end_address);
-
 
 
 
@@ -124,8 +124,8 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
-        System.out.println("-----start address name-----"+start_address);
-        System.out.println("-----end address name-------"+end_address);
+//        System.out.println("-----start address name-----"+start_address);
+//        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())

@@ -83,7 +83,7 @@ public class RiderRequestActivity extends BaseActivity {
     }
 
 
-    /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
+    /***2020.03.20 new part Yuxin for drawing route and calculating distance------------------------------------------------------------------
      *
      */
 
@@ -138,10 +138,6 @@ public class RiderRequestActivity extends BaseActivity {
         return null;
 
     }
-
-
-
-
 
 
 
