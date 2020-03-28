@@ -42,7 +42,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     TextViewSFProDisplayRegular CallButton;
     TextViewSFProDisplayRegular EmailButton;
     Button_SF_Pro_Display_Medium CancelButton;
-    Request currentRequest = null;
 
 
     /**
@@ -67,10 +66,12 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
+        // get activated request from firebase
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
         // set Buttons
-        /**
-         * havent implement driver detail
-         */
 //        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
@@ -85,20 +86,14 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
 
-        // get activated request from firebase
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
-        currentRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         //set Text View
-        driverName.setText(currentRequest.getDriver().getName());
-        /**
-         * Prob:
-         * Driver doesn't have Email or Phone attributes
-         */
-        driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
-        driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
-        driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-//        estimateFare.setText(currentRequest.getEstimatedCost().toString());
+        driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+
+        driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
+        driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
+        driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
+//        estimateFare.setText(mRequest.getEstimatedCost().toString());
 
         // set on click listener for buttons
         // transfer to default dial page
@@ -125,11 +120,17 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentRequest != null) {
+                if (mRequest != null) {
                     RequestDataHelper
                             .getInstance()
-                            /***问题***/
-                            .cancelRequest(currentRequest.getRid(), RiderWaitingRideActivity.this);
+                            .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
+
+                    Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
+                    startActivity(intent);
+                    finish();;
+
+                } else {
+                    System.out.println("Unable to retrieve current Request--------------");
                 }
             }
         });
@@ -141,7 +142,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
             Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
-            intent.putExtra("current request", currentRequest);
             startActivity(intent);
             finish();
         }

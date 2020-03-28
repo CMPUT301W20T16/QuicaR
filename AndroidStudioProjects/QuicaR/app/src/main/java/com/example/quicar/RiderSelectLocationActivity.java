@@ -50,7 +50,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private int currentPosition;
 
 
-    String address,locality,subLocality,state,postalCode,country,knownname,phone;
+    String address,adminiArea = null,phone;
     //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
@@ -124,6 +124,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         Intent intent = getIntent();
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
+
+        /*
+        Added something here to prevent error when re-selecting new location after invalid route
+         */
+
+        if (start_location == null) start_location = new Location();
+
+        /* End here */
 
 //        pickUpAutoComplete.setHint(pick_up_address);
 //        destinationAutoComplete.setHint("Select Destination");
@@ -202,10 +210,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         LatLng latLng = place.getLatLng();
                         currentLat = latLng.latitude;
                         currentLng = latLng.longitude;
-                        //如果user没有更新start lcoation的情况
-//                        if (currentLat == 0.0f || currentLng == 0.0f){
-//                            return;
-//                        }
+
                         location.setLat(currentLat);
                         location.setLon(currentLng);
 //
@@ -221,7 +226,23 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         try {
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
-                                locality = addresses.get(0).getLocality();
+                                String current_adminiArea = addresses.get(0).getAdminArea();
+                                if (adminiArea != null){
+                                    if(!current_adminiArea.equals(adminiArea)){
+                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
+
+                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
+                                        startActivity(intent);
+
+
+
+                                    }
+                                }
+                                else{
+                                    adminiArea = current_adminiArea;
+                                }
+
+
 
                                 //set address in Location object
                                 location.setAddressName(place.getAddress());

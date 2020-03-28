@@ -3,12 +3,15 @@ package com.example.quicar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
 
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     ProgressDialog mProgressDialog;
 
     Request currentRequest = null;
+    Button_SF_Pro_Display_Medium cancelButton;
 
     /**
      * when user confirm a request then goes to matching activity
@@ -27,20 +31,39 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View rootView = getLayoutInflater().inflate(R.layout.activity_rider_matching, frameLayout);
 
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
+        //get current request from databse
+        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
-        //get request intent from riderconfirm activity
-        Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current request");
+//        //get request intent from riderconfirm activity
+//        Intent intent = getIntent();
+//        currentRequest = (Request) intent.getSerializableExtra("current request");
+
+        cancelButton = findViewById(R.id.cancel_button);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Waiting for macthing...");
+        mProgressDialog.setMessage("Waiting for matching...");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentRequest != null) {
+                    System.out.println("currentrequest--------:"+ currentRequest);
+                    RequestDataHelper
+                            .getInstance()
+                            .cancelRequest(currentRequest.getRid(), RiderMatchingActivity.this);
+                } else {
+                    System.out.println("Unable to retrieve current Request!!!!!!!!!!!!!!!!!!!!!!");
+                }
+            }
+        });
     }
 
     @Override
@@ -76,6 +99,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onArrivedNotification(Request request) {
+        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
+        startActivity(intent);
 
     }
 
