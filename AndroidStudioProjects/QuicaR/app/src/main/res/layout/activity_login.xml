@@ -84,9 +84,19 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="324dp"
-            android:layout_height="91dp"
+            android:layout_width="332dp"
+            android:layout_height="109dp"
             android:layout_gravity="center_horizontal">
+
+            <CheckBox
+                android:id="@+id/rememberCheckbox"
+                android:layout_width="146dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="32dp"
+                android:text="Remember me"
+                android:textColor="@color/places_autocomplete_prediction_primary_text_highlight"
+                app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/sign_in_button"
@@ -99,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.048">
+                app:layout_constraintVertical_bias="0.298">
 
             </Button>
 
@@ -109,10 +119,10 @@
                 android:text="Don't have an account?"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.44"
+                app:layout_constraintHorizontal_bias="0.42"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
-                app:layout_constraintVertical_bias="0.304" />
+                app:layout_constraintVertical_bias="0.351" />
 
             <TextView
                 android:id="@+id/signUpText"

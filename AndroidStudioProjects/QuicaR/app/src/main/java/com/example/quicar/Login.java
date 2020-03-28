@@ -2,6 +2,7 @@ package com.example.quicar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,10 +45,14 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
+    private CheckBox mCheckBox;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference ref;
     FirebaseUser currentUser;
+    SharedPreferences mpref;
+    private static final String PREF = "mpref";
+
 
     /* added by Jeremy */
     OnGetUserDataListener listener = this;
@@ -59,17 +65,29 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
         setContentView(R.layout.activity_login);
         this.userID = findViewById(R.id.sign_in_email);
         this.pwd = findViewById(R.id.sign_in_password);
+        this.mCheckBox = findViewById(R.id.rememberCheckbox);
         loginButton = findViewById(R.id.sign_in_button);
         signUpButton = findViewById(R.id.signUpText);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String myID = userID.getEditText().getText().toString().trim();
                 String mypwd = pwd.getEditText().getText().toString();
+                mpref = getSharedPreferences(PREF, MODE_PRIVATE);
+                if (mCheckBox.isChecked()) {
+                    Boolean isCheck = mCheckBox.isChecked();
+                    SharedPreferences.Editor editor = mpref.edit();
+                    editor.putString("mpref_name", myID);
+                    editor.putString("mpref_pwd", mypwd);
+                    editor.putBoolean("mpref_check", isCheck);
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "user saved", Toast.LENGTH_SHORT).show();
+                } else {
+                    mpref.edit().clear().apply();
+                }
 
                 /* Added by Jeremy */
                 //MyUtil.disableSoftInputFromAppearing(appCompatActivity);
@@ -88,6 +106,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                 return;
                             }
                             for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+
                                 User myUser = dataSnapshot1.getValue(User.class);
                                 String getEmail = myUser.getAccountInfo().getEmail();
                                 mAuth.signInWithEmailAndPassword(getEmail, mypwd)
@@ -96,6 +115,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                                             public void onComplete(@NonNull Task<AuthResult> task) {
                                                 if (task.isSuccessful()) {
                                                     FirebaseUser currentUser = mAuth.getCurrentUser();
+
                                                     /* added by Jeremy */
                                                     UserDataHelper.getInstance().getUser(myID, listener);
                                                     ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
@@ -151,6 +171,8 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
                 startActivity(new Intent(getApplicationContext(), Register.class));
             }
         });
+
+        getPrefData();
 
     }
 
@@ -258,6 +280,22 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
             startActivity(homeIntent);
+        }
+    }
+
+    public void getPrefData() {
+        SharedPreferences sp = getSharedPreferences(PREF, MODE_PRIVATE);
+        if (sp.contains("mpref_name")) {
+            String prefName = sp.getString("mpref_name", "not found");
+            userID.getEditText().setText(prefName);
+        }
+        if (sp.contains("mpref_pwd")) {
+            String prefPassword = sp.getString("mpref_pwd", "not found");
+            pwd.getEditText().setText(prefPassword);
+        }
+        if (sp.contains("mpref_check")) {
+            Boolean prefCheck = sp.getBoolean("mpref_check", false);
+            mCheckBox.setChecked(prefCheck);
         }
     }
 

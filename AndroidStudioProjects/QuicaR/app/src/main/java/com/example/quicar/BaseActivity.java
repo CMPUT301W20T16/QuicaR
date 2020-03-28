@@ -412,6 +412,11 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_account:
+                Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+                startActivity(i);
+                break;
+
             case R.id.nav_profile:
                 // change here
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
