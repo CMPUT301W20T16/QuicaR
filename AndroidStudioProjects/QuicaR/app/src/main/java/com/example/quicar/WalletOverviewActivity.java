@@ -186,6 +186,11 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     public void onFailure(String errorMessage) {
 
     }
+
+    @Override
+    public void onBackPressed(){
+        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+    }
 //        //according to different click control different action
 //        if (item.getItemId() == R.id.help){
 //            finish();

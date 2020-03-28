@@ -73,4 +73,9 @@ public class ScanTransferActivity extends AppCompatActivity implements ZXingScan
         ScanView.setResultHandler(this);
         ScanView.startCamera();
     }
+
+    @Override
+    public void onBackPressed(){
+        startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
+    }
 }

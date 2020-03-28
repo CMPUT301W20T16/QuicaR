@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--<LinearLayout-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:background="#fff"-->
-<!--    android:orientation="vertical"-->
-<!--    android:padding="5dp"-->
-<!--    android:layout_marginTop="10dp"-->
-<!--    android:layout_marginLeft="20dp"-->
-<!--    android:layout_marginRight="20dp"-->
-<!--    android:id="@+id/bottom_sheet_order_detail"-->
-<!--    app:behavior_hideable="true"-->
-<!--    app:behavior_peekHeight="70dp"-->
-<!--    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">-->
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -198,21 +182,55 @@
 
         </LinearLayout>
 
-        <com.example.font.Button_SF_Pro_Display_Medium
-            android:id="@+id/confirm_ride"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/button_rect"
-            android:text="Confirm Ride"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="3.5dp"
+            android:layout_marginRight="26dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <com.example.font.Button_SF_Pro_Display_Medium
+                android:id="@+id/confirm_button"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_rect"
+                android:text="Confirm Ride"
+                android:textAllCaps="false"
+                android:layout_weight="1.3"
+
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="        "
+                android:layout_weight="0.4" />
+
+
+            <com.example.font.Button_SF_Pro_Display_Medium
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/button_rect"
+                android:text="Cancel Ride"
+                android:textAllCaps="false"
+                android:layout_weight="1.3"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
 
 
-</RelativeLayout>
+</LinearLayout>

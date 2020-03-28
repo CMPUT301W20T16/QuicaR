@@ -32,7 +32,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     public static class RequestViewHolder extends RecyclerView.ViewHolder {
-//        public TextView riderName;
+        public TextView riderName;
         public TextView startAdresse;
         public TextView endAdresse;
         public TextView estimateFare;
@@ -42,7 +42,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         public RequestViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
-//            riderName = itemView.findViewById(R.id.rider_name);
+            riderName = itemView.findViewById(R.id.rider_name);
             startAdresse = itemView.findViewById(R.id.start_address);
             endAdresse = itemView.findViewById(R.id.end_address);
             estimateFare = itemView.findViewById(R.id.estimate_fare);
@@ -76,7 +76,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public void onBindViewHolder(RequestViewHolder holder, int position) {
         Request currentItem = mRequestList.get(position);
 
-//        holder.riderName.setText("Rider: " + currentItem.getRider().getName());
+        holder.riderName.setText("Rider: " + currentItem.getRider().getName());
         //getStart and getEnd currently return lat and lng, need address
         holder.startAdresse.setText("From: " + currentItem.getStartAddrName());
         holder.endAdresse.setText("To: " + currentItem.getDestAddrName());

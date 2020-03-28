@@ -53,7 +53,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     private OnGetRequestDataListener listener = this;
 
-    RelativeLayout linearLayout;
+    LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
 
@@ -74,11 +74,11 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
 
         //set bottom sheet
-        linearLayout = (RelativeLayout) findViewById(R.id.bottom_sheet_order_detail);
+        linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_order_detail);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         // set Buttons
-        confirmButton = linearLayout.findViewById(R.id.confirm_ride);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
         cancelButton = linearLayout.findViewById(R.id.cancel_button);
 
 

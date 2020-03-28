@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:background="@color/bg_clolor"
+    tools:context="com.example.quicar.RiderReviewActivity">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="30dp"
+                    android:orientation="vertical">
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f1f1f1"/>
+
+
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="8dp">
+
+
+
+                        <LinearLayout
+                            android:id="@+id/dark_linear"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/green_rect"
+                            android:orientation="vertical">
+
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="125dp"
+                                    android:scaleType="centerCrop"
+                                    android:alpha="0.2"
+                                    android:background="@drawable/cardmapbg"/>
+
+
+                                <LinearLayout
+                                    android:id="@+id/white_linear"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="13sp"
+
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+
+                                            <com.example.font.TextViewSFProDisplayLight
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Ride with"
+                                                android:textSize="11sp"
+                                                android:textColor="@color/white"/>
+
+                                            <LinearLayout
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal">
+
+                                                <com.example.font.TextViewSFProDisplayMedium
+                                                    android:id="@+id/car_type"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:textColor="@color/white"
+                                                    android:textSize="12sp"
+                                                    android:text="Ferrari F450*******"/>
+
+
+                                                <ImageView
+                                                    android:id="@+id/car_image"
+                                                    android:layout_width="35dp"
+                                                    android:layout_height="15dp"
+                                                    android:src="@drawable/ic_car"/>
+                                            </LinearLayout>
+
+                                        </LinearLayout>
+
+
+                                        <LinearLayout
+                                            android:layout_weight="0.5"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <com.example.font.TextViewSFProDisplayRegular
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Total Time"
+                                                android:textSize="10sp"
+                                                android:textColor="@color/white"/>
+
+                                            <com.example.font.TextViewSFProDisplayMedium
+                                                android:id="@+id/total_time"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:textColor="@color/white"
+                                                android:textSize="11.5sp"
+                                                android:text="20min"/>
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="22sp"
+                                        android:layout_marginLeft="7dp"
+                                        android:layout_marginBottom="10dp"
+                                        android:orientation="horizontal">
+
+
+                                        <com.example.font.TextViewSFProDisplaySemibold
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Total Fare: "
+                                            android:lineSpacingExtra="2dp"
+                                            android:textSize="15sp"
+                                            android:textColor="@color/white"/>
+
+                                        <com.example.font.TextViewSFProDisplaySemibold
+                                            android:id="@+id/total_fare"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="$13.8"
+                                            android:lineSpacingExtra="2dp"
+                                            android:textSize="15sp"
+                                            android:textColor="@color/white"/>
+                                    </LinearLayout>
+                                </LinearLayout>
+
+
+
+
+
+                            </FrameLayout>
+
+
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginLeft="23dp"
+                            android:orientation="horizontal">
+
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#545454"
+                                android:textSize="14sp"
+                                android:text="Trip Details : "/>
+
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:id="@+id/today_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3/311/2020"
+                                android:textSize="14sp"
+                                android:textColor="#1072c6"/>
+                        </LinearLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="7sp"
+                            android:background="#f1f1f1"/>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@color/white">
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="27dp"
+                                android:text="From"
+                                android:layout_marginTop="18dp"/>
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:id="@+id/start_adress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10811 47 avenue, nw, Edmonton"
+                                android:textSize="12sp"
+                                android:letterSpacing="0.0165"
+                                android:textColor="#545454"
+                                android:layout_marginLeft="28dp"
+                                android:layout_marginTop="10sp"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="12sp"
+                                android:background="#f1f1f1"/>
+
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="27dp"
+                                android:text="To"
+                                android:layout_marginTop="15dp"/>
+
+                            <com.example.font.TextViewSFProDisplayMedium
+                                android:id="@+id/end_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10899 23 avenue, nw, Edmonton"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="28dp"
+                                android:textColor="#545454"
+                                android:layout_marginTop="10sp"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="14sp"
+                                android:background="#f1f1f1"/>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20sp"
+                            android:background="#f1f1f1"/>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="10dp"
+                            android:background="@color/white">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginLeft="32dp"
+                                android:orientation="horizontal">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/car"/>
+
+
+                                <com.example.font.TextViewSFProDisplaySemibold
+                                    android:id="@+id/rating_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="30dp"
+                                    android:textColor="@color/paymentBackground"
+                                    android:textSize="13sp"
+                                    android:layout_marginLeft="12sp"
+                                    android:text="Rate My ride with xxx driver"
+                                    android:clickable="true"
+                                    android:layout_gravity="center"/>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="1dp"-->
+
+<!--                            android:background="#f1f1f1"/>-->
+
+
+
+<!--                        <com.example.font.TextViewSFProDisplayMedium-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Help"-->
+<!--                            android:textSize="14sp"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:layout_marginLeft="26dp"-->
+<!--                            android:layout_marginTop="30dp"/>-->
+
+
+
+
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="1dp"-->
+<!--                            android:layout_marginTop="10sp"-->
+<!--                            android:background="#f1f1f1"/>-->
+
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="vertical"-->
+<!--                            android:background="@color/white">-->
+
+
+
+<!--                            <com.example.font.TextViewSFProDisplayMedium-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="Problem with calcellation fee"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:layout_marginLeft="26dp"-->
+<!--                                android:layout_marginTop="18dp"/>-->
+
+<!--                            <View-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="1dp"-->
+<!--                                android:layout_marginTop="18sp"-->
+<!--                                android:background="#f1f1f1"/>-->
+
+<!--                            <com.example.font.TextViewSFProDisplayMedium-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="I was involved in an accident"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:layout_marginLeft="26dp"-->
+<!--                                android:layout_marginTop="20dp"/>-->
+
+<!--                            <View-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="1dp"-->
+<!--                                android:layout_marginTop="18sp"-->
+<!--                                android:background="#f1f1f1"/>-->
+<!--                            <com.example.font.TextViewSFProDisplayMedium-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="Review my fare or fees"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:layout_marginLeft="26dp"-->
+<!--                                android:layout_marginTop="20dp"/>-->
+
+<!--                            <View-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="1dp"-->
+<!--                                android:layout_marginTop="18sp"-->
+<!--                                android:background="#f1f1f1"/>-->
+
+<!--                            <com.example.font.TextViewSFProDisplayMedium-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="My driver was unprofessional"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:layout_marginLeft="26dp"-->
+<!--                                android:layout_marginTop="20dp"/>-->
+
+<!--                            <View-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="1dp"-->
+<!--                                android:layout_marginTop="18sp"-->
+<!--                                android:background="#f1f1f1"/>-->
+
+<!--                            <com.example.font.TextViewSFProDisplayMedium-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="I had a different issue"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:layout_marginLeft="26dp"-->
+<!--                                android:layout_marginTop="20dp"/>-->
+
+<!--                            <View-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="1dp"-->
+<!--                                android:layout_marginTop="18sp"-->
+<!--                                android:background="#f1f1f1"/>-->
+
+<!--                        </LinearLayout>-->
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -94,6 +94,10 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".RiderMatchingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderReviewActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RiderRatingPopWindow" />
+
 
         <service
             android:name="com.example.util.MyFirebaseMessagingService"
