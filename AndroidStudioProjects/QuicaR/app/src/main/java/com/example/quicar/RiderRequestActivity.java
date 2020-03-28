@@ -83,26 +83,6 @@ public class RiderRequestActivity extends BaseActivity {
     }
 
 
-    /***2020.03.20 new part Yuxin for drawing route and calculating distance------------------------------------------------------------------
-     *
-     */
-
-    private GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-
-    /** end new part
-     -----------------------------------------------------------------------------
-     */
-
 
 
 

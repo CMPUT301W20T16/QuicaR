@@ -220,7 +220,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                 }
 
-                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+                travelFare = (float) estimateFare (directionsResult.routes[0].legs[0].distance.inMeters);
 
                 view_distance.setText(travelDistance);
                 view_time.setText(travelTime);
@@ -235,8 +235,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         }
         if (success) {
-
-
 //            travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
 //            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
 //            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
@@ -244,8 +242,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 //            view_distance.setText(travelDistance);
 //            view_time.setText(travelTime);
 //            view_fare.setText("$ " + travelFare);
-
-
         }
 
     }
@@ -266,18 +262,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         mMap.animateCamera(cu);
 
     }
-
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-
-
-        return url;    }
 
 
     protected GeoApiContext getGeoContext() {
@@ -335,10 +319,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
      */
 
 
-    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
-    }
+//    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
+//    }
 
 
     private String getEndLocationTitle(DirectionsResult results){
@@ -384,6 +368,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     @Override
     public void onActiveNotification(Request request) {
+
     }
 
     @Override
