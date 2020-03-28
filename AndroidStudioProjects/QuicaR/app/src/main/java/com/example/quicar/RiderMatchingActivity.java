@@ -30,7 +30,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Waiting for macthing...");
+        mProgressDialog.setMessage("Waiting for matching...");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -68,6 +68,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onArrivedNotification(Request request) {
+        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
+        startActivity(intent);
 
     }
 
