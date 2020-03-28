@@ -50,6 +50,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -70,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
+    protected FirebaseAuth mAuth;
 
     private double radius = 1000;
 
@@ -420,10 +422,24 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 startActivity(i);
                 break;
 
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
+//                break;
+
             case R.id.nav_profile:
-                // change here
+                // profile activity start
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 

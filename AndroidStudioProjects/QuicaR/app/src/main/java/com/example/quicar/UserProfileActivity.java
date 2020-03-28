@@ -71,6 +71,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         //?? set cannot edit
         this.emailLayout.setEnabled(false);
         this.usernameLayout.setEnabled(false);
+        this.passwordLayout.setEnabled(false);
 
         // below set for driver mode invisible
 //        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
