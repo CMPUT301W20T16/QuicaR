@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.sartainstudios.contacts.MyContacts">
+    tools:context="com.sartainstudios.contacts.MyContacts"
+    app:background="@color/paymentBackground">
 
     <item
         android:id="@+id/confirm_button"
@@ -11,5 +12,7 @@
         app:showAsAction="always">
 
     </item>
+
+
 
 </menu>

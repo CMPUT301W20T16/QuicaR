@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,7 +40,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
-    Button confirmButton;
+    Button_SF_Pro_Display_Medium confirmButton;
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
@@ -50,11 +51,13 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
         Intent intent = getIntent();
         currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+//        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
 
-        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
+//        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
 
 
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
@@ -64,9 +67,8 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_pick_up);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
-        confirmButton = linearLayout.findViewById(R.id.pick_up);
+        confirmButton = linearLayout.findViewById(R.id.confirm_button);
 
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
 
 
 //        mRequest = new Request();
@@ -84,6 +86,9 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
+        System.out.println("-----start address name-----"+start_address);
+        System.out.println("-----end address name-------"+end_address);
+
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
@@ -125,6 +130,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
                 System.out.println("Request id-------------" + currentRequest.getRid());
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
+                intent.putExtra("current accepted request", currentRequest);
                 startActivity(intent);
             }
         });
@@ -173,23 +179,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 //            }
 //        }
 
-    }
-
-
-    private GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
     }
 
 

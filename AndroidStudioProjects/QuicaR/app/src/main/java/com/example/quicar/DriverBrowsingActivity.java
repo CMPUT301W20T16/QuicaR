@@ -38,6 +38,8 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         super.onCreate(savedInstanceState);
         DatabaseHelper.getInstance().setCurrentMode("driver");
 
+
+
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_browsing, frameLayout);
 
@@ -94,26 +96,15 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
             /* Edited by Jeremy */
 
-//            if (requests.size() > 0) {
+
                 //  always check if the return value is valid
                 System.out.println("------------ open request obtained -----------");
 
                 // update newly added open requests to RecyclerView adapter
-
-
                 requestList.clear();
                 requestList.addAll(requests);
 
-//                for (Request request: requests){
-//                    if (!requestList.contains(request)) {
-//                        requestList.add(request);
-//                    }
-//                }
-
                 mAdapter.notifyDataSetChanged();
-//            } else {
-//                System.out.println("------------ empty list obtained -----------");
-//            }
 
             /* End here */
 

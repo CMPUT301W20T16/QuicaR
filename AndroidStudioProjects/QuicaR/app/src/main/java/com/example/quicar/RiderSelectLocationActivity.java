@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -50,11 +51,10 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
     String address,locality,subLocality,state,postalCode,country,knownname,phone;
-//    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
+    //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-//    private GoogleMap mMap;
 
     Marker marker;
     PlacesClient placesClient;
@@ -84,6 +84,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.paymentBackground)));
+
 
 
         String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
@@ -123,6 +125,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
 
+        /*
+        Added something here to prevent error when re-selecting new location after invalid route
+         */
+
+        if (start_location == null) start_location = new Location();
+
+        /* End here */
+
 //        pickUpAutoComplete.setHint(pick_up_address);
 //        destinationAutoComplete.setHint("Select Destination");
         start.setText(pick_up_address);
@@ -135,14 +145,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
             @Override
             public void onClick(View v) {
 
-                Location temp = new Location();
-                temp = start_location;
+//                Location temp = new Location();
+                Location temp = start_location;
                 start_location = end_location;
                 end_location = temp;
 
 
-                start.setText(end_location.getAddressName());
-                end.setText(start_location.getAddressName());
+                start.setText(start_location.getAddressName());
+                end.setText(end_location.getAddressName());
             }
         });
 
@@ -157,24 +167,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mAdapter = new LocationAdapter(locationList);
-//        System.out.println("-------------recycler view build successful-----------");
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+        // if user clicked on of the past address
         mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-//                System.out.println("clicked");
                 currentPosition = position;
-//                Request request = (Request)requestList.get(position);
-//                pickUpAutoComplete.setText(pick_up_address);
-//                destinationAutoComplete.setText("MY DESTINATION");
                 /**
                  * 问题：
                  * 1.没法确定选择的location是start还是end location
-                 * 2.没法显示地址（目前是location）
                  */
                 start_location = (Location) locationList.get(position);
                 System.out.println(start_location.getLon() + start_location.getLat());
@@ -212,25 +216,10 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 //                        }
                         location.setLat(currentLat);
                         location.setLon(currentLng);
-//                        DatabaseHelper.setSecondLocation(new Location(currentLat, currentLng));
-//                        User newUser = new User();
-//                        newUser.setName("testing1");
-//                        Request request = new Request(new Location(), DatabaseHelper.getSecondLocation(),
-//                                newUser, new User(), 89.f);
-//                        RequestDataHelper.addNewRequest(request, listener);
+//
 
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
-
-
-
-//                        if ( marker != null){
-//                            marker.remove();
-//                        }
-
-//                        mMap.clear();
-//                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-//                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16.5f ),null);
 
 
                         Geocoder gcd =  new Geocoder(getBaseContext(), Locale.getDefault());
@@ -241,13 +230,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
                                 locality = addresses.get(0).getLocality();
-                                //ystem.out.println("\n\n aaaaaaaaaaaa");
-                                //autocompleteSupportFragment.setText(locality);
-//                                EditText etPlace = (EditText) autocompleteSupportFragment
-//                                        .getView()
-//                                        .findViewById(R.id.places_autocomplete_search_input);
-//                                etPlace.setHint(place.getAddress());
-
 
                                 //set address in Location object
                                 location.setAddressName(place.getAddress());
@@ -292,7 +274,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 
-     // When user clicks on the tick button, this function checks if any of the entries are left blank.
+    // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
 
@@ -340,4 +322,3 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 }
-

@@ -1,9 +1,12 @@
 package com.example.quicar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +24,7 @@ import com.hsalf.smilerating.SmileRating;
  * e.g, 1 for poor service, 5 for excellent service
  */
 
-public class RiderRatingPopWindow extends AppCompatActivity {
+public class RiderRatingPopWindow extends Activity {
 
     private static final String TAG = "RiderRatingPopWindow";
 
@@ -36,7 +39,14 @@ public class RiderRatingPopWindow extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width * 0.8), (int)(height * 0.8));
+        getWindow().setLayout((int)(width * 0.8), (int)(height * 0.5));
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.gravity = Gravity.CENTER;
+        params.x = 0;
+        params.y = -20;
+
+        getWindow().setAttributes(params);
 
         SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
 

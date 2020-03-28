@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.entity.Request;
 import com.example.entity.Location;
+import com.example.font.TextViewSFProDisplayMedium;
+import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.datahelper.RequestDataHelper;
 import com.example.datahelper.DatabaseHelper;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
@@ -48,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
     //extends DrawRouteBaseActivity
 
     private OnGetRequestDataListener listener = this;
@@ -61,6 +64,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
     Button cancelButton;
     Request currentRequest = null;
     DirectionsResult directionsResult;
+
+    TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
+    String travelTime, travelDistance;
+    Float travelFare;
+
+    Location start_location, end_location;
+    MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     /**
@@ -80,6 +91,14 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         // set Buttons
         confirmButton = linearLayout.findViewById(R.id.confirm_button);
         cancelButton = linearLayout.findViewById(R.id.cancel_button);
+        //set text views
+        view_distance = linearLayout.findViewById(R.id.view_distance);
+        view_time = linearLayout.findViewById(R.id.view_time);
+        view_fare = linearLayout.findViewById(R.id.view_fare);
+        view_start = linearLayout.findViewById(R.id.start_address);
+        view_end = linearLayout.findViewById(R.id.end_address);
+
+
 
 
         //get data from intent, i.e., current address
@@ -89,28 +108,30 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
-        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
+//        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
+//        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
 
-
-
+        //add pins to map
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
+
+        //update start and end address on bottom sheet
+        view_start.setText(start_location.getAddressName());
+        view_end.setText(end_location.getAddressName());
 
 
         //mMap.clear();
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
+        System.out.println("-----start address name-----"+start_address);
+        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .destination(end_address).departureTime(now)
                     .await();
-
-
-
 
 
         } catch (ApiException e) {
@@ -121,14 +142,6 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
             e.printStackTrace();
         }
 
-//        addMarkersToMap(directionsResult,mMap);
-//        addPolyline(directionsResult,mMap);
-
-
-
-
-        /*new FetchURL(RiderConfirmRiderActivity.this)
-                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");*/
 
         /**
          * estimate cost function
@@ -138,59 +151,36 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         /**
          * when click confirm button, following will be executed
          */
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        confirmButton.setOnClickListener(v -> {
 
-                /**
-                 *   instantiate a new User class for current user
-                  */
-                User newUser = new User();
-                newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
+            /**
+             *   instantiate a new User class for current user
+              */
+            User newUser = new User();
+            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
-                /**
-                 *    new request's cost is hard coded for now
-                  */
-                Request request = new Request(start_location, start_location.getAddressName(),
-                        end_location, end_location.getAddressName(),
-                        newUser, new User(), 20.0f);
+            /**
+             *    new request's cost is hard coded for now
+              */
+            Request request = new Request(start_location, start_location.getAddressName(),
+                    end_location, end_location.getAddressName(),
+                    newUser, new User(), travelFare);
 
-                currentRequest = request;
-
-
-                /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
-                 */
-
-//                DateTime now = new DateTime();
-//                try {
-//                    directionsResult = DirectionsApi.newRequest(getGeoContext())
-//                            .mode(TravelMode.DRIVING).origin(start_location.getAddressName())
-//                            .destination(end_location.getAddressName()).departureTime(now)
-//                            .await();
-//                } catch (ApiException e) {
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                addMarkersToMap(directionsResult,mMap);
-
-                /** end new part
-                 -----------------------------------------------------------------------------
-                 */
-
-
-                RequestDataHelper.getInstance().addNewRequest(request, listener);
+            currentRequest = request;
 
 
 
-                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
-                intent.putExtra("current request", currentRequest);
-                startActivity(intent);
+            RequestDataHelper.getInstance().addNewRequest(request, listener);
 
-            }
+
+
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
+//            intent1.putExtra("current request", currentRequest);
+            startActivity(intent1);
+            finish();
+
         });
 
 
@@ -213,23 +203,38 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        boolean success = true;
         mMap = googleMap;
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
-        addPolyline(directionsResult,mMap);
-        System.out.println("----------Time---------- :"+ directionsResult.routes[0].legs[0].duration.humanReadable);
-        System.out.println("----------Distance---------- :" + directionsResult.routes[0].legs[0].distance.humanReadable);
+        try {
+            if (directionsResult != null)
+            {
+                addPolyline(directionsResult, mMap);
+            }
 
-//        addMarkersToMap(directionsResult,mMap);
+        }catch (ArrayIndexOutOfBoundsException e){
+            success = false;
+            Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+            startActivity(intent);
 
-//        addMarkersToMap(directionsResult,mMap);
-//        addPolyline(directionsResult,mMap);
+        }
+        if (success) {
 
+            if (directionsResult != null) {
+                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
-//        mMap.addMarker(start);
-//        mMap.addMarker(destination);
-//        showAllMarkers();
+                view_distance.setText(travelDistance);
+                view_time.setText(travelTime);
+                view_fare.setText("$ " + travelFare);
+            }
+
+        }
+
     }
 
     public void showAllMarkers() {
@@ -262,11 +267,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         return url;    }
 
 
-    /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
-     *
-     */
-
-    private GeoApiContext getGeoContext() {
+    protected GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
         geoApiContext.setQueryRateLimit(3)
                 .setApiKey(getString(R.string.map_key))
@@ -276,11 +277,49 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         return geoApiContext;
     }
 
-//   private GeoApiContext getGeoApiContext() {
-//       return new GeoApiContext.Builder()
-//               .apiKey(getString(R.string.map_key))
-//               .build();
-//   }
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 7.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*2.3;
+        }
+        else{
+            fare = (distance/1000)*2.0;
+        }
+
+
+        return fare;
+    }
+
+
+
+    /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
+     *
+     */
 
 
     private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
@@ -293,10 +332,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
     }
 
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-    }
+//    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
+//        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+//        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+//    }
 
 
 
@@ -315,19 +354,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
      */
 
 
-    @Override
-    public void onTaskDone(Object... values) {
 
-
-
-
-        /**if (currentPolyline != null)
-            currentPolyline.remove();
-
-        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);**/
-
-
-    }
 
     /**
      * automatically executed

@@ -8,76 +8,28 @@
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp">
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:padding="8dp"-->
-<!--        android:orientation="vertical">-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/start_address"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="1dp"-->
-<!--            android:textColor="#1C1C1C" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/end_address"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="1dp"-->
-<!--            android:textColor="#1C1C1C" />-->
-
-<!--    </LinearLayout>-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#f1f1f1"
-        android:paddingTop="3dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#f1f1f1"
-        android:layout_marginTop="7dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:padding="8dp"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="13dp"
-            android:src="@drawable/ic_placeholder" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/start_address"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:orientation="vertical"
-            android:padding="15dp">
-
-            <com.example.font.TextViewSFProDisplayMedium
-                android:id="@+id/start_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="13sp" />
-
-            <com.example.font.TextViewSFProDisplayRegular
-                android:id="@+id/end_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:letterSpacing="0.0265"
-                android:textColor="#9f9fa1"
-                android:textSize="14sp" />
-        </LinearLayout>
+            android:padding="1dp"
+            android:textColor="#1C1C1C" />
+        <TextView
+            android:id="@+id/end_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:textColor="#1C1C1C" />
 
     </LinearLayout>
+
 
 
 </androidx.cardview.widget.CardView>

@@ -20,63 +20,84 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_width="344dp"
+            android:layout_height="115dp"
+            android:layout_gravity="center_horizontal">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="24dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="148dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_checked"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/the_line"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.font.TextViewSFProDisplayRegular
                 android:id="@+id/start_address"
-                android:layout_width="130dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:text="PICK UP LOCATION"
+                android:layout_width="119dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="12dp"
+                android:text="10811 47 avenue, nw, Edmonton"
                 android:textSize="9dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="24dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="24dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:src="@drawable/ic_checked"
+                app:layout_constraintEnd_toStartOf="@+id/the_line"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.font.TextViewSFProDisplayRegular
                 android:id="@+id/end_address"
-                android:layout_width="130dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="40dp"
-                android:text="DESTINATION"
+                android:layout_width="119dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="24dp"
+                android:text="10811 47 avenue, nw, Edmonton"
                 android:textSize="9dp"
-                app:layout_constraintStart_toEndOf="@+id/start_address"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/gifImageView2"
                 app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
             <TextView
-                android:layout_width="147dp"
-                android:layout_height="61dp"
-                android:layout_marginTop="12dp"
-                android:text="--------------"
+                android:id="@+id/the_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="-----------------------"
                 android:textColor="#882C383E"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="@+id/imageView"
+                app:layout_constraintHorizontal_bias="0.405"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/gifImageView2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/car"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/the_line" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,14 +118,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Estimate Distance"
+                    android:text="Trip Distance"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <com.example.font.TextViewSFProDisplayRegular
+                    android:id="@+id/view_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#5a595e"
+                    android:text="1234km"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -121,14 +144,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Fare"
+                    android:text="Trip Fare"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <com.example.font.TextViewSFProDisplayRegular
+                    android:id="@+id/view_fare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#5a595e"
+                    android:text="$123"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -145,15 +170,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Per minute wait time"
+                    android:text="Travel Time"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <com.example.font.TextViewSFProDisplayRegular
+                    android:id="@+id/view_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$1.07"
+                    android:layout_height="match_parent"
                     android:textColor="#5a595e"
+                    android:text="99min"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -186,7 +212,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="3.5dp"
             android:layout_marginRight="26dp"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -196,7 +221,6 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/button_rect"
                 android:text="Confirm Ride"
                 android:textAllCaps="false"
@@ -216,7 +240,6 @@
                 android:id="@+id/cancel_button"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/button_rect"
                 android:text="Cancel Ride"

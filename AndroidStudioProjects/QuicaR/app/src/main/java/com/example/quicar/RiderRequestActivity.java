@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.quicar.R;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
@@ -27,7 +27,7 @@ import com.example.entity.Location;
 
 public class RiderRequestActivity extends BaseActivity {
 
-    private Button startLocation;
+    private Button_SF_Pro_Display_Medium startLocation;
 
 //    private EditText stopLocation;
 //    private Button confirmButton;
@@ -63,9 +63,11 @@ public class RiderRequestActivity extends BaseActivity {
             public void onClick(View v) {
                 String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 if (current_address != null) {
+                    Location currentLocation = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    currentLocation.setAddressName(current_address);
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
                     intent.putExtra("current pos", current_address);
-                    intent.putExtra("current location", new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    intent.putExtra("current location", currentLocation);
                     //startActivityForResult(intent, 1);
                     startActivity(intent);
                 }

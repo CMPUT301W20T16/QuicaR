@@ -21,7 +21,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="344dp"
-        android:layout_height="wrap_content"
+        android:layout_height="115dp"
         android:layout_gravity="center_horizontal">
 
         <ImageView
@@ -38,11 +38,12 @@
 
         <com.example.font.TextViewSFProDisplayRegular
             android:id="@+id/start_address"
-            android:layout_width="110dp"
-            android:layout_height="30dp"
+            android:layout_width="119dp"
+            android:layout_height="50dp"
             android:layout_marginStart="12dp"
             android:text="10811 47 avenue, nw, Edmonton"
             android:textSize="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
@@ -59,11 +60,12 @@
 
         <com.example.font.TextViewSFProDisplayRegular
             android:id="@+id/end_address"
-            android:layout_width="110dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
+            android:layout_width="119dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
             android:text="10811 47 avenue, nw, Edmonton"
             android:textSize="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/gifImageView2"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -90,7 +92,8 @@
             android:src="@drawable/car"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/the_line" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -128,24 +131,31 @@
                     app:civ_border_color="@color/paymentBackground"
                     app:civ_border_width="2dp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="   "/>
+
                 <com.example.font.TextViewSFProDisplayMedium
                     android:id="@+id/driver_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Some Name"
+                    android:layout_gravity="center_vertical"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="     " />
+                    android:text="   " />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="6dp"
+                    android:layout_gravity="center_vertical"
                     android:background="@drawable/parrot_gradient"
                     android:orientation="horizontal">
 
@@ -167,6 +177,7 @@
                             android:src="@drawable/ic_star" />
 
                         <com.example.font.TextViewSFProDisplayMedium
+                            android:id="@+id/driver_rating_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3.7"
@@ -350,7 +361,7 @@
                         <com.example.font.TextViewSFProDisplayRegular
                             android:id="@+id/call_driver_button"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:clickable="true"
                             android:text="CALL DRIVER"
                             android:textColor="@color/paymentBackground"
