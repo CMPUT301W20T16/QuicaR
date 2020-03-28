@@ -11,4 +11,11 @@
         android:layout_height="wrap_content"
         android:hint="new username"/>
 
+    <EditText
+        android:id="@+id/password_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"/>
+
+
 </LinearLayout>
