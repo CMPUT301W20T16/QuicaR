@@ -49,10 +49,10 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Intent intent = getIntent();
-//        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
+        Intent intent = getIntent();
+        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+//        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
@@ -130,7 +130,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
                 System.out.println("Request id-------------" + currentRequest.getRid());
                 Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
-//                intent.putExtra("current accepted request", currentRequest);
+                intent.putExtra("current accepted request", currentRequest);
                 startActivity(intent);
             }
         });

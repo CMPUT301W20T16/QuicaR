@@ -99,7 +99,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-        estimateFare.setText(currentRequest.getEstimatedCost().toString());
+//        estimateFare.setText(currentRequest.getEstimatedCost().toString());
 
         // set on click listener for buttons
         // transfer to default dial page
@@ -129,6 +129,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                 if (currentRequest != null) {
                     RequestDataHelper
                             .getInstance()
+                            /***问题***/
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
                 }
             }

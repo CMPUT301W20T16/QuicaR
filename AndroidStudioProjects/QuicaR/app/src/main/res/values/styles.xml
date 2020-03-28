@@ -20,12 +20,18 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/paymentBackground</item>
+        <item name="android:color">@color/paymentBackground</item>
     </style>
 
 
     <style name="error" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorCuteError</item> <!--apply the color you wat here -->
         <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="AppTheme.PopMe">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
 </resources>

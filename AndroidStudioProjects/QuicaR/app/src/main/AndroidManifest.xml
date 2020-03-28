@@ -41,7 +41,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".RiderReviewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW"/>
@@ -92,9 +92,10 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".RiderMatchingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RiderReviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RiderRatingPopWindow" />
+<!--        <activity android:name=".RiderReviewActivity"-->
+<!--            android:theme="@style/AppTheme.NoActionBar"/>-->
+        <activity android:name=".RiderRatingPopWindow"
+            android:theme="@style/AppTheme.PopMe"/>
 
 
         <service

@@ -180,6 +180,8 @@ public class RequestDataHelper {
                         Log.d(TAG,  " request addition successful");
                         ArrayList<Request> requests = new ArrayList<Request>();
                         requests.add(newRequest);
+                        /*****added ********/
+                        DatabaseHelper.getInstance().getUserState().setCurrentRequest(newRequest);
                         listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
@@ -293,6 +295,10 @@ public class RequestDataHelper {
                 DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
                 // set userstate of driver
                 Log.d(TAG, "Transaction success: " + docID);
+                /***** add request to driver's current request*****/
+                databaseHelper.getUserState().setCurrentRequest(request);
+                databaseHelper.getUserState().setCurrentRequest(request);
+
                 if (updateMode == SET_ACTIVE_TAG) {
                     databaseHelper.getUserState().setActive(true);
                     listener.onSuccess(null, SET_ACTIVE_TAG);
