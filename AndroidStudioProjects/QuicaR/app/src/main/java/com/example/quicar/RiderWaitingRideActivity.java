@@ -42,7 +42,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     TextViewSFProDisplayRegular CallButton;
     TextViewSFProDisplayRegular EmailButton;
     Button_SF_Pro_Display_Medium CancelButton;
-    Request currentRequest = null;
 
 
     /**
@@ -88,18 +87,18 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         // get activated request from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
 
-        currentRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         //set Text View
-        driverName.setText(currentRequest.getDriver().getName());
+        driverName.setText(mRequest.getDriver().getName());
         /**
          * Prob:
          * Driver doesn't have Email or Phone attributes
          */
-        driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
-        driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
-        driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-        estimateFare.setText(currentRequest.getEstimatedCost().toString());
+        driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
+        driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
+        driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
+//        estimateFare.setText(mRequest.getEstimatedCost().toString());
 
         // set on click listener for buttons
         // transfer to default dial page
@@ -126,9 +125,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentRequest != null) {
+                if (mRequest != null) {
                     RequestDataHelper
                             .getInstance()
+                            /***问题***/
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
                 }
             }

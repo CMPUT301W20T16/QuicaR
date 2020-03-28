@@ -221,19 +221,17 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             startActivity(intent);
 
         }
-        if (success){
+        if (success) {
 
+            if (directionsResult != null) {
+                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+                travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
-            travelTime =  directionsResult.routes[0].legs[0].duration.humanReadable;
-            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
-
-            view_distance.setText(travelDistance);
-            view_time.setText(travelTime);
-            view_fare.setText("$ "+travelFare );
-
-
-
+                view_distance.setText(travelDistance);
+                view_time.setText(travelTime);
+                view_fare.setText("$ " + travelFare);
+            }
 
         }
 

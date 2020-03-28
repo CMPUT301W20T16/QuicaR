@@ -96,26 +96,15 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
             /* Edited by Jeremy */
 
-//            if (requests.size() > 0) {
+
                 //  always check if the return value is valid
                 System.out.println("------------ open request obtained -----------");
 
                 // update newly added open requests to RecyclerView adapter
-
-
                 requestList.clear();
                 requestList.addAll(requests);
 
-//                for (Request request: requests){
-//                    if (!requestList.contains(request)) {
-//                        requestList.add(request);
-//                    }
-//                }
-
                 mAdapter.notifyDataSetChanged();
-//            } else {
-//                System.out.println("------------ empty list obtained -----------");
-//            }
 
             /* End here */
 
@@ -175,7 +164,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
                 .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
                         request.getEstimatedCost(), DriverBrowsingActivity.this);
         Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
-//        intent.putExtra("current accepted request", request);
+        intent.putExtra("current accepted request", request);
         startActivity(intent);
         finish();
     }

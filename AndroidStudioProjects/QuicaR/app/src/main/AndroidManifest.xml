@@ -94,7 +94,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".RiderReviewActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RiderRatingPopWindow" />
+        <activity android:name=".RiderRatingPopWindow"
+            android:theme="@style/AppTheme.PopMe"/>
 
 
         <service
