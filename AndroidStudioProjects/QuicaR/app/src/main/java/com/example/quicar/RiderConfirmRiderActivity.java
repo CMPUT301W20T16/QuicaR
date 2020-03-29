@@ -118,12 +118,9 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         view_end.setText(end_location.getAddressName());
 
 
-        //mMap.clear();
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
-//        System.out.println("-----start address name-----"+start_address);
-//        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
@@ -230,16 +227,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             startActivity(intent);
 
         }
-        if (success) {
-//            travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
-//            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-//            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
-//
-//            view_distance.setText(travelDistance);
-//            view_time.setText(travelTime);
-//            view_fare.setText("$ " + travelFare);
-        }
-
     }
 
     public void showAllMarkers() {

@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Location;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayLight;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -49,6 +51,10 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     TextViewSFProDisplayRegular callButton, emailButton;
     Request currentRequest = null;
     DirectionsResult directionsResult;
+
+    Location start_location, end_location;
+    MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     @Override
@@ -85,8 +91,9 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         riderName.setText(currentRequest.getRider().getName());
 
 
-        start_location = currentRequest.getStart();
-        end_location = currentRequest.getDestination();
+
+        start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        end_location = currentRequest.getStart();
 
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
@@ -143,6 +150,65 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
+    /**
+     * Draw route methods
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        boolean success = true;
+        mMap = googleMap;
+        mMap.addMarker(start);
+        mMap.addMarker(destination);
+        showAllMarkers();
+
+    }
+
+    public void showAllMarkers() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (MarkerOptions m : markerOptionsList) {
+            builder.include(m.getPosition());
+
+        }
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.30);
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
+
+    }
+
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
 
     /**
      * RequestDataHelper methods
@@ -162,28 +228,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
-
-
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.addMarker(start);
-        mMap.addMarker(destination);
-        showAllMarkers();
-        addPolyline(directionsResult,mMap);
-    }
-
-
-    @Override
-    public void onTaskDone(Object... values) {
-//        if (currentPolyline != null)
-//            currentPolyline.remove();
-//
-//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-
-    }
 
     @Override
     public void onActiveNotification(Request request) {
