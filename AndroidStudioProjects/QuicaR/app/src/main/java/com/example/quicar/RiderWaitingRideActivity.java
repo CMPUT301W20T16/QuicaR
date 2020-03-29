@@ -66,10 +66,12 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
+        // get activated request from firebase
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
         // set Buttons
-        /**
-         * havent implement driver detail
-         */
 //        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
@@ -84,17 +86,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
 
-        // get activated request from firebase
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
-
-        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         //set Text View
-        driverName.setText(mRequest.getDriver().getName());
-        /**
-         * Prob:
-         * Driver doesn't have Email or Phone attributes
-         */
+        driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
@@ -128,8 +123,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                 if (mRequest != null) {
                     RequestDataHelper
                             .getInstance()
-                            /***问题***/
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
+
+
+                } else {
+                    System.out.println("Unable to retrieve current Request--------------");
                 }
             }
         });
