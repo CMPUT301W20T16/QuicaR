@@ -131,7 +131,7 @@
                     android:text="   " />
 
                 <com.example.font.TextViewSFProDisplayMedium
-                    android:id="@+id/name"
+                    android:id="@+id/userName_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Some Name"
