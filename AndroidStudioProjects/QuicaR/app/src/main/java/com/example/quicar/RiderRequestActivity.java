@@ -3,6 +3,7 @@ package com.example.quicar;
 import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -72,20 +73,15 @@ public class RiderRequestActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 else if(current_address == null){
-                    Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT);
+                    Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(RiderRequestActivity.this, "Your charge pocket doesn't have enough money", Toast.LENGTH_SHORT);
+                    Toast.makeText(RiderRequestActivity.this, "Your charge pocket doesn't have enough money, please recharge", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
-
-
-
-
-
 
 
     /**
