@@ -1,6 +1,12 @@
 package com.example.quicar;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
@@ -39,6 +46,7 @@ import org.joda.time.Instant;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener {
@@ -56,6 +64,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     MarkerOptions start, destination;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
     DirectionsResult directionsResult;
+
+    final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
 
 
@@ -77,10 +87,21 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
         //set up firebase connection
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-        /**
-         * current request cannot be updated at driver end
-         */
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = mLocationManager.getLastKnownLocation(PROVİDER);
 
 
 
@@ -100,7 +121,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
 
 //        start_location = currentRequest.getStart();
-        start_location = currentRequest.getStart();
+        start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         end_location = currentRequest.getDestination();
 
 
@@ -112,7 +133,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
 
         DateTime now = new DateTime();
-        String start_address = start_location.getAddressName();
+//        String start_address = start_location.getAddressName();
+        String start_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         String end_address = end_location.getAddressName();
         try {
             //GeoApiContext geoApiContext = getGeoContext();
@@ -160,6 +182,27 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         mMap.addMarker(destination);
         showAllMarkers();
 
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Location Permission already granted
+                buildGoogleApiClient();
+                mMap.setMyLocationEnabled(true);
+            } else {
+                //Request Location Permission
+                checkLocationPermission();
+            }
+        } else {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
+
+        //draw route
+        if (directionsResult != null) {
+            addPolyline(directionsResult, mMap);
+        }
     }
 
     public void showAllMarkers() {
@@ -191,6 +234,36 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     }
 
 
+    /**
+     * helper function for address of selected location
+     * @param lat
+     * @param lng
+     * @return
+     */
+    // get address name in String from lat and long
+    public String findAddress(double lat, double lng) {
+        // set pick up location automatically as customer's current location
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        if (lat != 0 && lng != 0) {
+            try {
+                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addresses != null) {
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address.length() != 0) {
+                    return address;
+                }
+            }
+
+        }
+        return null;
+
+    }
+
     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
         if (results != null) {
 //            if (results.routes.length == 0)
@@ -208,25 +281,26 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         }
     }
 
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+        mLastLocation = location;
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
 
-    protected double estimateFare (long distance){
-        double fare;
+        //move map camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        if(distance<1000){
-            fare = 7.0;
-
+        if (start != null) {
+            start.position(latLng);
         }
-        else if (distance <= 5000 && distance >= 1000){
-            fare = 5 + (distance / 1000)*2.3;
-        }
-        else{
-            fare = (distance/1000)*2.0;
+        else {
+            start = new MarkerOptions().position(latLng).title("origin");
         }
 
-
-        return fare;
     }
+
 
     /**
      * when add new request, following will be executed automatically

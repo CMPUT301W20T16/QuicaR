@@ -81,7 +81,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.startAdresse.setText("From: " + currentItem.getStartAddrName());
         holder.endAdresse.setText("To: " + currentItem.getDestAddrName());
 
-        holder.estimateFare.setText("Estimated Fare: " + currentItem.getEstimatedCost().toString());
+//        holder.estimateFare.setText("Estimated Fare: " + currentItem.getEstimatedCost().toString());
     }
 
     @Override
