@@ -4,8 +4,8 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import java.util.List;
 
-public class CardNumAdapter<T> extends ArrayAdapter{
-    public CardNumAdapter(Context context, int resource, List<T>  objects) {
+public class MyAdapter<T> extends ArrayAdapter{
+    public MyAdapter(Context context, int resource, List<T>  objects) {
         super(context, resource, objects);
     }
 

@@ -8,6 +8,7 @@
     <color name="addCardBackground">#e1e1e1</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="grey">#f1f1f1</color>
 
     <color name="transperent">#00000000</color>
     <color name="sub_txt">#8e8e93</color>
@@ -16,4 +17,5 @@
     <color name="red">#ff3b30</color>
     <color name="keyboard">#fafafa</color>
     <color name="bg_clolor">#fafafa</color>
+
 </resources>

@@ -40,7 +40,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
     boolean is_card_select;
     float amount;
     User user;
-    CardNumAdapter cardAdapter;
+    MyAdapter cardAdapter;
     ArrayList<BankAccount> cardDataList;
     ArrayList<String> cardNumList;
 
@@ -64,7 +64,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
             cardNumList.add("**** **** **** " + cardDataList.get(i).getCardnumber().substring(12));
         }
         cardNumList.add("Select the card");
-        cardAdapter = new CardNumAdapter<String>(this, android.R.layout.simple_spinner_item, cardNumList);
+        cardAdapter = new MyAdapter<String>(this, android.R.layout.simple_spinner_item, cardNumList);
         cardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         card_spinner.setAdapter(cardAdapter);
         card_spinner.setSelection(cardNumList.size() - 1, true);

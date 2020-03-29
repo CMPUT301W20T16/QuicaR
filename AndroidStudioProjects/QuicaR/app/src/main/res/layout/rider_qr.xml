@@ -11,7 +11,6 @@
         android:id="@+id/qr_code"
         android:layout_width="240dp"
         android:layout_height="240dp"
-
         android:scaleType="centerInside"
         android:contentDescription="@string/qr_description"/>
 
