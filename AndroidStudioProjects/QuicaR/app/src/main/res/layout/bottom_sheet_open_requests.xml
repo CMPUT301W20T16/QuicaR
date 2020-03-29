@@ -11,18 +11,21 @@
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
 
-    <TextView
+    <com.example.font.TextViewSFProDisplaySemibold
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="Open Request"
-        android:gravity="center_horizontal"
-        android:textSize="15sp"/>
+        android:layout_height="30dp"
+        android:text="OPEN REQUEST"
+        android:gravity="center"
+        android:textColor="@color/paymentBackground"
+        android:textSize="16sp"
+
+        android:background="@drawable/gray_rect"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/open_requests_list"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/paymentBackground"
         android:padding="4dp"
         android:scrollbars="vertical" />
 

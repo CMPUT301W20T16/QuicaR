@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
@@ -35,15 +36,13 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     BottomSheetBehavior bottomSheetBehavior;
 
     TextView driverDistance;
-    TextView driverName;
-    TextView driverEmail;
-    TextView driverPhone;
+    TextView driverName, driverRating, driverEmail, driverPhone, estimateFare, startAddress, endAddress;
 
     Button DetailButton;
     TextViewSFProDisplayRegular CallButton;
     TextViewSFProDisplayRegular EmailButton;
     Button_SF_Pro_Display_Medium CancelButton;
-    Request currentRequest = null;
+
 
     /**
      * 问题：
@@ -56,8 +55,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current request");
+//        Intent intent = getIntent();
+//        currentRequest = (Request) intent.getSerializableExtra("current request");
         /** Added by Jeremy */
         //mRequest = currentRequest;
         /** End here */
@@ -67,10 +66,12 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_ride_status);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
+        // get activated request from firebase
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        mRequest = (Request) DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
         // set Buttons
-        /**
-         * havent implement driver detail
-         */
 //        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
         CallButton = linearLayout.findViewById(R.id.call_driver_button);
         EmailButton = linearLayout.findViewById(R.id.email_driver_button);
@@ -80,12 +81,19 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
-//        driverDi›stance = linearLayout.findViewById(R.id.driver_distance_tv);
+        driverRating = linearLayout.findViewById(R.id.driver_rating_tv);
+        estimateFare = linearLayout.findViewById(R.id.estimate_fare);
+        startAddress = linearLayout.findViewById(R.id.start_address);
+        endAddress = linearLayout.findViewById(R.id.end_address);
 
-        // get activated request from firebase
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
-//        RequestDataHelper.getInstance().queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(), "rider", this);
 
+        //set Text View
+        driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+
+        driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
+        driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
+        driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
+//        estimateFare.setText(mRequest.getEstimatedCost().toString());
 
         // set on click listener for buttons
         // transfer to default dial page
@@ -116,6 +124,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                     RequestDataHelper
                             .getInstance()
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
+
+
+                } else {
+                    System.out.println("Unable to retrieve current Request--------------");
                 }
             }
         });
@@ -138,24 +150,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
      */
     @Override
     public void onActiveNotification(Request request) {
-        //System.out.println("!!!id!!!!!========="+request.getRid());
-
-        if (currentRequest.getRid().equals(request.getRid())) {
-            //System.out.println("!!!id!!!!!========="+request.getRid());
-            String driverEmailStr = request.getDriver().getAccountInfo().getEmail();
-            String driverNameStr = request.getDriver().getAccountInfo().getUserName();
-            String driverPhoneStr = request.getDriver().getAccountInfo().getPhone();
-
-            driverEmail.setText(driverEmailStr);
-            driverName.setText(driverNameStr);
-            driverPhone.setText(driverPhoneStr);
-            Toast.makeText(RiderWaitingRideActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-
-
     }
 
     /**
