@@ -35,7 +35,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
     private TextInputLayout emailLayout, phoneLayout, usernameLayout, firstNameLayout, lastNameLayout, birthDateLayout,passwordLayout;
-    private  TextInputLayout plateNumberLayout,licenseLayout,sinNumberLayout;
+    private  TextInputLayout plateNumberLayout,licenseLayout,sinNumberLayout,rateLayout;
 
     private boolean issuccess = false;
     private  boolean isfalse = false;
@@ -66,12 +66,14 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.plateNumberLayout = findViewById(R.id.profile_driver_plateNumber);
         this.licenseLayout = findViewById(R.id.profile_driver_license_number);
         this.sinNumberLayout = findViewById(R.id.profile_driver_sin);
+        this.rateLayout = findViewById(R.id.profile_driver_rate);
 
         saveButton = findViewById(R.id.save_button);
         //?? set cannot edit
         this.emailLayout.setEnabled(false);
         this.usernameLayout.setEnabled(false);
         this.passwordLayout.setEnabled(false);
+        this.rateLayout.setEnabled(false);
 
         // below set for driver mode invisible
 //        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
@@ -182,6 +184,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.plateNumberLayout.setVisibility(View.GONE);
         this.licenseLayout.setVisibility(View.GONE);
         this.sinNumberLayout.setVisibility(View.GONE);
+        this.rateLayout.setVisibility(View.GONE);
 
     }
     /**
@@ -191,6 +194,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.plateNumberLayout.setVisibility(View.VISIBLE);
         this.licenseLayout.setVisibility(View.VISIBLE);
         this.sinNumberLayout.setVisibility(View.VISIBLE);
+        this.rateLayout.setVisibility(View.VISIBLE);
 
     }
 
@@ -213,8 +217,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 } catch (ParseException e) {
                     e.printStackTrace();
                     birthDate = null;
-//                    System.out.println("Teemo");
-//                    System.out.println(birthDate);
                 }
             }
             //change later
@@ -422,6 +424,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         }
         if(user.getAccountInfo().getDriverInfo().getSinNumber() != null){
             this.sinNumberLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getSinNumber());
+        }
+        if(user.getAccountInfo().getDriverInfo().getRating() != null){
+            this.rateLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getRating().toString());
         }
 
     }
