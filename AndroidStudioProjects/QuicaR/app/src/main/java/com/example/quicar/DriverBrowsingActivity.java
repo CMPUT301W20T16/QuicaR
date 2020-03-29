@@ -158,7 +158,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 //        newDriver.setName("new Driver");
         // testing
 //                DatabaseHelper.setCurrentUserName("Name");
-        Request request = (Request)requestList.get(currentPosition);
+        Request request = requestList.get(currentPosition);
         RequestDataHelper
                 .getInstance()
                 .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),

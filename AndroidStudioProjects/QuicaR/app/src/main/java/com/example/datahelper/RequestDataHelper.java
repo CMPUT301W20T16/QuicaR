@@ -307,6 +307,7 @@ public class RequestDataHelper {
                 // set userstate of driver
                 Log.d(TAG, "Transaction success: " + docID);
                 /***** add request to driver's current request*****/
+                UserState userState = databaseHelper.getUserState();
                 databaseHelper.getUserState().setCurrentRequest(request);
 //                databaseHelper.getUserState().setCurrentRequest(request);
 
@@ -320,6 +321,8 @@ public class RequestDataHelper {
                     databaseHelper.getUserState().setOnArrived(true);
                     listener.onSuccess(null, SET_ARRIVED_TAG);
                 }
+                DatabaseHelper.getInstance().setUserState(userState);
+
             }
         })
         .addOnFailureListener(new OnFailureListener() {

@@ -57,8 +57,10 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
@@ -132,6 +134,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
     }
 
+
+
+
     /**
      * google map methods
      */
@@ -144,6 +149,13 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
         }
+    }
+
+
+
+    protected Location getmLastLocation(){
+
+        return mLastLocation;
     }
 
     /**
@@ -520,5 +532,31 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+    public String findAddress(double lat, double lng) {
+        // set pick up location automatically as customer's current location
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        if (lat != 0 && lng != 0) {
+            try {
+                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addresses != null) {
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address.length() != 0) {
+                    return address;
+                }
+            }
+
+        }
+        return null;
+
+    }
+
 
 }

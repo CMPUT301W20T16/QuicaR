@@ -1,18 +1,24 @@
 package com.example.quicar;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
+import com.example.entity.Location;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,26 +42,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
-    LinearLayout linearLayout;
-    BottomSheetBehavior bottomSheetBehavior;
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
+    private LinearLayout linearLayout;
+    private BottomSheetBehavior bottomSheetBehavior;
 
-    Button_SF_Pro_Display_Medium confirmButton;
-    Request currentRequest = null;
-    DirectionsResult directionsResult;
+    private Button_SF_Pro_Display_Medium confirmButton;
+    private Request currentRequest = null;
+    private DirectionsResult directionsResult;
+    private Location start_location,end_location;
+    protected MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
+
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //start_location = new Location(mLastLocation.getLatitude(),mLastLocation.getLongitude());
 
         Intent intent = getIntent();
         currentRequest = (Request) intent.getSerializableExtra("current accepted request");
-        RequestDataHelper.getInstance().setOnNotifyListener(this);
-//        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        //RequestDataHelper.getInstance().setOnNotifyListener(this);
+        //currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
-        start_location = currentRequest.getStart();
-        end_location = currentRequest.getDestination();
+
+        end_location = currentRequest.getStart();
 
 //        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
 
@@ -76,28 +89,27 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         System.out.println("------------------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
 
 
-        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
-        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
+        start = new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude() )).title("your location");
+        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("rider's pick up location");
 
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
 
         DateTime now = new DateTime();
-        String start_address = start_location.getAddressName();
+
+        //String start_address = start_location.getAddressName();
+        String start_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         String end_address = end_location.getAddressName();
-        System.out.println("-----start address name-----"+start_address);
+        //System.out.println("-----start address name-----"+start_address);
         System.out.println("-----end address name-------"+end_address);
 
         try {
-            //GeoApiContext geoApiContext = getGeoContext();
+
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .destination(end_address).departureTime(now)
                     .await();
-
-
-
 
 
         } catch (ApiException e) {
@@ -184,7 +196,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -196,14 +207,14 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
-    @Override
-    public void onTaskDone(Object... values) {
-//        if (currentPolyline != null)
-//            currentPolyline.remove();
-//
-//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-
-    }
+//    @Override
+//    public void onTaskDone(Object... values) {
+//////        if (currentPolyline != null)
+//////            currentPolyline.remove();
+//////
+//////        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+////
+//    }
 
     @Override
     public void onActiveNotification(Request request) {
