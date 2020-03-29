@@ -38,8 +38,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateAccountActivity extends AppCompatActivity {
+public class UpdateAccountActivity extends AppCompatActivity implements OnGetUserDataListener{
     private static final String TAG = "UpdateAccountActivity";
+    private OnGetUserDataListener listener = this;
 
 
     @Override
@@ -61,7 +62,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflater = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialog = inflater.inflate(R.layout.username_update_dialog, null);
-                    EditText email_change = viewDialog.findViewById(R.id.email_change);
+                    EditText email_change = viewDialog.findViewById(R.id.email_update);
                     EditText pwd_confirm = viewDialog.findViewById(R.id.password_check);
                     builder.setView(viewDialog);
                     builder.setTitle("change email");
@@ -94,22 +95,9 @@ public class UpdateAccountActivity extends AppCompatActivity {
                                                             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                                                             ref.child(uid).child("accountInfo").child("email").setValue(newEmail);
-                                                            Query query = ref.orderByChild("AccountInfo/email").equalTo(newEmail);
-                                                            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                                                        User myUser = dataSnapshot1.getValue(User.class);
-                                                                        myUser.getAccountInfo().setEmail(newEmail);
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                }
-                                                            });
-
+                                                            User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+                                                            currentUser.getAccountInfo().setEmail(newEmail);
+                                                            UserDataHelper.getInstance().updateUserProfile(currentUser, listener);
                                                             Toast.makeText(getApplicationContext(), "email updated successful", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
@@ -120,29 +108,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                            // String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            // DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
-                            // Query query = ref.orderByChild("accountInfo/userName").equalTo(newUserName);
-/*
-                            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        Toast.makeText(UpdateAccountActivity.this, "username exist", Toast.LENGTH_SHORT).show();
-                                        username_change.setError("duplicate username");
-                                    } else {
-                                        ref.child(uid).child("accountInfo").child("userName").setValue(newUserName);
-
-                                        Toast.makeText(UpdateAccountActivity.this, "username updated", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-*/
                         }
                     });
                     builder.create().show();
@@ -179,7 +144,26 @@ public class UpdateAccountActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "User re-authenticated.");
-                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();;
+                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();
+                                                if (!pwdReset.equals(pwdResetConfirm)) {
+                                                    mpwdUpdate.setError("passwords didn't match");
+                                                    mpwdConfirm.setError("passwords didn't match");
+                                                } else {
+                                                    mUser.updatePassword(pwdReset)
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Log.d(TAG, "User password updated.");
+                                                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
+                                                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                                                        ref.child(uid).child("accountInfo").child("password").setValue(pwdReset);
+                                                                        Toast.makeText(getApplicationContext(), "password updated", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
+                                                }
 
                                             }
                                         }
@@ -191,6 +175,23 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onSuccess(User user, String tag) {
+        if (tag.equals(UserDataHelper.UPDATE_USER_TAG)) {
+            System.out.println("updated email sucessfully");
+        }
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+
     }
 
 
