@@ -129,6 +129,7 @@
                     android:text="   " />
 
                 <com.example.font.TextViewSFProDisplayMedium
+                    android:id="@+id/driver_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Some Name"
@@ -168,6 +169,7 @@
                             android:src="@drawable/ic_star" />
 
                         <com.example.font.TextViewSFProDisplayMedium
+                            android:id="@+id/driver_rating_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3.7"
@@ -276,7 +278,7 @@
                             android:textSize="14sp" />
 
                         <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@+id/userEmail_textView"
+                            android:id="@+id/driver_email_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="sampleEmail@gmail.com"
@@ -311,7 +313,7 @@
 
 
                         <com.example.font.TextViewSFProDisplayRegular
-                            android:id="@+id/userPhone_textView"
+                            android:id="@+id/driver_phone_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5872255201"
@@ -348,6 +350,7 @@
 
 
                     <com.example.font.TextViewSFProDisplayRegular
+                        android:id="@+id/estimate_fare"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$xxx"

@@ -8,13 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.example.quicar.R;
@@ -45,12 +50,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private int currentPosition;
 
 
-    String address,locality,subLocality,state,postalCode,country,knownname,phone;
-//    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
+    String address,adminiArea = null,phone;
+    //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-//    private GoogleMap mMap;
 
     Marker marker;
     PlacesClient placesClient;
@@ -59,6 +63,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private LocationAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Location> locationList;
+
+    ImageView swapIcon;
+    TextView start, end;
 
     AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
@@ -77,6 +84,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.paymentBackground)));
+
 
 
         String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
@@ -107,17 +116,45 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         destinationAutoComplete =
                 (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destination);
 
+        swapIcon = findViewById(R.id.swap_icon);
+        start = findViewById(R.id.start_tv);
+        end = findViewById(R.id.end_tv);
+
         //get data from intent, i.e., current address
         Intent intent = getIntent();
         String pick_up_address = (String) intent.getSerializableExtra("current pos");
         start_location = (Location) intent.getSerializableExtra("current location");
 
+        /*
+        Added something here to prevent error when re-selecting new location after invalid route
+         */
 
-        pickUpAutoComplete.setHint(pick_up_address);
-        destinationAutoComplete.setHint("Select Destination");
+        if (start_location == null) start_location = new Location();
 
-        onCreateAutoCompletion(pickUpAutoComplete, start_location);
-        onCreateAutoCompletion(destinationAutoComplete, end_location);
+        /* End here */
+
+//        pickUpAutoComplete.setHint(pick_up_address);
+//        destinationAutoComplete.setHint("Select Destination");
+        start.setText(pick_up_address);
+
+        onCreateAutoCompletion(pickUpAutoComplete, start_location, true);
+        onCreateAutoCompletion(destinationAutoComplete, end_location, false);
+
+        //enable user to swap start and end address
+        swapIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                Location temp = new Location();
+                Location temp = start_location;
+                start_location = end_location;
+                end_location = temp;
+
+
+                start.setText(start_location.getAddressName());
+                end.setText(end_location.getAddressName());
+            }
+        });
 
 
     }
@@ -130,24 +167,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mAdapter = new LocationAdapter(locationList);
-//        System.out.println("-------------recycler view build successful-----------");
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+        // if user clicked on of the past address
         mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-//                System.out.println("clicked");
                 currentPosition = position;
-//                Request request = (Request)requestList.get(position);
-//                pickUpAutoComplete.setText(pick_up_address);
-//                destinationAutoComplete.setText("MY DESTINATION");
                 /**
                  * 问题：
                  * 1.没法确定选择的location是start还是end location
-                 * 2.没法显示地址（目前是location）
                  */
                 start_location = (Location) locationList.get(position);
                 System.out.println(start_location.getLon() + start_location.getLat());
@@ -162,7 +193,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
      * @param autocompleteSupportFragment
      * @param location
      */
-    public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location) {
+    public void onCreateAutoCompletion(final AutocompleteSupportFragment autocompleteSupportFragment, final Location location, boolean isStart) {
         autocompleteSupportFragment.setPlaceFields(
                 Arrays.asList(
                         Place.Field.ID,
@@ -179,31 +210,13 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         LatLng latLng = place.getLatLng();
                         currentLat = latLng.latitude;
                         currentLng = latLng.longitude;
-                        //如果user没有更新start lcoation的情况
-//                        if (currentLat == 0.0f || currentLng == 0.0f){
-//                            return;
-//                        }
+
                         location.setLat(currentLat);
                         location.setLon(currentLng);
-//                        DatabaseHelper.setSecondLocation(new Location(currentLat, currentLng));
-//                        User newUser = new User();
-//                        newUser.setName("testing1");
-//                        Request request = new Request(new Location(), DatabaseHelper.getSecondLocation(),
-//                                newUser, new User(), 89.f);
-//                        RequestDataHelper.addNewRequest(request, listener);
+//
 
                         phone = place.getPhoneNumber();
                         address = place.getAddress();
-
-
-
-//                        if ( marker != null){
-//                            marker.remove();
-//                        }
-
-//                        mMap.clear();
-//                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-//                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16.5f ),null);
 
 
                         Geocoder gcd =  new Geocoder(getBaseContext(), Locale.getDefault());
@@ -213,17 +226,32 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         try {
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
-                                locality = addresses.get(0).getLocality();
-                                //ystem.out.println("\n\n aaaaaaaaaaaa");
-                                //autocompleteSupportFragment.setText(locality);
-                                EditText etPlace = (EditText) autocompleteSupportFragment
-                                        .getView()
-                                        .findViewById(R.id.places_autocomplete_search_input);
-                                etPlace.setHint(place.getAddress());
+                                String current_adminiArea = addresses.get(0).getAdminArea();
+                                if (adminiArea != null){
+                                    if(!current_adminiArea.equals(adminiArea)){
+                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
+
+                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
+                                        startActivity(intent);
+
+
+
+                                    }
+                                }
+                                else{
+                                    adminiArea = current_adminiArea;
+                                }
+
+
 
                                 //set address in Location object
                                 location.setAddressName(place.getAddress());
                                 //System.out.println(destinationAutoComplete);
+                                if (isStart) {
+                                    start.setText(place.getAddress());
+                                } else {
+                                    end.setText(place.getAddress());
+                                }
 
 
                             }
@@ -259,7 +287,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 
-     // When user clicks on the tick button, this function checks if any of the entries are left blank.
+    // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
 
@@ -307,4 +335,3 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 }
-

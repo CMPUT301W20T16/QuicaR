@@ -31,6 +31,7 @@ import com.arsy.maps_library.MapRadar;
 
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.entity.Request;
 import com.example.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,10 +50,11 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation = null;
@@ -64,9 +66,12 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
     CircleOptions circleOptions;
     Circle mapCircle;
 
+//    Request currentRequest = null;
+
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
+    protected FirebaseAuth mAuth;
 
     private double radius = 1000;
 
@@ -95,9 +100,6 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
         View headerView = navigationView.getHeaderView(0);
 
         TextView userName_textView = headerView.findViewById(R.id.userName_textView);
@@ -116,6 +118,34 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_draw_open, R.string.navigation_draw_close);
         toggle.syncState();
+
+
+        // alert
+        String firstName = currentUser.getAccountInfo().getFirstName();
+        String lastName = currentUser.getAccountInfo().getLastName();
+        String phone = currentUser.getAccountInfo().getPhone();
+//        System.out.println(firstName);
+////        System.out.println("haha");
+        if (firstName == null | lastName == null | phone == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("update profile")//设置标题
+                    .setMessage("Hey,Loos like you forgot to update your personal information, please click user profile in the sidebar to update")//设置内容
+                    .setCancelable(false)//设置是否可以点击对话框以外的地方消失
+                    .setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+        }
+
+
+
 
 
     }
@@ -346,13 +376,13 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mapRadar.isAnimationRunning()) {
-            mapRadar.stopRadarAnimation();
-        }
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (mapRadar.isAnimationRunning()) {
+//            mapRadar.stopRadarAnimation();
+//        }
+//    }
 
 
 
@@ -389,10 +419,24 @@ public class BaseActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(i);
                 break;
 
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
+//                break;
+
             case R.id.nav_profile:
-                // change here
+                // profile activity start
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 

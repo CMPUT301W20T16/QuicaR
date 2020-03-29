@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
@@ -50,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
     //extends DrawRouteBaseActivity
 
     private OnGetRequestDataListener listener = this;
@@ -64,13 +65,20 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
-    TextViewSFProDisplayMedium view_distance, view_time, view_fare;
+    TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
+    String travelTime, travelDistance;
+    Float travelFare;
+
+    Location start_location, end_location;
+    MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     /**
      * after rider chosen start and end, this activity shows up
      * @param savedInstanceState
      */
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +96,8 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         view_distance = linearLayout.findViewById(R.id.view_distance);
         view_time = linearLayout.findViewById(R.id.view_time);
         view_fare = linearLayout.findViewById(R.id.view_fare);
-
-
+        view_start = linearLayout.findViewById(R.id.start_address);
+        view_end = linearLayout.findViewById(R.id.end_address);
 
 
         //get data from intent, i.e., current address
@@ -97,23 +105,25 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         start_location = (Location) intent.getSerializableExtra("start location");
         end_location = (Location) intent.getSerializableExtra("end location");
 
+
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-//        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
-//        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
 
-
-
+        //add pins to map
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
+
+        //update start and end address on bottom sheet
+        view_start.setText(start_location.getAddressName());
+        view_end.setText(end_location.getAddressName());
 
 
         //mMap.clear();
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
-        System.out.println("-----start address name-----"+start_address);
-        System.out.println("-----end address name-------"+end_address);
+//        System.out.println("-----start address name-----"+start_address);
+//        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
@@ -130,14 +140,6 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
             e.printStackTrace();
         }
 
-//        addMarkersToMap(directionsResult,mMap);
-//        addPolyline(directionsResult,mMap);
-
-
-
-
-        /*new FetchURL(RiderConfirmRiderActivity.this)
-                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");*/
 
         /**
          * estimate cost function
@@ -155,24 +157,24 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
             User newUser = new User();
             newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
-            /**
-             *    new request's cost is hard coded for now
-              */
+            //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    newUser, new User(), 20.0f);
+                    newUser, new User(), travelFare);
 
             currentRequest = request;
-
 
 
             RequestDataHelper.getInstance().addNewRequest(request, listener);
 
 
 
-            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
             intent1.putExtra("current request", currentRequest);
             startActivity(intent1);
+            finish();
 
         });
 
@@ -202,29 +204,40 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
         mMap.addMarker(destination);
         showAllMarkers();
         try {
-            addPolyline(directionsResult, mMap);
+            if (directionsResult != null) {
+                addPolyline(directionsResult, mMap);
+                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+                if (directionsResult.routes[0].legs[0].distance.inMeters >= 100000){
+                    Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 100 km!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+                    startActivity(intent);
 
-        }catch (ArrayIndexOutOfBoundsException e){
+
+                }
+
+                travelFare = (float) estimateFare (directionsResult.routes[0].legs[0].distance.inMeters);
+
+                view_distance.setText(travelDistance);
+                view_time.setText(travelTime);
+                view_fare.setText("$ " + travelFare);
+            }
+
+        }catch (Exception e){
             success = false;
             Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
             startActivity(intent);
 
         }
-        if (success){
-
-
-            String travelTime =  directionsResult.routes[0].legs[0].duration.humanReadable;
-            String travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-            Double travelFare = estimateFare( directionsResult.routes[0].legs[0].distance.inMeters);
-
-            view_distance.setText(travelDistance);
-            view_time.setText(travelTime);
-            view_fare.setText("$ "+travelFare );
-
-
-
-
+        if (success) {
+//            travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+//            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+//            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+//
+//            view_distance.setText(travelDistance);
+//            view_time.setText(travelTime);
+//            view_fare.setText("$ " + travelFare);
         }
 
     }
@@ -246,17 +259,55 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     }
 
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
 
 
-        return url;    }
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 7.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*2.3;
+        }
+        else{
+            fare = (distance/1000)*2.0;
+        }
+
+
+        return fare;
+    }
+
 
 
     /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
@@ -264,10 +315,10 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
      */
 
 
-    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
-    }
+//    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
+//    }
 
 
     private String getEndLocationTitle(DirectionsResult results){
@@ -313,6 +364,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     @Override
     public void onActiveNotification(Request request) {
+
     }
 
     @Override

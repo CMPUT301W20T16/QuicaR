@@ -2,6 +2,8 @@ package com.example.quicar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,8 +15,10 @@ import com.example.entity.Request;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -26,10 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCallback{
+public abstract class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCallback{
 
     Request mRequest;
-    Location start_location, end_location;
+    Location start_location, end_location, currentLocation;
     protected MarkerOptions start, destination;
     protected Polyline currentPolyline;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
@@ -45,7 +49,19 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //set map style
+        try {
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                System.out.println("-------------Style parsing failed");
+            } else {
+                System.out.println("------------Style success");
+            }
+        } catch(Resources.NotFoundException e) {
+            System.out.println("------------Can;t find style");
+        }
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -88,22 +104,40 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
     }
 
+    @Override
+    public void onLocationChanged(android.location.Location location) {
 
+        mLastLocation = location;
 
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
 
+        //place a new marker for current location
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
 
-        return url;
+        mCurrLocationMarker = mMap.addMarker(markerOptions);
 
     }
 
+//    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        String mode = "mode=" + directionMode;
+//        String parameter = str_origin + "&" + str_dest + "&" + mode;
+//        String format = "json";
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+//
+//
+//        return url;
+//
+//    }
+//
 
     protected GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
@@ -122,7 +156,7 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
 
 
             List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
             System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
             System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
 
@@ -134,24 +168,24 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
     }
 
 
-
-    protected double estimateFare (long distance){
-        double fare;
-
-        if(distance<1000){
-            fare = 7.0;
-
-        }
-        else if (distance <= 5000 && distance >= 1000){
-            fare = 5 + (distance / 1000)*2.3;
-        }
-        else{
-            fare = (distance/1000)*2.0;
-        }
-
-
-        return fare;
-    }
+//
+//    protected double estimateFare (long distance){
+//        double fare;
+//
+//        if(distance<1000){
+//            fare = 7.0;
+//
+//        }
+//        else if (distance <= 5000){
+//            fare = 5 + (distance / 1000)*2.3;
+//        }
+//        else{
+//            fare = (distance/1000)*2.0;
+//        }
+//
+//
+//        return fare;
+//    }
 
 
     @Override
