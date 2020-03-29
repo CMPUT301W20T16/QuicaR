@@ -311,7 +311,6 @@ public class RequestDataHelper {
                 /***** add request to driver's current request*****/
                 UserState userState = databaseHelper.getUserState();
                 userState.setCurrentRequest(request);
-//                databaseHelper.getUserState().setCurrentRequest(request);
 
                 if (updateMode == SET_ACTIVE_TAG) {
                     userState.setActive(true);

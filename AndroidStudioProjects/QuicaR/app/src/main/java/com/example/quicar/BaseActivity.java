@@ -100,9 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
         View headerView = navigationView.getHeaderView(0);
 
         TextView userName_textView = headerView.findViewById(R.id.userName_textView);
