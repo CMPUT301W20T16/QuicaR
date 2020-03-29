@@ -132,14 +132,11 @@ public class UpdateAccountActivity extends AppCompatActivity {
                                         username_change.setError("duplicate username");
                                     } else {
                                         ref.child(uid).child("accountInfo").child("userName").setValue(newUserName);
-
                                         Toast.makeText(UpdateAccountActivity.this, "username updated", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                                 }
                             });
 */
@@ -152,9 +149,9 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     AlertDialog.Builder builderPwd = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflaterPwd = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialogPwd = inflaterPwd.inflate(R.layout.password_update_dialog, null);
-                    EditText mOriginEmail = viewDialogPwd.findViewById(R.id.origin_pwd);
+                    EditText mOriginEmail = viewDialogPwd.findViewById(R.id.origin_password);
                     EditText mpwdUpdate = viewDialogPwd.findViewById(R.id.pwd_dialog_change);
-                    EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_dialog);
+                    EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_pwd);
                     builderPwd.setView(viewDialogPwd);
                     builderPwd.setTitle("Change Password");
                     builderPwd.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -166,20 +163,20 @@ public class UpdateAccountActivity extends AppCompatActivity {
                             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
-                        // Get auth credentials from the user for re-authentication. The example below shows
-                        // email and password credentials but there are multiple possible providers,
-                        // such as GoogleAuthProvider or FacebookAuthProvider.
+                            // Get auth credentials from the user for re-authentication. The example below shows
+                            // email and password credentials but there are multiple possible providers,
+                            // such as GoogleAuthProvider or FacebookAuthProvider.
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(mUser.getEmail(), originEmail);
 
-                        // Prompt the user to re-provide their sign-in credentials
+                            // Prompt the user to re-provide their sign-in credentials
                             mUser.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "User re-authenticated.");
-                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();;
+                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();
 
                                             }
                                         }
