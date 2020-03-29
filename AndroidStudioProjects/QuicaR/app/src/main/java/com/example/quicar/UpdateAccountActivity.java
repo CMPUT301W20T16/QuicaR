@@ -71,6 +71,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     EditText pwd_confirm = viewDialog.findViewById(R.id.password_check);
                     builder.setView(viewDialog);
                     builder.setTitle("change email");
+                    builder.setNegativeButton("CANCEL", null);
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -147,7 +148,6 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                     });
                         }
                     });
-                    builder.setNegativeButton("CANCEL", null);
                     builder.create().show();
                 }
 
@@ -160,6 +160,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_dialog);
                     builderPwd.setView(viewDialogPwd);
                     builderPwd.setTitle("Change Password");
+                    builderPwd.setNegativeButton("CANCEL", null);
                     builderPwd.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
