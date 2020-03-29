@@ -50,6 +50,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -70,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
+    protected FirebaseAuth mAuth;
 
     private double radius = 1000;
 
@@ -116,6 +118,34 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_draw_open, R.string.navigation_draw_close);
         toggle.syncState();
+
+
+        // alert
+        String firstName = currentUser.getAccountInfo().getFirstName();
+        String lastName = currentUser.getAccountInfo().getLastName();
+        String phone = currentUser.getAccountInfo().getPhone();
+//        System.out.println(firstName);
+////        System.out.println("haha");
+        if (firstName == null | lastName == null | phone == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("update profile")//设置标题
+                    .setMessage("Hey,Loos like you forgot to update your personal information, please click user profile in the sidebar to update")//设置内容
+                    .setCancelable(false)//设置是否可以点击对话框以外的地方消失
+                    .setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+        }
+
+
+
 
 
     }
@@ -384,10 +414,29 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_account:
+                Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+                startActivity(i);
+                break;
+
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
+//                break;
+
             case R.id.nav_profile:
-                // change here
+                // profile activity start
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 
