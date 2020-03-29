@@ -74,8 +74,6 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         riderEmail = linearLayout.findViewById(R.id.userEmail_textView);
         riderPhone = linearLayout.findViewById(R.id.userPhone_textView);
         riderName = linearLayout.findViewById(R.id.userName_textView);
-        callButton = linearLayout.findViewById(R.id.call_rider_button);
-        emailButton = linearLayout.findViewById(R.id.email_rider_button);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
 
@@ -86,8 +84,8 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         riderName.setText(currentRequest.getRider().getName());
 
 
-        start_location = mRequest.getStart();
-        end_location = mRequest.getDestination();
+        start_location = currentRequest.getStart();
+        end_location = currentRequest.getDestination();
 
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
@@ -120,6 +118,12 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (currentRequest == null)
+                    return;
+
+                System.out.println("set arrived----------");
+
                 RequestDataHelper
                         .getInstance()
                         .setRequestArrived(currentRequest.getRid(),
@@ -138,6 +142,13 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.SET_ARRIVED_TAG)) {
 
+
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
+
+            System.out.println("susccess------------------");
             Intent intent = new Intent(DriverOnGoingActivity.this, ScanActivity.class);
             startActivity(intent);
             finish();
