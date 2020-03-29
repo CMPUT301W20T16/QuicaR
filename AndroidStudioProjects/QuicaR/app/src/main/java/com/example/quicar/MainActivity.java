@@ -23,6 +23,7 @@ import com.example.listener.OnGetRecordDataListener;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.user.User;
 import com.example.util.ConnectivityReceiver;
+import com.example.util.MyUtil;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -48,8 +49,13 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         RecordDataHelper.getInstance();
         UserDataHelper.getInstance();
 
+        System.out.println(DatabaseHelper.getInstance().getUserState().getCurrentUserName());
+        if (DatabaseHelper.getInstance().getUserState().getCurrentUserName() != null)
+            MyUtil.goToIntent(this);
+        else
+            startActivity(new Intent(getApplicationContext(), Login.class));
 //        //  test adding new user in register page
-        startActivity(new Intent(getApplicationContext(), Login.class));
+
 //        finish();
 
 ////           test map view

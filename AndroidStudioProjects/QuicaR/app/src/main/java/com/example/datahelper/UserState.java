@@ -10,6 +10,7 @@ public class UserState {
     private User currentUser = new User();
     private String currentMode;
     private String token;
+    private Boolean onConfirm = Boolean.FALSE;
     private Boolean onMatching = Boolean.FALSE;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
@@ -91,6 +92,14 @@ public class UserState {
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Boolean getOnConfirm() {
+        return onConfirm;
+    }
+
+    public void setOnConfirm(Boolean onConfirm) {
+        this.onConfirm = onConfirm;
     }
 
     public Boolean getOnMatching() {

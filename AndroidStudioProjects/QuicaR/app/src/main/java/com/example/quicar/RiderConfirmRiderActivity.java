@@ -189,6 +189,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
             @Override
             public void onClick(View v) {
+                /* added for user state */
+                DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
+                UserStateDataHelper.getInstance().recordState();
+
                 finish();
             }
         });

@@ -5,6 +5,8 @@ import com.example.user.User;
 
 public class ProxyUserState {
     private String currentMode;
+    private Boolean onConfirm = Boolean.FALSE;
+    private Boolean onMatching = Boolean.FALSE;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
@@ -18,6 +20,8 @@ public class ProxyUserState {
 
     ProxyUserState(UserState userState) {
         this.currentMode = userState.getCurrentMode();
+        this.onConfirm = userState.getOnConfirm();
+        this.onMatching = userState.getOnMatching();
         this.active = userState.getActive();
         this.onGoing = userState.getOnGoing();
         this.onArrived = userState.getOnArrived();
@@ -41,6 +45,22 @@ public class ProxyUserState {
      */
     public void setCurrentMode(String currentMode) {
         this.currentMode = currentMode;
+    }
+
+    public Boolean getOnConfirm() {
+        return onConfirm;
+    }
+
+    public void setOnConfirm(Boolean onConfirm) {
+        this.onConfirm = onConfirm;
+    }
+
+    public Boolean getOnMatching() {
+        return onMatching;
+    }
+
+    public void setOnMatching(Boolean onMatching) {
+        this.onMatching = onMatching;
     }
 
     /**
