@@ -38,10 +38,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateAccountActivity extends AppCompatActivity implements OnGetUserDataListener {
+public class UpdateAccountActivity extends AppCompatActivity {
     private static final String TAG = "UpdateAccountActivity";
-    FirebaseAuth mAuth;
-    private OnGetUserDataListener listener = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +54,6 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, optionList);
         list.setAdapter(adapter);
 
-
-        mAuth = FirebaseAuth.getInstance();
-
-
-
-
-//        setContentView(R.layout.activity_general_user_profile);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -70,7 +61,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     AlertDialog.Builder builder = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflater = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialog = inflater.inflate(R.layout.username_update_dialog, null);
-                    EditText email_change = viewDialog.findViewById(R.id.email_update);
+                    EditText email_change = viewDialog.findViewById(R.id.email_change);
                     EditText pwd_confirm = viewDialog.findViewById(R.id.password_check);
                     builder.setView(viewDialog);
                     builder.setTitle("change email");
@@ -110,9 +101,6 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                                                         User myUser = dataSnapshot1.getValue(User.class);
                                                                         myUser.getAccountInfo().setEmail(newEmail);
-                                                                        UserDataHelper.getInstance().updateUserProfile(myUser,listener);
-                                                                        System.out.println("emailC");
-                                                                        System.out.println(myUser.getAccountInfo().getEmail());
                                                                     }
                                                                 }
 
@@ -160,78 +148,49 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     builder.create().show();
                 }
 
-//                if (position == 1) {
-//                    AlertDialog.Builder builderPwd = new AlertDialog.Builder(UpdateAccountActivity.this);
-//                    LayoutInflater inflaterPwd = LayoutInflater.from(UpdateAccountActivity.this);
-//                    View viewDialogPwd = inflaterPwd.inflate(R.layout.password_update_dialog, null);
-//                    EditText mOriginEmail = viewDialogPwd.findViewById(R.id.origin_pwd);
-//                    EditText mpwdUpdate = viewDialogPwd.findViewById(R.id.pwd_dialog_change);
-//                    EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_dialog);
-//                    builderPwd.setView(viewDialogPwd);
-//                    builderPwd.setTitle("Change Password");
-//                    builderPwd.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            String originEmail = mOriginEmail.getText().toString();
-//                            String pwdReset = mpwdUpdate.getText().toString();
-//                            String pwdResetConfirm = mpwdConfirm.getText().toString();
-//                            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//
-//                        // Get auth credentials from the user for re-authentication. The example below shows
-//                        // email and password credentials but there are multiple possible providers,
-//                        // such as GoogleAuthProvider or FacebookAuthProvider.
-//                            AuthCredential credential = EmailAuthProvider
-//                                    .getCredential(mUser.getEmail(), originEmail);
-//
-//                        // Prompt the user to re-provide their sign-in credentials
-//                            mUser.reauthenticate(credential)
-//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            if (task.isSuccessful()) {
-//                                                Log.d(TAG, "User re-authenticated.");
-//                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();;
-//
-//                                            }
-//                                        }
-//                                    });
-//                        }
-//                    });
-//                    builderPwd.create().show();
-//                }
+                if (position == 1) {
+                    AlertDialog.Builder builderPwd = new AlertDialog.Builder(UpdateAccountActivity.this);
+                    LayoutInflater inflaterPwd = LayoutInflater.from(UpdateAccountActivity.this);
+                    View viewDialogPwd = inflaterPwd.inflate(R.layout.password_update_dialog, null);
+                    EditText mOriginEmail = viewDialogPwd.findViewById(R.id.origin_pwd);
+                    EditText mpwdUpdate = viewDialogPwd.findViewById(R.id.pwd_dialog_change);
+                    EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_dialog);
+                    builderPwd.setView(viewDialogPwd);
+                    builderPwd.setTitle("Change Password");
+                    builderPwd.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String originEmail = mOriginEmail.getText().toString();
+                            String pwdReset = mpwdUpdate.getText().toString();
+                            String pwdResetConfirm = mpwdConfirm.getText().toString();
+                            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+                        // Get auth credentials from the user for re-authentication. The example below shows
+                        // email and password credentials but there are multiple possible providers,
+                        // such as GoogleAuthProvider or FacebookAuthProvider.
+                            AuthCredential credential = EmailAuthProvider
+                                    .getCredential(mUser.getEmail(), originEmail);
+
+                        // Prompt the user to re-provide their sign-in credentials
+                            mUser.reauthenticate(credential)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User re-authenticated.");
+                                                Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();;
+
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+                    builderPwd.create().show();
+                }
 
             }
         });
-    }
-
-
-    /**
-     *
-     * for implement to get databasework
-     */
-    @Override
-    public void onSuccess(User user, String tag) {
-
-        if (tag == UserDataHelper.GET_USER_TAG){
-            System.out.println("isSuccess");
-        }
-
-
-    }
-
-    @Override
-    public void onUpdateNotification(User user) {
-
-    }
-
-    @Override
-    public void onFailure(String errorMessage) {
-        System.out.println("isFalse");
-        System.out.println(errorMessage);
-        Toast.makeText(UpdateAccountActivity.this,
-                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
-
     }
 
 
