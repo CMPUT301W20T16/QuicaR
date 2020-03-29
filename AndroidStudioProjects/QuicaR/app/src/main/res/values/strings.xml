@@ -31,7 +31,7 @@
     <string name="profile_firstName">first name</string>
     <string name="profile_lastName">last name</string>
     <string name="profile_birthDate">birth date</string>
-    <string name="profile_gender_hint">gender</string>
+    <string name="profile_gender_hint">\t\tgender</string>
     <string name="save_button">save</string>
 
 

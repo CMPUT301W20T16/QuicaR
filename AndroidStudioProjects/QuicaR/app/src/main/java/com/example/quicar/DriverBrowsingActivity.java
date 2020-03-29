@@ -117,6 +117,11 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
                             "driver", this);
             Toast.makeText(this, "rider request updated to active successfully",
                     Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
+//            intent.putExtra("current accepted request", request);
+            startActivity(intent);
+            finish();
         }
 
     }
@@ -154,18 +159,12 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
 
     @Override
     public void onOkPressed() {
-//        User newDriver = new User();
-//        newDriver.setName("new Driver");
-        // testing
-//                DatabaseHelper.setCurrentUserName("Name");
+        //activate selected request
         Request request = (Request)requestList.get(currentPosition);
         RequestDataHelper
                 .getInstance()
                 .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
                         request.getEstimatedCost(), DriverBrowsingActivity.this);
-        Intent intent = new Intent(DriverBrowsingActivity.this, DriverPickUpActivity.class);
-        intent.putExtra("current accepted request", request);
-        startActivity(intent);
-        finish();
+
     }
 }
