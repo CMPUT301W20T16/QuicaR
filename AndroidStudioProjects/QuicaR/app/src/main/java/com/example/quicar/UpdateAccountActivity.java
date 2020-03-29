@@ -41,6 +41,7 @@ import java.util.Map;
 public class UpdateAccountActivity extends AppCompatActivity implements OnGetUserDataListener {
     private static final String TAG = "UpdateAccountActivity";
     private OnGetUserDataListener listener = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     AlertDialog.Builder builder = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflater = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialog = inflater.inflate(R.layout.username_update_dialog, null);
-                    EditText email_change = viewDialog.findViewById(R.id.email_change);
+                    EditText email_change = viewDialog.findViewById(R.id.change_email);
                     EditText pwd_confirm = viewDialog.findViewById(R.id.password_check);
                     builder.setView(viewDialog);
                     builder.setTitle("change email");
@@ -93,22 +94,24 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                                             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                                                             ref.child(uid).child("accountInfo").child("email").setValue(newEmail);
-                                                            Query query = ref.orderByChild("AccountInfo/email").equalTo(newEmail);
-                                                            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                                                        User myUser = dataSnapshot1.getValue(User.class);
-                                                                        myUser.getAccountInfo().setEmail(newEmail);
-                                                                        UserDataHelper.getInstance().updateUserProfile(myUser,listener);
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                }
-                                                            });
+                                                            User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+                                                            currentUser.getAccountInfo().setEmail(newEmail);
+                                                            UserDataHelper.getInstance().updateUserProfile(currentUser, listener);
+//                                                            Query query = ref.orderByChild("AccountInfo/email").equalTo(newEmail);
+//                                                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                                @Override
+//                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                                                                        User myUser = dataSnapshot1.getValue(User.class);
+//                                                                        myUser.getAccountInfo().setEmail(newEmail);
+//                                                                    }
+//                                                                }
+//
+//                                                                @Override
+//                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                                                }
+//                                                            });
 
                                                             Toast.makeText(getApplicationContext(), "email updated successful", Toast.LENGTH_SHORT).show();
                                                         }
@@ -132,11 +135,14 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                         username_change.setError("duplicate username");
                                     } else {
                                         ref.child(uid).child("accountInfo").child("userName").setValue(newUserName);
+
                                         Toast.makeText(UpdateAccountActivity.this, "username updated", Toast.LENGTH_SHORT).show();
                                     }
                                 }
+
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                 }
                             });
 */
@@ -188,25 +194,14 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
 
             }
         });
-
-
-
-
-
-
     }
 
-    /**
-     *
-     * for implement to get databasework
-     */
+
     @Override
     public void onSuccess(User user, String tag) {
-
-        if (tag == UserDataHelper.GET_USER_TAG){
-            System.out.println("isSuccess");
+        if (tag.equals(UserDataHelper.UPDATE_USER_TAG)) {
+            System.out.println("updated email sucessfully");
         }
-
     }
 
     @Override
@@ -216,15 +211,6 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("isFalse");
-        System.out.println(errorMessage);
-        Toast.makeText(UpdateAccountActivity.this,
-                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }
-
-
-
-
-
 }
