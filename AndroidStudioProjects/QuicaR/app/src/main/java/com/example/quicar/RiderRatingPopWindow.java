@@ -7,10 +7,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserDataHelper;
+import com.example.listener.OnGetUserDataListener;
+import com.example.user.DriverInfo;
+import com.example.user.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 
@@ -24,9 +31,12 @@ import com.hsalf.smilerating.SmileRating;
  * e.g, 1 for poor service, 5 for excellent service
  */
 
-public class RiderRatingPopWindow extends Activity {
+public class RiderRatingPopWindow extends Activity implements OnGetUserDataListener{
+
+    User currentUser = DatabaseHelper.getInstance().getCurrentUser();
 
     private static final String TAG = "RiderRatingPopWindow";
+    private OnGetUserDataListener listener = this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +60,8 @@ public class RiderRatingPopWindow extends Activity {
 
         SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
 
+
+
         @BaseRating.Smiley int smiley = smileRating.getSelectedSmile();
         switch (smiley) {
             case SmileRating.BAD:
@@ -72,7 +84,7 @@ public class RiderRatingPopWindow extends Activity {
                 break;
         }
 
-        int level = smileRating.getRating(); // level is from 1 to 5
+        int rateLevel = smileRating.getRating(); // level is from 1 to 5
 
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
@@ -101,6 +113,9 @@ public class RiderRatingPopWindow extends Activity {
             }
         });
 
+        // update rate first
+        this.updateDriverRate(rateLevel);
+
         smileRating.setOnRatingSelectedListener(new SmileRating.OnRatingSelectedListener() {
             @Override
             public void onRatingSelected(int level, boolean reselected) {
@@ -115,4 +130,52 @@ public class RiderRatingPopWindow extends Activity {
             }
         });
     }
+
+
+
+    /**
+     *Design for update rate
+     */
+    public void updateDriverRate(int newRateLevel) {
+        int orderNumPre = currentUser.getAccountInfo().getDriverInfo().getOrderNumber();
+        double avgRatePre  = currentUser.getAccountInfo().getDriverInfo().getRating();
+        double preSumRate = orderNumPre * avgRatePre;
+
+        // plus one for current finished order
+        int orderNumNew = orderNumPre + 1;
+        double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
+        // update new order num and rate
+        currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
+        currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
+        UserDataHelper.getInstance().updateUserProfile(currentUser,listener);
+
+    }
+
+    /**
+     *
+     * for implement to get databasework
+     */
+    @Override
+    public void onSuccess(User user, String tag) {
+        ;
+
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        System.out.println("isFalse");
+        System.out.println(errorMessage);
+        Toast.makeText(RiderRatingPopWindow.this,
+                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
+
 }
