@@ -80,7 +80,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         endAddress.setText(currentRequest.getDestAddrName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
-        riderName.setText(currentRequest.getRider().getName());
+//        riderName.setText(currentRequest.getRider().getName());
 
 
         start_location = currentRequest.getStart();
@@ -106,10 +106,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                     .mode(TravelMode.DRIVING).origin(start_address)
                     .destination(end_address).departureTime(Instant.now())
                     .await();
-
-
-
-
 
         } catch (ApiException e) {
             e.printStackTrace();
@@ -139,10 +135,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                         .setRequestPickedUp(currentRequest.getRid(),
                                 DriverPickUpActivity.this);
 
-                System.out.println("Request id-------------" + currentRequest.getRid());
-                Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
-                intent.putExtra("current accepted request", currentRequest);
-                startActivity(intent);
             }
         });
 
@@ -154,9 +146,16 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
      * @param requests
      * @param tag
      */
-    // if successfully get all request associated with the specific driver, i.e., current user
+    // if successfully successfully set currentRequest status to PickUp
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.SET_PICKEDUP_TAG)) {
+            System.out.println("------------ request is set to pick up -----------");
+
+            Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
+            intent.putExtra("current accepted request", currentRequest);
+            startActivity(intent);
+        }
 
     }
 
@@ -171,9 +170,8 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         mMap.addMarker(destination);
         showAllMarkers();
         addPolyline(directionsResult,mMap);
-
-
     }
+
 
     @Override
     public void onTaskDone(Object... values) {

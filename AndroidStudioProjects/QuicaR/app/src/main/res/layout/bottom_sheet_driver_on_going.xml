@@ -123,17 +123,19 @@
                     app:civ_border_color="@color/paymentBackground"
                     app:civ_border_width="2dp" />
 
-                <com.example.font.TextViewSFProDisplayMedium
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Some Name"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="     " />
+
+                <com.example.font.TextViewSFProDisplayMedium
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Some Name"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
 
             </LinearLayout>
 
@@ -249,6 +251,7 @@
 
 
                             <com.example.font.TextViewSFProDisplayRegular
+                                android:id="@+id/estimate_fare"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="$xxx"

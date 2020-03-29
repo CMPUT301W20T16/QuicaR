@@ -125,9 +125,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
                             .getInstance()
                             .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
 
-                    Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
-                    startActivity(intent);
-                    finish();;
 
                 } else {
                     System.out.println("Unable to retrieve current Request--------------");

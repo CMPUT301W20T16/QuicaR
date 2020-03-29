@@ -81,7 +81,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         endAddress.setText(currentRequest.getDestAddrName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
-        riderName.setText(currentRequest.getRider().getName());
+//        riderName.setText(currentRequest.getRider().getName());
 
 
         start_location = mRequest.getStart();
@@ -122,8 +122,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
                         .getInstance()
                         .setRequestArrived(currentRequest.getRid(),
                                 DriverOnGoingActivity.this);
-                Intent intent = new Intent(DriverOnGoingActivity.this, ScanActivity.class);
-                startActivity(intent);
+
             }
         });
     }
@@ -135,6 +134,12 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
      */
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.SET_ARRIVED_TAG)) {
+
+            Intent intent = new Intent(DriverOnGoingActivity.this, ScanActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
