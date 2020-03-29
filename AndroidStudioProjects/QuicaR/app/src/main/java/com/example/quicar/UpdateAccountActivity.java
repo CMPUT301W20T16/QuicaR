@@ -38,10 +38,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateAccountActivity extends AppCompatActivity {
+public class UpdateAccountActivity extends AppCompatActivity implements OnGetUserDataListener {
     private static final String TAG = "UpdateAccountActivity";
-
-
+    private OnGetUserDataListener listener = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +100,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
                                                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                                                         User myUser = dataSnapshot1.getValue(User.class);
                                                                         myUser.getAccountInfo().setEmail(newEmail);
+                                                                        UserDataHelper.getInstance().updateUserProfile(myUser,listener);
                                                                     }
                                                                 }
 
@@ -188,7 +188,43 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+
     }
+
+    /**
+     *
+     * for implement to get databasework
+     */
+    @Override
+    public void onSuccess(User user, String tag) {
+
+        if (tag == UserDataHelper.GET_USER_TAG){
+            System.out.println("isSuccess");
+        }
+
+    }
+
+    @Override
+    public void onUpdateNotification(User user) {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        System.out.println("isFalse");
+        System.out.println(errorMessage);
+        Toast.makeText(UpdateAccountActivity.this,
+                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
 
 
 }
