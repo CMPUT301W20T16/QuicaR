@@ -138,6 +138,12 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                            "rider", this);
+
             Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
             startActivity(intent);
             finish();
