@@ -13,7 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.PayRecordDataHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.entity.PayRecord;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.BankAccount;
 import com.example.user.User;
@@ -129,11 +131,12 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
                     Toast.makeText(RechargeActivity.this,"Please enter valid ccv number with length 3",Toast.LENGTH_SHORT ).show();
                 }
                 else {
-                    if (is_select){
-                        amount += user.getAccountInfo().getWallet().getBalance();
-                    }else{
-                        amount += Float.parseFloat(edit_amount.getText().toString());
+                    if (!is_select){
+                        amount = Float.parseFloat(edit_amount.getText().toString());
                     }
+                    PayRecord payRecord = new PayRecord(user, null, select_card, amount);
+                    PayRecordDataHelper.getInstance().addPayRecord(payRecord);
+                    amount += user.getAccountInfo().getWallet().getBalance();
                     user.getAccountInfo().getWallet().setBalance(amount);
                     UserDataHelper.getInstance().updateUserProfile(user, listener);
                     Toast.makeText(RechargeActivity.this,"Recharge successfully",Toast.LENGTH_SHORT ).show();

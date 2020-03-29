@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.user.BankAccount;
 import com.example.user.User;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public class PayRecord {
 
     private User toUser;
     private User fromUser;
+    private BankAccount fromCard;
     private Float payment;
     private Date dateTime;
 
@@ -29,9 +31,10 @@ public class PayRecord {
      * @param payment
      *  the amount of the payment
      */
-    public PayRecord(User toUser, User fromUser, Float payment){
+    public PayRecord(User toUser, User fromUser, BankAccount fromCard, Float payment){
         this.toUser = toUser;
         this.fromUser = fromUser;
+        this.fromCard = fromCard;
         this.payment = payment;
         this.dateTime = new Date();
     }
@@ -71,6 +74,25 @@ public class PayRecord {
      */
     public void setFromUser(User fromUser) {
         this.fromUser = fromUser;
+        // might want to test if the user is valid
+    }
+
+    /**
+     * This method return the card where the money from
+     * @return
+     *  fromCard of the payment record
+     */
+    public BankAccount getFromCard() {
+        return fromCard;
+    }
+
+    /**
+     * This method set the fromUser of the payment record
+     * @param fromCard
+     *  the user who pay the money to be set into the payment record
+     */
+    public void setFromCard(BankAccount fromCard) {
+        this.fromCard = fromCard;
         // might want to test if the user is valid
     }
 
