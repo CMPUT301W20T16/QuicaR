@@ -298,8 +298,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderReviewActivity.this, R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.pop_window_rider_rating,(LinearLayout)findViewById(R.id.rate_linear));
         SmileRating smileRating = (SmileRating)bottomSheetView.findViewById(R.id.smile_rating);
-        qrCode = (ImageView)bottomSheetView.findViewById(R.id.qr_code);
-        generate_qr(qrCode);
 //                DisplayMetrics dm = new DisplayMetrics();
 //                getWindowManager().getDefaultDisplay().getMetrics(dm);
 //
@@ -376,14 +374,21 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 // reselected is false when user selects different smiley that previously selected one
                 // true when the same smiley is selected.
                 // Except if it first time, then the value will be false.
-                Intent intent = new Intent(RiderReviewActivity.this, QRPaymentActivity.class);
-                intent.putExtra("rating", level);
-                startActivity(intent);
-                finish();
+                bottomSheetDialog.cancel();
+                showQRBottom();
             }
         });
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+    }
+
+    protected void showQRBottom() {
+        BottomSheetDialog bottomSheetDialog2 = new BottomSheetDialog(RiderReviewActivity.this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView2 = LayoutInflater.from(getApplicationContext()).inflate(R.layout.ride_complete_qr, (LinearLayout) findViewById(R.id.qr_linear));
+        qrCode = (ImageView) bottomSheetView2.findViewById(R.id.qr_code);
+        generate_qr(qrCode);
+        bottomSheetDialog2.setContentView(bottomSheetView2);
+        bottomSheetDialog2.show();
     }
 
 

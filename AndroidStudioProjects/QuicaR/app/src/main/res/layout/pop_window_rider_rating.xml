@@ -7,24 +7,16 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_sheet_background">
 
+
     <TextView
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show the QR code to the driver"
+        android:text="Rate your trip"
         android:layout_gravity="center_horizontal"
         android:textSize="20sp"
         android:textColor="@color/white"/>
 
-    <ImageView
-        android:id="@+id/qr_code"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/qr_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <com.hsalf.smilerating.SmileRating
         android:id="@+id/smile_rating"
@@ -35,5 +27,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="(If you have anything extra to say about your trip experience, you can click on the 'Complaints and Suggestions' button on the home page)"
+        android:textSize="12sp"
+        android:textColor="@color/white"/>
 
 </LinearLayout>
