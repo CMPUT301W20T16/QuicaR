@@ -116,7 +116,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                                         if (task.isSuccessful()) {
                                                             if (task.getResult().getSignInMethods().size() == 1) {
                                                                 Log.d(TAG, "this email is already in use");
-                                                                // Toast.makeText(getApplicationContext(), "this email is already in use", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(getApplicationContext(), "this email is already in use", Toast.LENGTH_SHORT).show();
                                                             } else if (task.getResult().getSignInMethods().size() == 0) {
                                                                 // update the email
                                                                 Log.d(TAG, "valid new email");
@@ -155,7 +155,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     AlertDialog.Builder builderPwd = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflaterPwd = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialogPwd = inflaterPwd.inflate(R.layout.password_update_dialog, null);
-                    EditText mOriginEmail = viewDialogPwd.findViewById(R.id.origin_pwd);
+                    EditText mOldPassword = viewDialogPwd.findViewById(R.id.origin_pwd);
                     EditText mpwdUpdate = viewDialogPwd.findViewById(R.id.pwd_dialog_change);
                     EditText mpwdConfirm = viewDialogPwd.findViewById(R.id.pwd_confirm_dialog);
                     builderPwd.setView(viewDialogPwd);
@@ -163,13 +163,13 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                     builderPwd.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String originEmail = mOriginEmail.getText().toString();
+                            String oldPassword = mOldPassword.getText().toString();
                             String pwdReset = mpwdUpdate.getText().toString();
                             String pwdResetConfirm = mpwdConfirm.getText().toString();
                             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                            if (TextUtils.isEmpty(originEmail)) {
-                                Toast.makeText(getApplicationContext(), "Email field can not be empty", Toast.LENGTH_SHORT).show();
+                            if (TextUtils.isEmpty(oldPassword)) {
+                                Toast.makeText(getApplicationContext(), "old password field can not be empty", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
@@ -184,17 +184,11 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                             }
 
 
-                            if (!isValidEmail(originEmail)) {
-                                Toast.makeText(getApplicationContext(), "wrong email format", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-
                             // Get auth credentials from the user for re-authentication. The example below shows
                             // email and password credentials but there are multiple possible providers,
                             // such as GoogleAuthProvider or FacebookAuthProvider.
                             AuthCredential credential = EmailAuthProvider
-                                    .getCredential(mUser.getEmail(), originEmail);
+                                    .getCredential(mUser.getEmail(), oldPassword);
 
                             // Prompt the user to re-provide their sign-in credentials
                             mUser.reauthenticate(credential)
@@ -243,13 +237,16 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
 
     public static boolean isValidEmail(String email)
     {
-        if (email != null)
-        {
-            Pattern p = Pattern.compile("^[A-Za-z].*?@gmail\\.com$");
-            Matcher m = p.matcher(email);
-            return m.find();
-        }
-        return false;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
+
     }
 
     @Override
