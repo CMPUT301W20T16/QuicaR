@@ -132,6 +132,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 if (currentRequest == null)
                     return;
                 /* End here */
+
                 RequestDataHelper
                         .getInstance()
                         .setRequestPickedUp(currentRequest.getRid(),

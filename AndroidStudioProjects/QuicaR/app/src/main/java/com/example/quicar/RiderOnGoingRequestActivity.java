@@ -14,6 +14,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
+import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -29,9 +30,8 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
-    TextView driverName, driverRating, driverEmail, driverPhone, estimateFare, startAddress, endAddress;
-    TextViewSFProDisplayRegular CallButton;
-    TextViewSFProDisplayRegular EmailButton;
+    TextViewSFProDisplayMedium driverName, driverRating;
+    TextViewSFProDisplayRegular driverEmail, driverPhone, estimateFare, startAddress, endAddress;
     Button_SF_Pro_Display_Medium CancelButton;
 
     Request currentRequest = null;
@@ -56,11 +56,9 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
 
         // set Buttons
 //        DetailButton = linearLayout.findViewById(R.id.driver_detail_button);
-        CallButton = linearLayout.findViewById(R.id.call_driver_button);
-        EmailButton = linearLayout.findViewById(R.id.email_driver_button);
         CancelButton = linearLayout.findViewById(R.id.cancel_button);
 
-        // set TextView
+//        // set TextView
         driverName = linearLayout.findViewById(R.id.driver_name_tv);
         driverEmail = linearLayout.findViewById(R.id.driver_email_tv);
         driverPhone = linearLayout.findViewById(R.id.driver_phone_tv);
@@ -68,31 +66,15 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
         estimateFare = linearLayout.findViewById(R.id.estimate_fare);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
+//
+//        //set Text View
+        driverName.setText(currentRequest.getDriver().getName());
+//        driverName.setText("TYYIJOKM!!!!!!!!!!!!!!!!!");
+//        driverEmail.setText("!!!!!!!!!!!!!!!!!!");
 
-        //set Text View
-        driverName.setText(mRequest.getDriver().getName());
-
-        driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
-        driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
-        driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-//        estimateFare.setText(mRequest.getEstimatedCost().toString());
-
-        // set on click listener for buttons
-        // transfer to default dial page
-        CallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + driverPhone.getText().toString()));
-                startActivity(intent);
-
-            }
-        });
-
-        //send email需要拿到user的email，格式类似上面打电话
-
-
+        driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
+        driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
+        driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
 
 
 

@@ -50,10 +50,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LogoActivity"/>
         <activity android:name=".Register" android:parentActivityName=".Login"/>
-        <activity android:name=".Login" /> <!-- [START firebase_service] -->
+        <activity android:name=".Login"/> <!-- [START firebase_service] -->
 
         <activity android:name=".UserProfileActivity"
+            android:parentActivityName=".RiderRequestActivity">
+        </activity>
+        
+        <activity android:name=".UpdateAccountActivity"
             android:parentActivityName=".RiderRequestActivity">
         </activity>
 

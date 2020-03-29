@@ -1,6 +1,6 @@
 package com.example.user;
 
-
+import com.google.firebase.database.Exclude;
 import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
@@ -55,10 +55,12 @@ public class User implements Serializable {
         this.accountInfo.setDriverInfo( rating,  plateNumber,  license,  sinNumber);
     }
 
+    @Exclude
     public void setName(String name) {
         setAccountInfo(null, null, null, null, null, null, null, name, null, new Wallet());
     }
 
+    @Exclude
     public String getName() {
         return this.accountInfo.getUserName();
     }

@@ -289,7 +289,7 @@ public class RequestDataHelper {
                     if (requestTmp.getAccepted() && !requestTmp.getPickedUp())
                         valid = true;
                 } else if (updateMode.equals(SET_ARRIVED_TAG)) {
-                    if (requestTmp.getAccepted() && !requestTmp.getPickedUp())
+                    if (requestTmp.getAccepted() && requestTmp.getPickedUp())
                         valid = true;
                 }
                 if (valid) {
