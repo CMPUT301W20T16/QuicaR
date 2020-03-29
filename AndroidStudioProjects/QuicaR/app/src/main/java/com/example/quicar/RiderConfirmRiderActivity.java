@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
     //extends DrawRouteBaseActivity
 
     private OnGetRequestDataListener listener = this;
@@ -70,7 +70,7 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     private Location start_location, end_location;
     private MarkerOptions start, destination;
-//    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
     /**
@@ -241,71 +241,71 @@ public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements 
 
     }
 
-//    public void showAllMarkers() {
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//
-//        for (MarkerOptions m : markerOptionsList) {
-//            builder.include(m.getPosition());
-//
-//        }
-//        LatLngBounds bounds = builder.build();
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels;
-//        int padding = (int) (width * 0.30);
-//
-//        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-//        mMap.animateCamera(cu);
-//
-//    }
-//
-//
-//    protected GeoApiContext getGeoContext() {
-//        GeoApiContext geoApiContext = new GeoApiContext();
-//        geoApiContext.setQueryRateLimit(3)
-//                .setApiKey(getString(R.string.map_key))
-//                .setConnectTimeout(1, TimeUnit.SECONDS)
-//                .setReadTimeout(1, TimeUnit.SECONDS)
-//                .setWriteTimeout(1, TimeUnit.SECONDS);
-//        return geoApiContext;
-//    }
-//
-//
-//    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-//        if (results != null) {
-////            if (results.routes.length == 0)
-//
-//
-//            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-//            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-//            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-//            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-//
-//        }
-//        else{
-//            System.out.println("------- null request queried.--------------");
-//
-//        }
-//    }
-//
-//
-//
-//    protected double estimateFare (long distance){
-//        double fare;
-//
-//        if(distance<1000){
-//            fare = 7.0;
-//
-//        }
-//        else if (distance <= 5000 && distance >= 1000){
-//            fare = 5 + (distance / 1000)*2.3;
-//        }
-//        else{
-//            fare = (distance/1000)*2.0;
-//        }
-//
-//
-//        return fare;
-//    }
+    public void showAllMarkers() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (MarkerOptions m : markerOptionsList) {
+            builder.include(m.getPosition());
+
+        }
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.30);
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
+
+    }
+
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
+
+    protected double estimateFare (long distance){
+        double fare;
+
+        if(distance<1000){
+            fare = 5.0;
+
+        }
+        else if (distance <= 5000 && distance >= 1000){
+            fare = 5 + (distance / 1000)*3;
+        }
+        else{
+            fare = (distance/1000)*2.5;
+        }
+
+
+        return fare;
+    }
 
 
 

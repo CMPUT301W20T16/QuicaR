@@ -185,7 +185,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 System.out.println("------------Style success");
             }
         } catch(Resources.NotFoundException e) {
-            System.out.println("------------Can;t find style");
+            System.out.println("------------Can't find style");
         }
 
 
@@ -254,8 +254,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setInterval(10);
+        mLocationRequest.setFastestInterval(10);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)

@@ -85,6 +85,7 @@ dependencies {
 
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
     implementation 'com.google.maps:google-maps-services:0.1.20'
+    //implementation 'com.google.android.gms:play-services:12.0.1'
 
     implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -92,5 +93,8 @@ dependencies {
     implementation 'com.hanks:passcodeview:0.1.2'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.github.sujithkanna:smileyrating:1.6.8'
+
+    //implementation 'com.google.android.gms:play-services-location:16.0.0'
+
 
 }
