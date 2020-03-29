@@ -62,7 +62,7 @@ public class RiderRequestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                if (current_address != null) {
+                if (current_address != null && DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBalance() > 0) {
                     Location currentLocation = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                     currentLocation.setAddressName(current_address);
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
@@ -71,8 +71,11 @@ public class RiderRequestActivity extends BaseActivity {
                     //startActivityForResult(intent, 1);
                     startActivity(intent);
                 }
-                else {
+                else if(current_address == null){
                     Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT);
+                }
+                else{
+                    Toast.makeText(RiderRequestActivity.this, "Your charge pocket doesn't have enough money", Toast.LENGTH_SHORT);
                 }
             }
         });

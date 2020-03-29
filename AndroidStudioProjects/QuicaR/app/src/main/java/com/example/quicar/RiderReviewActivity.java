@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -50,7 +52,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnGetUserDataListener {
+public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnGetUserDataListener, OnGetRequestDataListener {
 
     TextView currentDate, totalFare, totalTime, startAddress, endAddress, RatingButton;
     protected DrawerLayout drawer;
@@ -405,6 +407,44 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         System.out.println(errorMessage);
         Toast.makeText(RiderReviewActivity.this,
                 "Error loading user data, try later", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onSuccess(ArrayList<Request> requests, String tag) {
+
+    }
+
+    @Override
+    public void onActiveNotification(Request request) {
+
+    }
+
+    @Override
+    public void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public void onArrivedNotification(Request request) {
+
+    }
+
+    @Override
+    public void onCancelNotification() {
+
+    }
+
+    @Override
+    public void onCompleteNotification() {
+        Toast.makeText(RiderReviewActivity.this,
+                "The rider completed", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), RiderRequestActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure(String errorMessage, String tag) {
 
     }
 }
