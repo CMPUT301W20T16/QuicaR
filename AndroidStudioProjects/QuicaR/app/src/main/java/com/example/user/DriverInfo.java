@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class DriverInfo implements Serializable {
 
-    private Double rating = 0.;
+    private Double rating = 5.0;
     private Integer orderNumber = 0;
     private String plateNumber;
     private String license;
