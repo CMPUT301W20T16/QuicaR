@@ -74,12 +74,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.usernameLayout.setEnabled(false);
         this.passwordLayout.setEnabled(false);
         this.rateLayout.setEnabled(false);
+        
 
-        // below set for driver mode invisible
-//        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
-////        this.licenseLayout.setVisibility(TextInputLayout.GONE);
-////        this.sinNumberLayout.setVisibility(TextInputLayout.GONE);
-        // user is not driver
+
+        // below set for user info  invisible
+        this.usernameLayout.setVisibility(View.GONE);
+        this.emailLayout.setVisibility(View.GONE);
+        this.passwordLayout.setVisibility(View.GONE);
 
 
         closeDriverInfo();
