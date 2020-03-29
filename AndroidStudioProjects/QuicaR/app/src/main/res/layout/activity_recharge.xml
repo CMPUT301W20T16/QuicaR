@@ -6,8 +6,7 @@
     <RelativeLayout
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -19,6 +18,7 @@
             android:contentDescription="@string/card_fragment"/>
 
         <RadioGroup
+            android:id="@+id/amount_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -32,8 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$50"
-                android:buttonTint="@color/addCardBackground"
-                android:textColor="@color/addCardBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -42,8 +40,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$100"
-                android:buttonTint="@color/addCardBackground"
-                android:textColor="@color/addCardBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -52,8 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$200"
-                android:buttonTint="@color/addCardBackground"
-                android:textColor="@color/addCardBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -62,28 +56,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$"
-                android:buttonTint="@color/addCardBackground"
-                android:textColor="@color/addCardBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/enter_amount"
+                android:layout_marginStart="-1dp"
+                android:layout_marginTop="-1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textCursorDrawable="@color/addCardBackground"
-                android:background="@null"
-                android:textColor="@color/addCardBackground"
-                android:textSize="14sp" />
-
+                android:textSize="14sp"
+                android:visibility="invisible"/>
         </RadioGroup>
 
         <Spinner
             android:id="@+id/card_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="55dp"
-            android:layout_marginStart="80dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginStart="72dp"
             android:spinnerMode="dropdown"
             android:popupBackground="@color/white" />
 
@@ -110,7 +101,7 @@
         <ImageView
             android:id="@+id/card_outline"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 

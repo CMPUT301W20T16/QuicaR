@@ -34,6 +34,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     Button card_pay;
     Button camera_scan;
     Button card_info;
+    Button recharge;
     ImageView qr_code;
     TextView balance;
     Handler handler = new Handler();
@@ -81,6 +82,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         card_pay = (Button)findViewById(R.id.card_pay);
         camera_scan = (Button)findViewById(R.id.camera_scan);
         card_info = (Button)findViewById(R.id.card_information);
+        recharge = (Button)findViewById(R.id.recharge);
         balance = (TextView)findViewById(R.id.balance);
         UserDataHelper.getInstance().setOnNotifyListener(this);
 
@@ -107,6 +109,13 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
+            }
+        });
+
+        recharge.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
             }
         });
     }
