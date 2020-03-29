@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
+public class RiderConfirmRiderActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
     //extends DrawRouteBaseActivity
 
     private OnGetRequestDataListener listener = this;
