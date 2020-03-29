@@ -56,6 +56,10 @@
         <activity android:name=".UserProfileActivity"
             android:parentActivityName=".RiderRequestActivity">
         </activity>
+        
+        <activity android:name=".UpdateAccountActivity"
+            android:parentActivityName=".RiderRequestActivity">
+        </activity>
 
         <activity android:name=".RiderRequestActivity"
             android:parentActivityName=".Login"
