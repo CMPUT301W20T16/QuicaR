@@ -2,6 +2,7 @@ package com.example.quicar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCallback{
+public abstract class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCallback{
 
     Request mRequest;
     Location start_location, end_location, currentLocation;
@@ -47,7 +49,19 @@ public class DrawRouteBaseActivity extends BaseActivity implements TaskLoadedCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //set map style
+        try {
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                System.out.println("-------------Style parsing failed");
+            } else {
+                System.out.println("------------Style success");
+            }
+        } catch(Resources.NotFoundException e) {
+            System.out.println("------------Can;t find style");
+        }
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

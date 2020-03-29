@@ -1,24 +1,21 @@
 package com.example.quicar;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
-import com.example.entity.Location;
 import com.example.font.Button_SF_Pro_Display_Medium;
+import com.example.font.TextViewSFProDisplayLight;
+import com.example.font.TextViewSFProDisplayMedium;
+import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,75 +39,75 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
-    private LinearLayout linearLayout;
-    private BottomSheetBehavior bottomSheetBehavior;
+public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+    LinearLayout linearLayout;
+    BottomSheetBehavior bottomSheetBehavior;
 
-    private Button_SF_Pro_Display_Medium confirmButton;
-    private Request currentRequest = null;
-    private DirectionsResult directionsResult;
-    private Location start_location,end_location;
-    protected MarkerOptions start, destination;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
-
-
-
+    TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress;
+    TextViewSFProDisplayMedium riderName;
+    Button_SF_Pro_Display_Medium confirmButton;
+    TextViewSFProDisplayRegular callButton, emailButton;
+    Request currentRequest = null;
+    DirectionsResult directionsResult;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //start_location = new Location(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-
-        Intent intent = getIntent();
-        currentRequest = (Request) intent.getSerializableExtra("current accepted request");
-        //RequestDataHelper.getInstance().setOnNotifyListener(this);
-        //currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
-
-
-        end_location = currentRequest.getStart();
-
-//        System.out.println(String.format("--------requestInfo:-------%s %s %s %s", start_location.getLat(),start_location.getLon(),end_location.getLat(),end_location.getLon()));
-
-
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_pick_up, frameLayout);
 
-
-
         linearLayout = (LinearLayout) findViewById(R.id.bottom_sheet_driver_pick_up);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        /**
+         * current request cannot be updated at driver end
+         */
+        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
+        //set up textView and buttons
+
         confirmButton = linearLayout.findViewById(R.id.confirm_button);
+        riderEmail = linearLayout.findViewById(R.id.userEmail_textView);
+        riderPhone = linearLayout.findViewById(R.id.userPhone_textView);
+        riderName = linearLayout.findViewById(R.id.userName_textView);
+        callButton = linearLayout.findViewById(R.id.call_rider_button);
+        emailButton = linearLayout.findViewById(R.id.email_rider_button);
+        startAddress = linearLayout.findViewById(R.id.start_address);
+        endAddress = linearLayout.findViewById(R.id.end_address);
+
+        startAddress.setText(currentRequest.getStartAddrName());
+        endAddress.setText(currentRequest.getDestAddrName());
+        riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
+        riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
+        riderName.setText(currentRequest.getRider().getName());
 
 
-
-//        mRequest = new Request();
-        //get data from firebase
-        System.out.println("------------------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
+        start_location = currentRequest.getStart();
+        end_location = currentRequest.getDestination();
 
 
-        start = new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude() )).title("your location");
-        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("rider's pick up location");
+        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
+        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
 
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
 
         DateTime now = new DateTime();
-
-        //String start_address = start_location.getAddressName();
-        String start_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
-        //System.out.println("-----start address name-----"+start_address);
+        System.out.println("-----start address name-----"+start_address);
         System.out.println("-----end address name-------"+end_address);
 
         try {
-
+            //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(now)
+                    .destination(end_address).departureTime(Instant.now())
                     .await();
-
 
         } catch (ApiException e) {
             e.printStackTrace();
@@ -140,10 +137,6 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
                         .setRequestPickedUp(currentRequest.getRid(),
                                 DriverPickUpActivity.this);
 
-                System.out.println("Request id-------------" + currentRequest.getRid());
-                Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
-                intent.putExtra("current accepted request", currentRequest);
-                startActivity(intent);
             }
         });
 
@@ -155,43 +148,19 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
      * @param requests
      * @param tag
      */
-    // if successfully get all request associated with the specific driver, i.e., current user
+    // if successfully successfully set currentRequest status to PickUp
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-//        if (tag.equals(RequestDataHelper.USER_REQ_TAG)) {
-//
-//            if (requests.size() > 0) {
-//                //  always check if the return value is valid
-//                System.out.println("------------ all open request obtained -----------");
-//                for (Request request: requests) {
-//                    if (request.getAccepted()
-//                            /* Edited by Jeremy */
-//                            && request.getRid().equals(DatabaseHelper.getInstance().getUserState().getRequestID())
-//                            /* End here */
-//                    ) {
-//                        mRequest = request;
-//
-////                        start_location = mRequest.getStart();
-////                        end_location = mRequest.getDestination();
-////
-////                        System.out.println("start location" + start_location.getLat() + start_location.getLon());
-////                        System.out.println("end location" + end_location.getLat() + end_location.getLon());
-////
-////                        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
-////                        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-////
-////                        new FetchURL(this)
-////                                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
-//
-//                    }
-//                }
-//            }
-//            else {
-//                System.out.println("------------ empty list obtained -----------");
-//            }
-//        }
+        if (tag.equals(RequestDataHelper.SET_PICKEDUP_TAG)) {
+            System.out.println("------------ request is set to pick up -----------");
+
+            Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
+            intent.putExtra("current accepted request", currentRequest);
+            startActivity(intent);
+        }
 
     }
+
 
 
 
@@ -203,18 +172,17 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         mMap.addMarker(destination);
         showAllMarkers();
         addPolyline(directionsResult,mMap);
-
-
     }
 
-//    @Override
-//    public void onTaskDone(Object... values) {
-//////        if (currentPolyline != null)
-//////            currentPolyline.remove();
-//////
-//////        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-////
-//    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+//        if (currentPolyline != null)
+//            currentPolyline.remove();
+//
+//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+    }
 
     @Override
     public void onActiveNotification(Request request) {

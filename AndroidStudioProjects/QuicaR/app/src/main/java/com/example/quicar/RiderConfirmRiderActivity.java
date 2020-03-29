@@ -99,16 +99,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         view_end = linearLayout.findViewById(R.id.end_address);
 
 
-
         //get data from intent, i.e., current address
         Intent intent = getIntent();
         start_location = (Location) intent.getSerializableExtra("start location");
         end_location = (Location) intent.getSerializableExtra("end location");
 
+
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-//        LatLng start_latlng = new LatLng(start_location.getLat(),start_location.getLon());
-//        LatLng dest_latlng = new LatLng(end_location.getLat(),end_location.getLon());
 
         //add pins to map
         markerOptionsList.add(start);
@@ -158,9 +156,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             User newUser = new User();
             newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
-            /**
-             *    new request's cost is hard coded for now
-              */
+            //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
                     newUser, new User(), travelFare);
@@ -175,7 +171,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
 //            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
 
-//            intent1.putExtra("current request", currentRequest);
+            intent1.putExtra("current request", currentRequest);
             startActivity(intent1);
             finish();
 

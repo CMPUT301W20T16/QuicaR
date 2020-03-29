@@ -38,7 +38,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,21 +46,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
-import com.google.maps.GeoApiContext;
-import com.google.maps.android.PolyUtil;
-import com.google.maps.model.DirectionsResult;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     protected GoogleMap mMap;
@@ -80,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected FrameLayout frameLayout;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
-    protected List<MarkerOptions> markerOptionsList = new ArrayList<>();
+    protected FirebaseAuth mAuth;
 
     private double radius = 1000;
 
@@ -109,9 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
         View headerView = navigationView.getHeaderView(0);
 
         TextView userName_textView = headerView.findViewById(R.id.userName_textView);
@@ -132,10 +120,35 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         toggle.syncState();
 
 
+        // alert
+        String firstName = currentUser.getAccountInfo().getFirstName();
+        String lastName = currentUser.getAccountInfo().getLastName();
+        String phone = currentUser.getAccountInfo().getPhone();
+//        System.out.println(firstName);
+////        System.out.println("haha");
+        if (firstName == null | lastName == null | phone == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("update profile")//设置标题
+                    .setMessage("Hey,Loos like you forgot to update your personal information, please click user profile in the sidebar to update")//设置内容
+                    .setCancelable(false)//设置是否可以点击对话框以外的地方消失
+                    .setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+        }
+
+
+
+
+
     }
-
-
-
 
     /**
      * google map methods
@@ -149,13 +162,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
         }
-    }
-
-
-
-    protected Location getmLastLocation(){
-
-        return mLastLocation;
     }
 
     /**
@@ -233,6 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
 
     }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -329,78 +336,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /*** added by Yuxin March 28 th **************/
-
-    public void showAllMarkers() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (MarkerOptions m : markerOptionsList) {
-            builder.include(m.getPosition());
-
-        }
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-
-    }
-
-
-    protected GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-//            if (results.routes.length == 0)
-
-
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-//            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-//            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
-    }
-
-    protected double estimateFare (long distance){
-        double fare;
-
-        if(distance<1000){
-            fare = 7.0;
-
-        }
-        else if (distance <= 5000 && distance >= 1000){
-            fare = 5 + (distance / 1000)*2.3;
-        }
-        else{
-            fare = (distance/1000)*2.0;
-        }
-
-
-        return fare;
-    }
-
-    /******* ended here *********************************************/
-
-
-
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -419,7 +354,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
-
                         mMap.setMyLocationEnabled(true);
                     }
 
@@ -480,10 +414,29 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_account:
+                Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+                startActivity(i);
+                break;
+
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
+//                break;
+
             case R.id.nav_profile:
-                // change here
+                // profile activity start
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-//                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
 
@@ -532,31 +485,5 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-    public String findAddress(double lat, double lng) {
-        // set pick up location automatically as customer's current location
-        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-        if (lat != 0 && lng != 0) {
-            try {
-                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (addresses != null) {
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                if (address.length() != 0) {
-                    return address;
-                }
-            }
-
-        }
-        return null;
-
-    }
-
 
 }
