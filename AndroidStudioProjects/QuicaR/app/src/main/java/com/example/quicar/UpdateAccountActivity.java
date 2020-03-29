@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +40,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UpdateAccountActivity extends AppCompatActivity implements OnGetUserDataListener{
     private static final String TAG = "UpdateAccountActivity";
@@ -77,6 +82,23 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                             // email and password credentials but there are multiple possible providers,
                             // such as GoogleAuthProvider or FacebookAuthProvider.
                             String oldEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+                            if (TextUtils.isEmpty(newEmail)) {
+                                Toast.makeText(getApplicationContext(), "Email field can not be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if (TextUtils.isEmpty(checkPwd)) {
+                                // pwd_confirm.setError("Field can not be empty");
+                                Toast.makeText(getApplicationContext(), "password field can not be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if (!isValidEmail(newEmail)) {
+                                Toast.makeText(getApplicationContext(), "wrong email format", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(oldEmail, checkPwd);
 
@@ -87,18 +109,33 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "Re-auth success");
-                                                FirebaseAuth.getInstance().getCurrentUser().updateEmail(newEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                // check if email is unique
+                                                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(newEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                                                         if (task.isSuccessful()) {
-                                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
-                                                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                            if (task.getResult().getSignInMethods().size() == 1) {
+                                                                Log.d(TAG, "this email is already in use");
+                                                                // Toast.makeText(getApplicationContext(), "this email is already in use", Toast.LENGTH_SHORT).show();
+                                                            } else if (task.getResult().getSignInMethods().size() == 0) {
+                                                                // update the email
+                                                                Log.d(TAG, "valid new email");
+                                                                FirebaseAuth.getInstance().getCurrentUser().updateEmail(newEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
+                                                                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                                            ref.child(uid).child("accountInfo").child("email").setValue(newEmail);
-                                                            User currentUser = DatabaseHelper.getInstance().getCurrentUser();
-                                                            currentUser.getAccountInfo().setEmail(newEmail);
-                                                            UserDataHelper.getInstance().updateUserProfile(currentUser, listener);
-                                                            Toast.makeText(getApplicationContext(), "email updated successful", Toast.LENGTH_SHORT).show();
+                                                                            ref.child(uid).child("accountInfo").child("email").setValue(newEmail);
+                                                                            User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+                                                                            currentUser.getAccountInfo().setEmail(newEmail);
+                                                                            UserDataHelper.getInstance().updateUserProfile(currentUser, listener);
+                                                                            Toast.makeText(getApplicationContext(), "email updated successful", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
                                                         }
                                                     }
                                                 });
@@ -110,6 +147,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                     });
                         }
                     });
+                    builder.setNegativeButton("CANCEL", null);
                     builder.create().show();
                 }
 
@@ -130,14 +168,35 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                             String pwdResetConfirm = mpwdConfirm.getText().toString();
                             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
+                            if (TextUtils.isEmpty(originEmail)) {
+                                Toast.makeText(getApplicationContext(), "Email field can not be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                        // Get auth credentials from the user for re-authentication. The example below shows
-                        // email and password credentials but there are multiple possible providers,
-                        // such as GoogleAuthProvider or FacebookAuthProvider.
+                            if (TextUtils.isEmpty(pwdReset)) {
+                                Toast.makeText(getApplicationContext(), "password field can not be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if (TextUtils.isEmpty(pwdResetConfirm)) {
+                                Toast.makeText(getApplicationContext(), "confirm password field can not be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+
+                            if (!isValidEmail(originEmail)) {
+                                Toast.makeText(getApplicationContext(), "wrong email format", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+
+                            // Get auth credentials from the user for re-authentication. The example below shows
+                            // email and password credentials but there are multiple possible providers,
+                            // such as GoogleAuthProvider or FacebookAuthProvider.
                             AuthCredential credential = EmailAuthProvider
                                     .getCredential(mUser.getEmail(), originEmail);
 
-                        // Prompt the user to re-provide their sign-in credentials
+                            // Prompt the user to re-provide their sign-in credentials
                             mUser.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -146,8 +205,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                                 Log.d(TAG, "User re-authenticated.");
                                                 Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();
                                                 if (!pwdReset.equals(pwdResetConfirm)) {
-                                                    mpwdUpdate.setError("passwords didn't match");
-                                                    mpwdConfirm.setError("passwords didn't match");
+                                                    Toast.makeText(getApplicationContext(), "new passwords didn't match", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     mUser.updatePassword(pwdReset)
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -159,12 +217,18 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                                                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                                                                         ref.child(uid).child("accountInfo").child("password").setValue(pwdReset);
+                                                                        User currentUser1 = DatabaseHelper.getInstance().getCurrentUser();
+                                                                        currentUser1.getAccountInfo().setPassword(pwdReset);
+                                                                        UserDataHelper.getInstance().updateUserProfile(currentUser1, listener);
                                                                         Toast.makeText(getApplicationContext(), "password updated", Toast.LENGTH_SHORT).show();
                                                                     }
                                                                 }
                                                             });
                                                 }
 
+                                            } else {
+                                                Log.d(TAG, "User re-authenticated failed");
+                                                Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -177,10 +241,24 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
         });
     }
 
+    public static boolean isValidEmail(String email)
+    {
+        if (email != null)
+        {
+            Pattern p = Pattern.compile("^[A-Za-z].*?@gmail\\.com$");
+            Matcher m = p.matcher(email);
+            return m.find();
+        }
+        return false;
+    }
+
     @Override
     public void onSuccess(User user, String tag) {
         if (tag.equals(UserDataHelper.UPDATE_USER_TAG)) {
-            System.out.println("updated email sucessfully");
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            Intent homeIntent = new Intent(UpdateAccountActivity.this, Login.class);
+            startActivity(homeIntent);
+            // System.out.println("updated email sucessfully");
         }
     }
 
