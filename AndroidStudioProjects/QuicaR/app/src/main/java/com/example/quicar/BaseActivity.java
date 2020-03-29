@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,14 +99,39 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         // set up the left navigation  drawer
         drawer = findViewById(R.id.drawer_layout);
+
+
+        // design for head
+        // navView from base Activity
         navigationView = findViewById(R.id.nav_view);
+        // header of navView
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
+        // head image in the nav header.xml
+        ImageView imgHeaderHeadPro = (ImageView) headerView.findViewById(R.id.head_image);
+
+        User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+        Double rate = currentUser.getAccountInfo().getDriverInfo().getRating();
+        if (rate != null){
+            if (rate >= 0.0 & rate < 1.0 ) {
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
+            } else if(rate >= 1.0 & rate < 2.0){
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
+            } else if(rate >= 2.0 & rate < 3.0){
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headdog2);
+            } else if(rate >= 3.0 & rate < 4.0){
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headvan3);
+            } else if (rate >= 4.0 & rate < 5.0) {
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
+            } else if (rate >= 5.0 ){
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
+            }
+        }
+
+
 
         TextView userName_textView = headerView.findViewById(R.id.userName_textView);
         TextView userEmail_textView = headerView.findViewById(R.id.userEmail_textView);
-
-        User currentUser = DatabaseHelper.getInstance().getCurrentUser();
         String userEmailStr =currentUser.getAccountInfo().getEmail();
         String userNameStr = currentUser.getAccountInfo().getUserName();
 

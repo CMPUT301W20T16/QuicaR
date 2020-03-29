@@ -25,8 +25,12 @@ public class DriverInfo implements Serializable {
     }
 
     public void setRating(Double newRating) {
-        //this.rating = rating;
+        this.rating = newRating;
+//        this.rating = (this.rating * this.orderNumber + newRating) / (++this.orderNumber);
+    }
+    public void autoCmputAndSetRate(Double newRating) {
         this.rating = (this.rating * this.orderNumber + newRating) / (++this.orderNumber);
+
     }
 
     public Integer getOrderNumber() {
