@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
@@ -69,7 +70,13 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
 
+        if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnMatching(true);
+            UserStateDataHelper.getInstance().recordState();
 
+            // TODO go back to rider request activity here
+        }
     }
 
     /**

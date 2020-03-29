@@ -316,7 +316,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         // handle previous activity here
         UserState userState = DatabaseHelper.getInstance().getUserState();
         Intent directIntent;
-//        if (userState.getCurrentMode().equals("rider")) {
+        if (userState.getCurrentMode().equals("rider")) {
             if (!userState.getActive() && !userState.getOnGoing())
                 directIntent = new Intent(Login.this, RiderRequestActivity.class);
             else if (userState.getActive() && !userState.getOnGoing())
@@ -324,10 +324,17 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
             else if (userState.getActive() && userState.getOnGoing())
                 directIntent = new Intent(Login.this, RiderWaitingRideActivity.class);
             else
-                directIntent = new Intent(Login.this, RiderWaitingRideActivity.class);
-//        } else {
-//
-//        }
+                directIntent = new Intent(Login.this, RiderRequestActivity.class);
+        } else {
+            if (!userState.getActive() && !userState.getOnGoing())
+                directIntent = new Intent(Login.this, DriverBrowsingActivity.class);
+            else if (userState.getActive() && !userState.getOnGoing())
+                directIntent = new Intent(Login.this, DriverPickUpActivity.class);
+            else if (userState.getActive() && userState.getOnGoing())
+                directIntent = new Intent(Login.this, DriverOnGoingActivity.class);
+            else
+                directIntent = new Intent(Login.this, DriverBrowsingActivity.class);
+        }
 
         startActivity(directIntent);
     }

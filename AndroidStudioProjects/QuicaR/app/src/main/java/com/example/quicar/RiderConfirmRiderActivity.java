@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.entity.Location;
 import com.example.font.TextViewSFProDisplayMedium;
@@ -166,7 +167,9 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
             RequestDataHelper.getInstance().addNewRequest(request, listener);
-
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnMatching(true);
+            UserStateDataHelper.getInstance().recordState();
 
 
             Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
