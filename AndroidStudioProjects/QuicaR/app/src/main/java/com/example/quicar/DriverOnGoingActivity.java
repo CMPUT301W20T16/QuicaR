@@ -14,6 +14,7 @@ import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayLight;
+import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +38,8 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
     BottomSheetBehavior bottomSheetBehavior;
     private DirectionsResult directionsResult;
 
-    TextViewSFProDisplayRegular riderEmail, riderPhone,riderName, startAddress, endAddress;
+    TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress;
+    TextViewSFProDisplayMedium riderName;
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
     Request currentRequest = null;
@@ -81,7 +83,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         endAddress.setText(currentRequest.getDestAddrName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
-//        riderName.setText(currentRequest.getRider().getName());
+        riderName.setText(currentRequest.getRider().getName());
 
 
         start_location = mRequest.getStart();
