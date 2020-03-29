@@ -157,12 +157,21 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             builder.setTitle("update profile")//设置标题
                     .setMessage("Hey,Loos like you forgot to update your personal information, please click user profile in the sidebar to update")//设置内容
                     .setCancelable(false)//设置是否可以点击对话框以外的地方消失
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // profile activity start
+                            Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                            startActivityForResult(intent, 2);
+                        }
+                    })
                     .setNegativeButton("cancle", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
                     });
+
 
             AlertDialog alertDialog = builder.create();
 
