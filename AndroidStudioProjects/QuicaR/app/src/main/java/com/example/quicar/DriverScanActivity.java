@@ -51,7 +51,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     @Override
     public void handleResult(Result rawResult) {
         //textUsername.setText(rawResult.getText());
-        showQRBottom(rawResult);
+        showRideBottom(rawResult);
         //Toast.makeText(DriverScanActivity.this,"The rider done.",Toast.LENGTH_SHORT ).show();
         //startActivity(new Intent(getApplicationContext(), MainActivity.class));
         //onBackPressed();
@@ -73,7 +73,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         ScanView.startCamera();
     }
 
-    protected void showQRBottom(Result rawResult) {
+    protected void showRideBottom(Result rawResult) {
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverScanActivity.this, R.style.BottomSheetDialogTheme);
