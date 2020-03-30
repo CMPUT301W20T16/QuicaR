@@ -21,6 +21,9 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
     TextView toUsername;
     EditText amount;
     Button confirm;
+    String info;
+    String username;
+    float balance;
     public static float money;
     public static User toUser;
     public static User fromUser;
@@ -34,8 +37,8 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
         amount = (EditText)findViewById(R.id.amount);
         confirm = (Button)findViewById(R.id.pay_confirm);
 
-        String info = ScanTransferActivity.result.getText();
-        String username = info.split("\n")[1];
+        info = ScanTransferActivity.result.getText();
+        username = info.split("\n")[1];
 
         // read the user object from the gson string
         Gson gson = new Gson();
@@ -54,15 +57,21 @@ public class SetAmountActivity extends AppCompatActivity implements OnGetUserDat
                 // finally should be connected with the password enter
                 money = Float.valueOf(amount.getText().toString());
                 fromUser = DatabaseHelper.getInstance().getCurrentUser();
-                startActivity(new Intent(SetAmountActivity.this, PayPasswordEnterActivity.class));
+                balance = fromUser.getAccountInfo().getWallet().getBalance();
+                // the balance is not enough to pay
+                if (money > balance){
+                    Toast.makeText(getApplicationContext(), "Balance is not enough to pay.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    startActivity(new Intent(SetAmountActivity.this, PayPasswordEnterActivity.class));
 //                System.out.println("33333333333333333333333333333333333333");
 //                fromUser.getAccountInfo().getWallet().setBalance(fromUser.getAccountInfo().getWallet().getBalance() - money);
 //                toUser.getAccountInfo().getWallet().setBalance(toUser.getAccountInfo().getWallet().getBalance() + money);
 //                UserDataHelper.getInstance().updateUserProfile(fromUser, SetAmountActivity.this);
 //                UserDataHelper.getInstance().updateUserProfile(toUser, SetAmountActivity.this);
 //                System.out.println("444444444444444444444444444444444444444444");
-                //startActivity(new Intent(SetAmountActivity.this, WalletOverviewActivity.class));
-
+                    //startActivity(new Intent(SetAmountActivity.this, WalletOverviewActivity.class));
+                }
             }
         });
 

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnGetRequestDataL
         UserDataHelper.getInstance();
 
 //        //  test adding new user in register page
-        startActivity(new Intent(getApplicationContext(), Login.class));
+        startActivity(new Intent(getApplicationContext(), LogoActivity.class));
 //        finish();
 
 ////           test map view

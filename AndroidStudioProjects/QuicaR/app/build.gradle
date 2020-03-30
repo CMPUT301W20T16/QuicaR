@@ -93,6 +93,9 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.github.sujithkanna:smileyrating:1.6.8'
 
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 
 

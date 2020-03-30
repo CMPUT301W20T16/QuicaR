@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/confirm_button"
-        android:icon="@drawable/ic_checkmark"
+        android:icon="@drawable/ic_checked2"
         android:title="confirm"
         app:showAsAction="always">
 
