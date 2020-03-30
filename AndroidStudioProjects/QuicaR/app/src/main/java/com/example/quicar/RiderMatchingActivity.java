@@ -205,8 +205,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onArrivedNotification(Request request) {
-        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
+//        startActivity(intent);
 
     }
 

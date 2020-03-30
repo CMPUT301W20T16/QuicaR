@@ -369,6 +369,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     @Override
     public void onCancelNotification() {
 
+
+
     }
 
     @Override

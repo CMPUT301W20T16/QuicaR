@@ -211,7 +211,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                     Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
                     startActivity(intent);
 
-
                 }
 
                 travelFare = (float) estimateFare (directionsResult.routes[0].legs[0].distance.inMeters);
