@@ -171,10 +171,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
 
-        RequestDataHelper
-                .getInstance()
-                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                        "driver", this);
+//        RequestDataHelper
+//                .getInstance()
+//                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                        "driver", this);
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +344,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             System.out.println("------------ request is set to pick up -----------");
 
             Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
-            intent.putExtra("current accepted request", currentRequest);
+//            intent.putExtra("current accepted request", currentRequest);
             startActivity(intent);
         }
 

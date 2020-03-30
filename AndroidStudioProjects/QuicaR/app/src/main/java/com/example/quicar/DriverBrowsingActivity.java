@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -37,7 +38,7 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DatabaseHelper.getInstance().setCurrentMode("driver");
-
+        UserStateDataHelper.getInstance().recordState();
 
 
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
@@ -111,10 +112,10 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         } else if (tag.equals(RequestDataHelper.SET_ACTIVE_TAG)) {
             System.out.println("------------ request is set to active -----------");
 //            RequestDataHelper.queryAllOpenRequests(this);
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "driver", this);
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "driver", this);
             Toast.makeText(this, "rider request updated to active successfully",
                     Toast.LENGTH_SHORT).show();
 

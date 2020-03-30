@@ -32,6 +32,8 @@ import com.arsy.maps_library.MapRadar;
 
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.user.User;
 import com.google.android.gms.common.ConnectionResult;
@@ -485,12 +487,20 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
                     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
                     if(currentUser.isDriver()){
+
+                        UserState userState = DatabaseHelper.getInstance().getUserState();
+                        if (userState.getOnMatching() || userState.getOnArrived() || userState.getOnGoing()) {
+                            Toast.makeText(BaseActivity.this, "You are still on a ride request...", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+
                         Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
                         startActivity(intent2);
 
                     }
 
                     else{
+
                         Intent intent2 = new Intent(getApplicationContext(), RegisterDriverActivity.class);
                         startActivity(intent2);
                     }
@@ -502,6 +512,15 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 if(DatabaseHelper.getInstance().getCurrentMode() == "driver") {
                     //Toast.makeText(this, "Enter if statement!", Toast.LENGTH_LONG).show();
 
+                    UserState userState = DatabaseHelper.getInstance().getUserState();
+                    if (userState.getOnMatching() || userState.getOnArrived() || userState.getOnGoing()) {
+                        Toast.makeText(BaseActivity.this, "You are still on a ride request...", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+
+                    DatabaseHelper.getInstance().setCurrentMode("rider");
+                    UserStateDataHelper.getInstance().recordState();
 
                     Intent intent3 = new Intent(getApplicationContext(), RiderRequestActivity.class);
                     startActivity(intent3);
