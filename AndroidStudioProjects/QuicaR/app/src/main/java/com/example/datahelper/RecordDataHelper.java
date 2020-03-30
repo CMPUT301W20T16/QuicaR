@@ -200,6 +200,7 @@ public class RecordDataHelper {
                 userState.setOnArrived(Boolean.FALSE);
                 userState.setCurrentRequest(null);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 RequestDataHelper.getInstance().notifyComplete();
                 System.out.println("-------- Notification sent --------");
                 break;

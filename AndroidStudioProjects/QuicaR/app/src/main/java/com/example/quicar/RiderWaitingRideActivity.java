@@ -21,6 +21,8 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.LocationDataHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Location;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayRegular;
@@ -347,10 +349,17 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "rider", this);
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
+            UserState userState = DatabaseHelper.getInstance().getUserState();
+            userState.setOnConfirm(Boolean.FALSE);
+            userState.setOnMatching(Boolean.FALSE);
+            userState.setActive(Boolean.FALSE);
+            userState.setCurrentRequest(new Request());
+            DatabaseHelper.getInstance().setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
 
             Intent intent = new Intent(RiderWaitingRideActivity.this, RiderRequestActivity.class);
             startActivity(intent);

@@ -375,14 +375,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onCancelNotification() {
-
-        Toast.makeText(DriverPickUpActivity.this, "ride has been canceled by rider", Toast.LENGTH_SHORT).show();
-
-
+        System.out.println("cancel notification  --------- ");
+        Toast.makeText(DriverPickUpActivity.this, "This request has been canceled!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(DriverPickUpActivity.this, DriverBrowsingActivity.class);
         startActivity(intent);
-        finish();
-
     }
 
     @Override

@@ -21,7 +21,10 @@ import androidx.core.view.GravityCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.listener.OnGetUserDataListener;
+import com.example.listener.OnGetUserStateListener;
 import com.example.user.User;
 import com.example.util.MyUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.regex.Pattern;
 
 
-public class Login extends AppCompatActivity implements OnGetUserDataListener {
+public class Login extends AppCompatActivity implements OnGetUserDataListener, OnGetUserStateListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
@@ -277,10 +280,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
     public void onSuccess(User user, String tag) {
         if (tag == UserDataHelper.GET_USER_TAG) {
             DatabaseHelper.getInstance().setCurrentUser(user);
-            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            Intent homeIntent = new Intent(Login.this, RiderRequestActivity.class);
-            startActivity(homeIntent);
+            UserStateDataHelper.getInstance().getUserState(this);
         }
     }
 
@@ -315,4 +315,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener {
 
     }
 
+    @Override
+    public void onStateUpdated() {
+        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        MyUtil.goToIntent(Login.this);
+    }
 }
