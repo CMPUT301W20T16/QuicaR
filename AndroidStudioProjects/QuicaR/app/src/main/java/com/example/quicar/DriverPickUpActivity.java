@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.LocationDataHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Location;
 import com.example.entity.Request;
@@ -24,11 +25,13 @@ import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayLight;
 import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
+import com.example.listener.OnGetLocationDataListener;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,7 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -79,9 +82,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-        /**
-         * current request cannot be updated at driver end
-         */
+        LocationDataHelper.getInstance().setOnNotifyListener(this);
+
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         String riderNameStr = currentRequest.getRider().getName();
@@ -132,7 +134,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
 
 
-        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon())).title("driver's current location");
+        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon()))
+                .title("driver's current location")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
         destination = new MarkerOptions().position(new LatLng(driver_end_location.getLat(), driver_end_location.getLon())).title("rider's pick up location");
 
         markerOptionsList.add(start);
@@ -171,10 +175,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
 
-        RequestDataHelper
-                .getInstance()
-                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                        "driver", this);
+//        RequestDataHelper
+//                .getInstance()
+//                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                        "driver", this);
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -264,8 +268,11 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         }
         else {
             start = new MarkerOptions().position(latLng).title("origin");
-
         }
+        mMap.addMarker(start);
+
+        //upload current location to database
+        LocationDataHelper.getInstance().updateLocation(DatabaseHelper.getInstance().getCurrentUserName(), new Location((double)location.getLatitude(), (double)location.getLongitude()));
 
     }
 
@@ -368,7 +375,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onCancelNotification() {
-
+        System.out.println("cancel notification  --------- ");
+        Toast.makeText(DriverPickUpActivity.this, "This request has been canceled!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(DriverPickUpActivity.this, DriverBrowsingActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -378,6 +388,11 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onFailure(String errorMessage, String tag) {
+
+    }
+
+    @Override
+    public void onUpdate(Location location) {
 
     }
 }

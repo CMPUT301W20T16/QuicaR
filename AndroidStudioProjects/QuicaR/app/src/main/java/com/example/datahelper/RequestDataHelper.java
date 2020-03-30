@@ -65,12 +65,11 @@ public class RequestDataHelper {
                     if (!queryDocumentSnapshots.getMetadata().hasPendingWrites()) {
                         ArrayList<Request> requests = new ArrayList<>();
                         ArrayList<Request> openRequests = new ArrayList<>();
-
                         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             Request request = doc.toObject(Request.class);
                             //  check if there is a change in the request status of current user
-                            if (databaseHelper.getCurrentMode() == "rider") {
+                            if (databaseHelper.getCurrentMode().equals("rider")) {
                                 checkActiveNotification(request);
                                 checkPickedUpNotification(request);
                                 checkArrivedNotification(request);
@@ -79,7 +78,7 @@ public class RequestDataHelper {
                             if (!request.getAccepted())
                                 openRequests.add(request);
                         }
-                        if (databaseHelper.getCurrentMode() == "driver") {
+                        if (databaseHelper.getCurrentMode().equals("driver")) {
                             notifyAllOpenRequests(openRequests);
                             checkCancelNotification(requests);
                         }
@@ -182,6 +181,7 @@ public class RequestDataHelper {
                         requests.add(newRequest);
                         /*****added ********/
                         DatabaseHelper.getInstance().getUserState().setCurrentRequest(newRequest);
+                        UserStateDataHelper.getInstance().recordState();
                         listener.onSuccess(requests, ADD_REQ_TAG);
                     }
                 })
@@ -242,6 +242,7 @@ public class RequestDataHelper {
                             DatabaseHelper.getInstance().getUserState().setActive(false);
                             DatabaseHelper.getInstance().getUserState().setOnGoing(false);
                             DatabaseHelper.getInstance().getUserState().setOnArrived(false);
+                            UserStateDataHelper.getInstance().recordState();
                             listener.onSuccess(null, COMPLETE_REQ_TAG);
                         }
                     }
@@ -321,6 +322,7 @@ public class RequestDataHelper {
                     listener.onSuccess(null, SET_ARRIVED_TAG);
                 }
                 DatabaseHelper.getInstance().setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -746,9 +748,8 @@ public class RequestDataHelper {
             return;
 
         UserState userState = databaseHelper.getUserState();
-        if (request.getRider().getName().equals(databaseHelper.getCurrentUserName())) {
+        if (request.getRid().equals(userState.getCurrentRequest().getRid())) {
             if (request.getAccepted() && !userState.getActive()) {
-                notifyActive(request);
                 new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                         "your request is accepted by " + request.getDriver().getName())
                         .build();
@@ -756,7 +757,10 @@ public class RequestDataHelper {
                 userState.setActive(Boolean.TRUE);
                 userState.setCurrentRequest(request);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Accept Notification sent --------");
+
+                notifyActive(request);
             }
         }
     }
@@ -780,14 +784,17 @@ public class RequestDataHelper {
         if (request.getRid().equals(userState.getRequestID())) {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
-                notifyPickedUp(request);
+
                 new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                         "you are picked up by " + request.getDriver().getName())
                         .build();
                 // update user state of rider
                 userState.setOnGoing(Boolean.TRUE);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Picked up Notification sent --------");
+
+                notifyPickedUp(request);
             }
         }
     }
@@ -805,14 +812,17 @@ public class RequestDataHelper {
         if (request.getRid().equals(userState.getRequestID())) {
             if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
                     && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
-                notifyArrived(request);
+
                 new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                         "you have arrived your destination")
                         .build();
                 // update user state of rider
                 userState.setOnArrived(Boolean.TRUE);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Arrived Notification sent --------");
+
+                notifyArrived(request);
             }
         }
     }
@@ -830,7 +840,7 @@ public class RequestDataHelper {
             return;
 
         UserState userState = databaseHelper.getUserState();
-        if (!userState.getOnGoing()) {
+        if (!userState.getActive()) {
             return;
         }
 
@@ -849,13 +859,18 @@ public class RequestDataHelper {
             new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                     "this request is canceled")
                     .build();
-            notifyCancel();
+
             // update user state of driver
+            userState.setOnConfirm(Boolean.FALSE);
+            userState.setOnMatching(Boolean.FALSE);
             userState.setActive(Boolean.FALSE);
             userState.setOnGoing(Boolean.FALSE);
-            userState.setCurrentRequest(null);
+            userState.setCurrentRequest(new Request());
             databaseHelper.setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
             System.out.println("-------- Cancel Notification sent --------");
+
+            notifyCancel();
         }
 
     }

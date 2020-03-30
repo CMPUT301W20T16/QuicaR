@@ -36,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.listener.OnGetUserDataListener;
@@ -426,6 +428,15 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         Toast.makeText(RiderReviewActivity.this,
                 "The rider completed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), RiderRequestActivity.class);
+        UserState userState = DatabaseHelper.getInstance().getUserState();
+        userState.setOnConfirm(Boolean.FALSE);
+        userState.setOnMatching(Boolean.FALSE);
+        userState.setActive(Boolean.FALSE);
+        userState.setOnGoing(Boolean.FALSE);
+        userState.setOnArrived(Boolean.FALSE);
+        userState.setCurrentRequest(new Request());
+        DatabaseHelper.getInstance().setUserState(userState);
+        UserStateDataHelper.getInstance().recordState();
         startActivity(intent);
     }
 

@@ -1,18 +1,23 @@
 package com.example.quicar;
 
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.entity.Location;
 
 import java.util.ArrayList;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder>  {
+public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
 
     private ArrayList<Location> mLocationList;
     private OnItemClickListener mListener;
@@ -22,21 +27,33 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         void onItemClick(int position);
     }
 
+
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
 
-    public static class LocationViewHolder extends RecyclerView.ViewHolder {
+    public static class LocationViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, View.OnLongClickListener{
         public TextView startAdresse;
         public TextView endAdresse;
+        CardView mCardView;
+        RecyclerViewClickListener recyclerViewClickListener;
 
 
+        public interface RecyclerViewClickListener
+        {
+            public int recyclerViewListClicked(int position);
+        }
 
 
         public LocationViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             startAdresse = itemView.findViewById(R.id.start_address);
             endAdresse = itemView.findViewById(R.id.end_address);
+            mCardView = itemView.findViewById(R.id.location_card_view);
+
+            mCardView.setOnCreateContextMenuListener((View.OnCreateContextMenuListener) this);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -49,6 +66,23 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                     }
                 }
             });
+
+        }
+
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Use as");
+            MenuItem start = menu.add(Menu.NONE,1,1,"Start");
+            MenuItem end = menu.add(Menu.NONE,2,2,"Destination");
+
+        }
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            recyclerViewClickListener.recyclerViewListClicked(this.getPosition());
+            return false;
         }
     }
 
@@ -68,8 +102,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         Location currentItem = mLocationList.get(position);
 
         //getStart and getEnd currently return lat and lng, need address
-        holder.startAdresse.setText("From: " + currentItem.getLat() + currentItem.getLon().toString());
-        holder.endAdresse.setText("To: " + currentItem.getLat().toString() + currentItem.getLon().toString());
+        holder.startAdresse.setText(currentItem.getAddressName());
 
     }
 

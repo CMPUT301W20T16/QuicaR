@@ -20,6 +20,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
+import com.example.util.MyUtil;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -163,7 +164,8 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         switch(item.getItemId())//得到被点击的item的itemId
         {
             case android.R.id.home:
-                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+//                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+                MyUtil.goToIntent(WalletOverviewActivity.this);
                 break;
             case R.id.help: //对应的ID就是在add方法中所设定的Id
                 startActivity(new Intent(getApplicationContext(), WalletIntro.class));
@@ -199,7 +201,8 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
 
     @Override
     public void onBackPressed(){
-        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+//        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+        MyUtil.goToIntent(WalletOverviewActivity.this);
     }
 //        //according to different click control different action
 //        if (item.getItemId() == R.id.help){
