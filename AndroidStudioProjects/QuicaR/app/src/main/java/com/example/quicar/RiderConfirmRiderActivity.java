@@ -147,16 +147,16 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
          */
         confirmButton.setOnClickListener(v -> {
 
-            /**
-             *   instantiate a new User class for current user
-              */
-            User newUser = new User();
-            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
+//            /**
+//             *   instantiate a new User class for current user
+//              */
+//            User newUser = new User();
+//            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
             //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    newUser, new User(), travelFare);
+                    DatabaseHelper.getInstance().getCurrentUser(), new User(), travelFare);
 
             currentRequest = request;
 
