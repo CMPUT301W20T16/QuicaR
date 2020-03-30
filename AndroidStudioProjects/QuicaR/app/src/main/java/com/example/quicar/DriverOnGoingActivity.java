@@ -81,11 +81,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
     DirectionsResult directionsResult;
 
-    //counter of time since app started, a background task
-    private long mStartTime = 0L;
+    long tStart;
 
-    //handler to handle the message to the timer task
-    private Handler mHandler = new Handler();
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -140,13 +137,9 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
 
+        // start timing the activity
+        long tStart = System.currentTimeMillis();
 
-        //start timing the activity
-        if(mStartTime==0L){
-            mStartTime= SystemClock.uptimeMillis();
-            mHandler.removeCallbacks(mUpdateTimeTask);
-            mHandler.postDelayed(mUpdateTimeTask,100);
-        }
 
 
 
@@ -313,19 +306,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
     }
 
-    /**
-     * helper function for timing the activity
-     */
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            final long start = mStartTime;
-            long millis = SystemClock.uptimeMillis() - start;
-            int seconds = (int) (millis / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-            mHandler.postDelayed(this, 200);
-        }
-    };
+
 
     /**
      * when add new request, following will be executed automatically
@@ -336,16 +317,17 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.SET_ARRIVED_TAG)) {
 
-
-//            RequestDataHelper
-//                    .getInstance()
-//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-//                            "rider", this);
-
             System.out.println("susccess------------------");
-//            Intent intent = new Intent(DriverOnGoingActivity.this, DriverScanActivity.class);
-//            startActivity(intent);
-//            finish();
+
+            long tEnd = System.currentTimeMillis();
+            long tDelta = tEnd - tStart;
+            double elapsedSeconds = tDelta / 1000.0;
+
+
+            //if the ride is longer or shorter than expcetd
+            //charge 1 extra dollar per 5 minutes
+//            float extraCost = (elapsedSeconds - currentRequest.getEstimateTime()) / 5;
+//            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + extraCost);
             showQRBottom();
 
         }
