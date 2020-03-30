@@ -114,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         Double rate = currentUser.getAccountInfo().getDriverInfo().getRating();
         if (rate != null){
             if (rate >= 0.0 & rate < 1.0 ) {
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
             } else if(rate >= 1.0 & rate < 2.0){
                 imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
             } else if(rate >= 2.0 & rate < 3.0){
@@ -124,7 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             } else if (rate >= 4.0 & rate < 5.0) {
                 imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
             } else if (rate >= 5.0 ){
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
+                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
             }
         }
 
