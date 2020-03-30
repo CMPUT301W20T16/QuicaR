@@ -27,6 +27,7 @@ import com.example.user.User;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -47,13 +48,15 @@ import org.joda.time.Instant;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
 
 
-public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener {
-    //extends DrawRouteBaseActivity
+public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
+
 
     private OnGetRequestDataListener listener = this;
 
@@ -64,6 +67,8 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     private Button confirmButton, cancelButton;
     private Request currentRequest = null;
     private DirectionsResult directionsResult;
+    protected Polyline currentPolyline;
+
 
     private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
     private String travelTime, travelDistance;
@@ -115,6 +120,9 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
+        new FetchURL(RiderConfirmRiderActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
         //update start and end address on bottom sheet
         view_start.setText(start_location.getAddressName());
         view_end.setText(end_location.getAddressName());
@@ -124,7 +132,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
         try {
-            //GeoApiContext geoApiContext = getGeoContext();
+
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
                     .destination(end_address).departureTime(now)
@@ -205,43 +213,82 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        boolean success = true;
+
         mMap = googleMap;
+
+
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
 
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
+
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+        mUiSettings.setTiltGesturesEnabled(true);
+
         try {
             if (directionsResult != null) {
-                addPolyline(directionsResult, mMap);
-                travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
-                travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-                if (directionsResult.routes[0].legs[0].distance.inMeters >= 100000){
-                    Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 100 km!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
-                    startActivity(intent);
+                if (directionsResult.routes != null) {
+                    //addPolyline(directionsResult, mMap);
+
+                    travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
+                    travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
+//                    if (directionsResult.routes[0].legs[0].distance.inMeters >= 100000) {
+//                        Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 100 km!", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+
+                    travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+
+                    view_distance.setText(travelDistance);
+                    view_time.setText(travelTime);
+                    view_fare.setText("$ " + travelFare);
 
 
                 }
-
-                travelFare = (float) estimateFare (directionsResult.routes[0].legs[0].distance.inMeters);
-
-                view_distance.setText(travelDistance);
-                view_time.setText(travelTime);
-                view_fare.setText("$ " + travelFare);
             }
-            else{
-                Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
-
-            }
+//                else {
+//                    Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//
+//                }
+//            }else {
+//                Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
 
         }catch (Exception e){
-            success = false;
+
             Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
             startActivity(intent);
 
         }
+
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+
+
+
     }
 
     public void showAllMarkers() {
@@ -275,19 +322,33 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
         if (results != null) {
-//            if (results.routes.length == 0)
-
-
+            if (results.routes.length == 0){
+                return;
+            }
             List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
 
         }
         else{
             System.out.println("------- null request queried.--------------");
 
         }
+    }
+
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
     }
 
 
@@ -315,22 +376,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     /***2020.03.20 new part Yuxin for calculating distance------------------------------------------------------------------
      *
      */
-
-
-//    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
-//    }
-
-
-    private String getEndLocationTitle(DirectionsResult results){
-        return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
-    }
-
-//    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-//        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-//        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-//    }
 
 
 
@@ -403,5 +448,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
     }
+
 
 }

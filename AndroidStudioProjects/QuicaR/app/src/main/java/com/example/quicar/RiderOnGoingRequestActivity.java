@@ -27,11 +27,14 @@ import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
@@ -52,7 +55,7 @@ import java.util.concurrent.TimeUnit;
  * When rider is picked up by driver
  * rider is able to see their current location on google map
  */
-public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
+public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
@@ -66,6 +69,7 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
     DirectionsResult directionsResult;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
+    protected Polyline currentPolyline;
 
 
     /**
@@ -128,6 +132,9 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
+        new FetchURL(RiderOnGoingRequestActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
 
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
@@ -156,11 +163,22 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        boolean success = true;
+
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
+
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
+
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setCompassEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -180,9 +198,34 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
         }
 
         //draw route
-        if (directionsResult != null) {
-            addPolyline(directionsResult, mMap);
-        }
+//        if (directionsResult != null) {
+//            //addPolyline(directionsResult, mMap);
+//        }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
     }
 
     public void showAllMarkers() {
