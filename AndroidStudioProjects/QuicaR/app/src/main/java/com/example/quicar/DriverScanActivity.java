@@ -90,8 +90,8 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         if (rider_name != null){
             rider = gson.fromJson(rider_name, User.class);
             User fromQr = currentRequest.getRider();
-            System.out.println("11111111111111111111111111111111111111111 " + rider.getName() + " " + fromQr.getName());
-            if (rider.getName() != fromQr.getName()){
+            //System.out.println("11111111111111111111111111111111111111111 " + rider.getName() + " " + fromQr.getName());
+            if (!rider.getName().equals(fromQr.getName())){
                 Toast.makeText(DriverScanActivity.this,
                         "Scan a QR from a wrong user, please scan again", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
@@ -127,6 +127,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
 
             }
         });
+        ScanView.stopCamera();
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
 
