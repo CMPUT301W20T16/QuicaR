@@ -75,11 +75,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         this.passwordLayout.setEnabled(false);
         this.rateLayout.setEnabled(false);
 
-        // below set for driver mode invisible
-//        this.plateNumberLayout.setVisibility(TextInputLayout.GONE);
-////        this.licenseLayout.setVisibility(TextInputLayout.GONE);
-////        this.sinNumberLayout.setVisibility(TextInputLayout.GONE);
-        // user is not driver
+
+
+        // below set for user info  invisible
+        this.usernameLayout.setVisibility(View.GONE);
+        this.emailLayout.setVisibility(View.GONE);
+        this.passwordLayout.setVisibility(View.GONE);
 
 
         closeDriverInfo();
@@ -286,6 +287,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
             DriverInfo driverInfo = user.getAccountInfo().getDriverInfo();
             Double rating = driverInfo.getRating();
+            // change later
+//            rating = 5.0;
+
             user.setDriverInfo( rating,  plate,  license,  sin);
         }
         // ???
@@ -295,7 +299,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         ;
 
     }
-
 
 
 
@@ -426,7 +429,7 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             this.sinNumberLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getSinNumber());
         }
         if(user.getAccountInfo().getDriverInfo().getRating() != null){
-            this.rateLayout.getEditText().setText(user.getAccountInfo().getDriverInfo().getRating().toString());
+            this.rateLayout.getEditText().setText(Double.toString(user.getAccountInfo().getDriverInfo().getRating()));
         }
 
     }
