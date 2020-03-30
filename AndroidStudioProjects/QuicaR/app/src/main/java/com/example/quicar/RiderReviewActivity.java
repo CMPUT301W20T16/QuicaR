@@ -34,6 +34,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.entity.Request;
 import com.example.listener.OnGetRequestDataListener;
@@ -52,7 +53,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnGetUserDataListener, OnGetRequestDataListener {
+public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnGetUserDataListener, OnGetRequestDataListener {
 
     TextView currentDate, totalFare, totalTime, startAddress, endAddress, RatingButton;
     protected DrawerLayout drawer;
@@ -65,6 +66,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
     ArrayList<String> rateList;
     MyAdapter rateAdapter;
+    int rateLevel;
 
     private static final String TAG = "RiderRatingWindow";
     private OnGetUserDataListener listener = this;
@@ -254,25 +256,11 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     }
 
 
-    /**
-     *Design for update rate
-     */
-    protected void updateDriverRate(int newRateLevel) {
-        int orderNumPre = currentUser.getAccountInfo().getDriverInfo().getOrderNumber();
-        double avgRatePre  = currentUser.getAccountInfo().getDriverInfo().getRating();
-        double preSumRate = orderNumPre * avgRatePre;
-
-        // plus one for current finished order
-        int orderNumNew = orderNumPre + 1;
-        double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
-        // update new order num and rate
-        currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
-        currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
-        UserDataHelper.getInstance().updateUserProfile(currentUser,listener);
-
-    }
-
     protected void generate_qr(ImageView qr_code) {
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        Float money = currentRequest.getEstimatedCost();
+        money = money * (1 + rate);
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         time = df.format(LocalDateTime.now());
         Gson gson = new Gson();
@@ -285,7 +273,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         int y = point.y;
         int icon = x < y ? x : y;
         icon = icon * 3 / 4;
-        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json, BarcodeFormat.QR_CODE.toString(), icon);
+        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json + "\n"  + money.toString() + "\n" + Integer.toString(rateLevel), BarcodeFormat.QR_CODE.toString(), icon);
         try {
             Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
             qr_code.setImageBitmap(bitmap);
@@ -335,7 +323,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 break;
         }
 
-        int rateLevel = smileRating.getRating(); // level is from 1 to 5
+        rateLevel = smileRating.getRating(); // level is from 1 to 5
 
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
@@ -363,9 +351,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 }
             }
         });
-
-        // update rate first
-        updateDriverRate(rateLevel);
 
         smileRating.setOnRatingSelectedListener(new SmileRating.OnRatingSelectedListener() {
             @Override
@@ -408,10 +393,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("isFalse");
-        System.out.println(errorMessage);
-        Toast.makeText(RiderReviewActivity.this,
-                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }
 

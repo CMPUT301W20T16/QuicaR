@@ -1,9 +1,15 @@
 package com.example.quicar;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -21,15 +27,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.google.maps.DirectionsApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 
 import java.io.IOException;
+import java.sql.Driver;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
@@ -43,7 +56,7 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
     Request currentRequest = null;
-
+    ImageView qrCode;
     /**
      * when going to this activity, following is executed automatically
      * @param savedInstanceState
@@ -133,6 +146,21 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
         });
     }
 
+    protected void showQRBottom() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverOnGoingActivity.this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.driver_scan_qr, (LinearLayout) findViewById(R.id.qr_linear));
+        Button scan = (Button)bottomSheetView.findViewById(R.id.scan);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+        scan.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
+            }
+        });
+
+    }
+
     /**
      * when add new request, following will be executed automatically
      * @param requests
@@ -149,9 +177,11 @@ public class DriverOnGoingActivity extends DrawRouteBaseActivity implements OnGe
 //                            "rider", this);
 
             System.out.println("susccess------------------");
-            Intent intent = new Intent(DriverOnGoingActivity.this, ScanActivity.class);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(DriverOnGoingActivity.this, DriverScanActivity.class);
+//            startActivity(intent);
+//            finish();
+            showQRBottom();
+
         }
     }
 
