@@ -160,22 +160,17 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "rider", this);
-
-            Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        if (tag == RequestDataHelper.CANCEL_REQ_TAG) {
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
             /* added for user state */
             DatabaseHelper.getInstance().getUserState().setOnMatching(true);
             UserStateDataHelper.getInstance().recordState();
 
-            // TODO go back to rider request activity here
+            Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -210,8 +205,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onArrivedNotification(Request request) {
-        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
+//        startActivity(intent);
 
     }
 

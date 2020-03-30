@@ -784,7 +784,7 @@ public class RequestDataHelper {
         if (request.getRid().equals(userState.getRequestID())) {
             if (request.getAccepted() &&  request.getPickedUp()
                     && userState.getActive() && !userState.getOnGoing()) {
-                notifyPickedUp(request);
+
                 new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                         "you are picked up by " + request.getDriver().getName())
                         .build();
@@ -793,6 +793,8 @@ public class RequestDataHelper {
                 databaseHelper.setUserState(userState);
                 UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Picked up Notification sent --------");
+
+                notifyPickedUp(request);
             }
         }
     }
@@ -810,7 +812,7 @@ public class RequestDataHelper {
         if (request.getRid().equals(userState.getRequestID())) {
             if (request.getAccepted() && request.getPickedUp() && request.getHasArrived()
                     && userState.getActive() && userState.getOnGoing() && !userState.getOnArrived()) {
-                notifyArrived(request);
+
                 new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                         "you have arrived your destination")
                         .build();
@@ -819,6 +821,8 @@ public class RequestDataHelper {
                 databaseHelper.setUserState(userState);
                 UserStateDataHelper.getInstance().recordState();
                 System.out.println("-------- Arrived Notification sent --------");
+
+                notifyArrived(request);
             }
         }
     }
@@ -836,7 +840,7 @@ public class RequestDataHelper {
             return;
 
         UserState userState = databaseHelper.getUserState();
-        if (!userState.getOnGoing()) {
+        if (!userState.getActive()) {
             return;
         }
 
@@ -855,7 +859,7 @@ public class RequestDataHelper {
             new PopUpNotification("Hey " + databaseHelper.getCurrentUserName(),
                     "this request is canceled")
                     .build();
-            notifyCancel();
+
             // update user state of driver
             userState.setOnConfirm(Boolean.FALSE);
             userState.setOnMatching(Boolean.FALSE);
@@ -865,6 +869,8 @@ public class RequestDataHelper {
             databaseHelper.setUserState(userState);
             UserStateDataHelper.getInstance().recordState();
             System.out.println("-------- Cancel Notification sent --------");
+
+            notifyCancel();
         }
 
     }

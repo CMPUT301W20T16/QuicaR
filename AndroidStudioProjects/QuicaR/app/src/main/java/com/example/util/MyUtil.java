@@ -21,6 +21,7 @@ import com.example.quicar.RiderOnGoingRequestActivity;
 import com.example.quicar.RiderRequestActivity;
 import com.example.quicar.RiderReviewActivity;
 import com.example.quicar.RiderWaitingRideActivity;
+import com.example.quicar.ScanActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,14 +78,14 @@ public class MyUtil {
             else
                 directIntent = new Intent(context, RiderReviewActivity.class);
         } else {
-            if (!userState.getActive() && !userState.getOnGoing())
+            if (!userState.getActive())
                 directIntent = new Intent(context, DriverBrowsingActivity.class);
-            else if (userState.getActive() && !userState.getOnGoing())
+            else if (!userState.getOnGoing())
                 directIntent = new Intent(context, DriverPickUpActivity.class);
-            else if (userState.getActive() && userState.getOnGoing())
+            else if (!userState.getOnArrived())
                 directIntent = new Intent(context, DriverOnGoingActivity.class);
             else
-                directIntent = new Intent(context, DriverBrowsingActivity.class);
+                directIntent = new Intent(context, ScanActivity.class);
         }
 
         context.startActivity(directIntent);

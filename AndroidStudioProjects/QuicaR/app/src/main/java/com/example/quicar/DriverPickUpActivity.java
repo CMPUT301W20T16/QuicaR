@@ -346,6 +346,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             Intent intent = new Intent(DriverPickUpActivity.this, DriverOnGoingActivity.class);
 //            intent.putExtra("current accepted request", currentRequest);
             startActivity(intent);
+            finish();
         }
 
     }
@@ -368,7 +369,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onCancelNotification() {
-
+        System.out.println("cancel notification  --------- ");
+        Toast.makeText(DriverPickUpActivity.this, "This request has been canceled!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(DriverPickUpActivity.this, DriverBrowsingActivity.class);
+        startActivity(intent);
     }
 
     @Override
