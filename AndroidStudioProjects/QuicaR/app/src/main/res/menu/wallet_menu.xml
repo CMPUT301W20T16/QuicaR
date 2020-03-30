@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sartainstudios.contacts.MyContacts">
 
-    <item android:id="@+id/help"
-        android:icon="@drawable/ic_person"
-        android:title="help"/>
+    <item
+        android:id="@+id/help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/help" />
 
-    <item android:id="@+id/pay_record"
-        android:icon="@drawable/ic_money"
-        android:title="pay record"/>
+    <item
+        android:id="@+id/pay_record"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/pay_record" />
 
-    <item android:id="@+id/change_password"
-        android:icon="@drawable/ic_history"
-        android:title="change password"/>
+    <item
+        android:id="@+id/change_password"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/change_password" />
 
 </menu>
