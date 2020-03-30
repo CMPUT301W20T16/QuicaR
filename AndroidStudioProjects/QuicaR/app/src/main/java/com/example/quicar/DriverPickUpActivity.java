@@ -31,10 +31,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.DirectionsApi;
@@ -53,7 +55,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener {
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener, TaskLoadedCallback {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -68,6 +70,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     Location driver_start_location, driver_end_location;
     MarkerOptions start, destination;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
+    protected Polyline currentPolyline;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -142,6 +146,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
+        new FetchURL(DriverPickUpActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
 
         DateTime now = new DateTime();
 //        String start_address = start_location.getAddressName();
@@ -166,25 +173,21 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             e.printStackTrace();
         }
 
-        if(directionsResult == null){
-            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
-            startActivity(intent);
-            finish();
-
-        }
-
-        if(directionsResult.routes == null){
-            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
-            startActivity(intent);
-            finish();
-
-        }
-
-
-
-
+//        if(directionsResult == null){
+//            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
+//            startActivity(intent);
+//            finish();
+//
+//        }
+//
+//        if(directionsResult.routes == null){
+//            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
+//            startActivity(intent);
+//            finish();
+//
+//        }
 
         travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
@@ -218,9 +221,19 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        boolean success = true;
+
 
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setCompassEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+        mUiSettings.setTiltGesturesEnabled(true);
+        mUiSettings.setRotateGesturesEnabled(true);
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
@@ -242,14 +255,36 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 //            mMap.setMyLocationEnabled(true);
         }
 
+//
+//        try {
+//            //draw route
+//            //addPolyline(directionsResult, mMap);
+//        }catch (Exception e){
+//
+//        }
 
-        try {
-            //draw route
-            addPolyline(directionsResult, mMap);
-        }catch (Exception e){
 
-        }
+    }
 
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
 
     }
 

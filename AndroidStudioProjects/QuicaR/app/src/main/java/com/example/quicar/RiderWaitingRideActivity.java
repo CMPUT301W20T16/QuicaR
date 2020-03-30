@@ -187,15 +187,10 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         if(directionsResult == null){
             Toast.makeText(RiderWaitingRideActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
 
-            if (mRequest != null) {
-                RequestDataHelper
-                        .getInstance()
-                        .cancelRequest(mRequest.getRid(), RiderWaitingRideActivity.this);
-
 
 
             }
-        }
+
 
 
 
@@ -215,10 +210,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         // if user tries to cancel the ride while driver is on their way
         // call cancelRequest so ride will be deleted in the database
         // user back to the main screen
-        /**
-         * 问题：1.
-         * 还不能确定允许cancel的时间
-         */
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

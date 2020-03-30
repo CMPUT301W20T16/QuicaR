@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,18 +44,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener {
-    private EditText pickUp;
-    private EditText destination;
-    private Button confirmButton;
 
     private int currentPosition;
 
-
     String address,adminiArea = null,phone;
-    //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
-
 
     Marker marker;
     PlacesClient placesClient;
@@ -99,10 +94,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         start_location = new Location();
         end_location = new Location();
 
-        /**
-         * 问题：history location得在点击auto complete fragment之后才显示
-         */
+
         locationList = new ArrayList<>();
+        locationList.add(new Location(0.0,0.0,"apple shit"));
         RecordDataHelper
                 .getInstance()
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
@@ -133,8 +127,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
         /* End here */
 
-//        pickUpAutoComplete.setHint(pick_up_address);
-//        destinationAutoComplete.setHint("Select Destination");
         start.setText(pick_up_address);
 
         onCreateAutoCompletion(pickUpAutoComplete, start_location, true);
@@ -171,7 +163,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        // if user clicked on of the past address
+//        // if user long clicked on of the past address
         mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -287,6 +279,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 
+
     // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
@@ -318,6 +311,29 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         }
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 1:
+                start_location = (Location) locationList.get(currentPosition);
+                start.setText(start_location.getAddressName());
+                break;
+
+            case 2:
+                end_location = (Location) locationList.get(currentPosition);
+                end.setText(end_location.getAddressName());
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+
+    /**
+     * Record datahelper method
+     * @param history
+     */
 
     @Override
     public void onSuccess(ArrayList<Location> history) {

@@ -34,10 +34,12 @@ import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -63,7 +65,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener {
+public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -80,6 +82,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     DirectionsResult directionsResult;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
+
+    protected Polyline currentPolyline;
 
     /**
      * when going to this activity, following is executed automatically
@@ -142,10 +146,12 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
+        new FetchURL(DriverOnGoingActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
 
         DateTime now = new DateTime();
-//        String start_address = start_location.getAddressName();
-        String start_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
         try {
             //GeoApiContext geoApiContext = getGeoContext();
@@ -187,6 +193,16 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setCompassEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+        mUiSettings.setTiltGesturesEnabled(true);
+        mUiSettings.setRotateGesturesEnabled(true);
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
@@ -209,9 +225,33 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         }
 
         //draw route
-        if (directionsResult != null) {
-            addPolyline(directionsResult, mMap);
-        }
+//        if (directionsResult != null) {
+//            addPolyline(directionsResult, mMap);
+//        }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
     }
 
     public void showAllMarkers() {
@@ -242,36 +282,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         return geoApiContext;
     }
 
-
-    /**
-     * helper function for address of selected location
-     * @param lat
-     * @param lng
-     * @return
-     */
-    // get address name in String from lat and long
-    public String findAddress(double lat, double lng) {
-        // set pick up location automatically as customer's current location
-        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-        if (lat != 0 && lng != 0) {
-            try {
-                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (addresses != null) {
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                if (address.length() != 0) {
-                    return address;
-                }
-            }
-
-        }
-        return null;
-
-    }
 
     protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
         if (results != null) {
