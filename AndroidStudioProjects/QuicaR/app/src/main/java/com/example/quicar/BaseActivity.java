@@ -269,6 +269,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         mapCircle = mMap.addCircle(circleOptions);
 
+        //move map camera
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
 
 
 

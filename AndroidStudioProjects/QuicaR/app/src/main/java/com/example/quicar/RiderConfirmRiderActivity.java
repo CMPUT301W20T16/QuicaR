@@ -168,12 +168,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             UserStateDataHelper.getInstance().recordState();
 
 
-            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
-//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
-
-            intent1.putExtra("current request", currentRequest);
-            startActivity(intent1);
-            finish();
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+////            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+//
+////            intent1.putExtra("current request", currentRequest);
+//            startActivity(intent1);
+//            finish();
 
         });
 
@@ -356,6 +356,13 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(RiderConfirmRiderActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
+//            intent1.putExtra("current request", currentRequest);
+            startActivity(intent1);
+            finish();
         }
 
     }

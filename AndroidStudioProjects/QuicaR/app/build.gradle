@@ -98,5 +98,7 @@ dependencies {
 
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 
+    implementation 'com.steelkiwi:dots-loader-view:1.0.0'
+
 
 }
