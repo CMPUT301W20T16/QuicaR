@@ -1,20 +1,34 @@
 package com.example.quicar;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
+import com.arsy.maps_library.MapRadar;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 import java.util.ArrayList;
+
+import steelkiwi.com.library.DotsLoaderView;
 
 public class RiderMatchingActivity extends BaseActivity implements OnGetRequestDataListener {
 
@@ -22,6 +36,9 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     Request currentRequest = null;
     Button_SF_Pro_Display_Medium cancelButton;
+    DotsLoaderView dotsLoaderView;
+
+    private double radius = 5000;
 
     /**
      * when user confirm a request then goes to matching activity
@@ -33,23 +50,21 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
         super.onCreate(savedInstanceState);
         View rootView = getLayoutInflater().inflate(R.layout.activity_rider_matching, frameLayout);
 
-        // get activated request from firebase
+        // get data from firebase
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-
-        //get current request from databse
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
-//        //get request intent from riderconfirm activity
-//        Intent intent = getIntent();
-//        currentRequest = (Request) intent.getSerializableExtra("current request");
-
         cancelButton = findViewById(R.id.cancel_button);
+//        dotsLoaderView = findViewById(R.id.dots_loader_view);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Waiting for matching...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        // to show loading
+//        dotsLoaderView.show();
+
+//        mProgressDialog = new ProgressDialog(this);
+//        mProgressDialog.setMessage("Waiting for matching...");
+//        mProgressDialog.setIndeterminate(true);
+//        mProgressDialog.setCancelable(false);
+//        mProgressDialog.show();
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +81,95 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
         });
     }
 
+    /**
+     * set map with larger radar
+     * @param googleMap
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        //set map style
+        try {
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                System.out.println("-------------Style parsing failed");
+            } else {
+                System.out.println("------------Style success");
+            }
+        } catch(Resources.NotFoundException e) {
+            System.out.println("------------Can;t find style");
+        }
+
+
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Location Permission already granted
+                buildGoogleApiClient();
+                mMap.setMyLocationEnabled(true);
+            } else {
+                //Request Location Permission
+                checkLocationPermission();
+            }
+        } else {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
+
+
+
+
+        //set up radar pin
+        mapRadar = new MapRadar(mMap, new LatLng(0, 0 ), this);
+        mapRadar.withDistance(5000);
+        mapRadar.withClockwiseAnticlockwiseDuration(2);
+        mapRadar.withOuterCircleFillColor(Color.parseColor("#12000000"));
+        mapRadar.withOuterCircleStrokeColor(Color.parseColor("#2e8b57"));
+        mapRadar.withRadarColors(Color.parseColor("#00000000"), Color.parseColor("#ff000000"));  //starts from transparent to fuly black
+        mapRadar.withRadarColors(Color.parseColor("#00fccd29"), Color.parseColor("#fffccd29"));  //starts from transparent to fuly black
+        mapRadar.withOuterCircleStrokewidth(7);
+        mapRadar.withRadarSpeed(5);
+        mapRadar.withOuterCircleTransparency(0.5f);
+        mapRadar.withRadarTransparency(0.5f);
+        mapRadar.startRadarAnimation();      //in onMapReadyCallBack
+
+        mapRadar.withClockWiseAnticlockwise(true);
+
+        circleOptions = new CircleOptions()
+                .center(new LatLng(0,0))
+                .radius(radius)
+                .strokeColor(Color.GREEN)
+                .strokeWidth(0f)
+                .fillColor(Color.parseColor("#802e8b57"));
+
+        mapCircle = mMap.addCircle(circleOptions);
+
+        //move map camera
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+
+
+
+
+    }
+
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                            "rider", this);
+
+            Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
 
     }
@@ -82,8 +184,12 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
         System.out.println("------------- rider request updated to active -----------------");
 
         // dismiss progress dialog if rider has been successfully matched to a driver
-        mProgressDialog.dismiss();
+//        mProgressDialog.dismiss();
         Toast.makeText(RiderMatchingActivity.this, "rider request updated to active by driver", Toast.LENGTH_SHORT).show();
+
+
+        // to hide loading
+//        dotsLoaderView.hide();
 
         // go to the new activity
         Intent intent = new Intent(RiderMatchingActivity.this, RiderWaitingRideActivity.class);

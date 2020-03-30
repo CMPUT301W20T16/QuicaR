@@ -28,6 +28,7 @@ import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,7 +51,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener {
-
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -66,8 +66,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     DirectionsResult directionsResult;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
-
-
 
     /**
      * when going to this activity, following is executed automatically
@@ -120,12 +118,11 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderName.setText(currentRequest.getRider().getName());
 
 
-//        start_location = currentRequest.getStart();
-        start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
 
 
-        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
+        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
 
         markerOptionsList.add(start);
@@ -140,7 +137,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .destination(end_address).departureTime(now)
                     .await();
         } catch (ApiException e) {
             e.printStackTrace();
