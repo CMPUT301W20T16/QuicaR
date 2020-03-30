@@ -45,6 +45,7 @@ import com.example.user.User;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -69,6 +70,9 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     ArrayList<String> rateList;
     MyAdapter rateAdapter;
     int rateLevel;
+
+    protected FirebaseAuth mAuth;
+
 
     private static final String TAG = "RiderRatingWindow";
     private OnGetUserDataListener listener = this;
@@ -205,6 +209,20 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
 //                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                 startActivityForResult(intent, 2);
                 break;
+
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
 
 
             case R.id.nav_driver_mode:

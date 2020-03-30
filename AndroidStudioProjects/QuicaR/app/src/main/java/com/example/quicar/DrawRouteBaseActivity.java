@@ -126,20 +126,20 @@ public abstract class DrawRouteBaseActivity extends BaseActivity implements Task
 
     }
 
-//    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        String mode = "mode=" + directionMode;
-//        String parameter = str_origin + "&" + str_dest + "&" + mode;
-//        String format = "json";
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-//                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-//
-//
-//        return url;
-//
-//    }
-//
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
+    }
+
 
     protected GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
@@ -152,22 +152,22 @@ public abstract class DrawRouteBaseActivity extends BaseActivity implements Task
     }
 
 
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-//            if (results.routes.length == 0)
-
-
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
-            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
-    }
+//    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+//        if (results != null) {
+////            if (results.routes.length == 0)
+//
+//
+//            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+//            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
+//            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+//            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+//
+//        }
+//        else{
+//            System.out.println("------- null request queried.--------------");
+//
+//        }
+//    }
 
 
 
