@@ -28,6 +28,7 @@ import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -125,7 +126,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         end_location = currentRequest.getDestination();
 
 
-        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
+        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
 
         markerOptionsList.add(start);

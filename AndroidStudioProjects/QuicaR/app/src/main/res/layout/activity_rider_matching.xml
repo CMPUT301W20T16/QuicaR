@@ -3,22 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:background="#FFFFFF"
+    android:padding="16dp"
+    android:layout_alignBottom="@+id/map">
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:layout_width="wrap_content"
+<!--    <steelkiwi.com.library.DotsLoaderView-->
+<!--        android:id="@+id/dots_loader_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="visible"-->
+<!--        app:dlv_item_drawable="@drawable/circle_background"-->
+<!--        app:dlv_line_color="@color/paymentBackground"/>-->
+    <com.example.font.TextViewSFProDisplaySemibold
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:mpb_progressStyle="horizontal"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal" />
+        android:text="@string/finding_your_ride"
+        android:textSize="20sp"
+        android:gravity="center" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="3dp"
+        android:background="#f1f1f1" />
 
     <com.example.font.Button_SF_Pro_Display_Medium
         android:id="@+id/cancel_button"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="5dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/parrot_gradient"
         android:text="Cancel Ride"
