@@ -15,7 +15,7 @@ public class UserState {
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
-    private Request currentRequest;
+    private Request currentRequest = new Request();
 
     /**
      * This is the empty constructor for UserState
@@ -178,6 +178,8 @@ public class UserState {
 
     public void setState(ProxyUserState proxyUserState) {
         this.currentMode = proxyUserState.getCurrentMode();
+        this.onConfirm = proxyUserState.getOnConfirm();
+        this.onMatching = proxyUserState.getOnMatching();
         this.active = proxyUserState.getActive();
         this.onGoing = proxyUserState.getOnGoing();
         this.onArrived = proxyUserState.getOnArrived();

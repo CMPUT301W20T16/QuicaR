@@ -19,6 +19,7 @@ import com.example.quicar.RiderConfirmRiderActivity;
 import com.example.quicar.RiderMatchingActivity;
 import com.example.quicar.RiderOnGoingRequestActivity;
 import com.example.quicar.RiderRequestActivity;
+import com.example.quicar.RiderReviewActivity;
 import com.example.quicar.RiderWaitingRideActivity;
 
 import java.text.ParseException;
@@ -65,18 +66,16 @@ public class MyUtil {
         if (userState.getCurrentMode().equals("rider")) {
             if (!userState.getOnConfirm())
                 directIntent = new Intent(context, RiderRequestActivity.class);
-            else if (!userState.getOnMatching()) {
-//                directIntent = new Intent(context, RiderConfirmRiderActivity.class);
-                directIntent = new Intent(context, RiderRequestActivity.class);
-            }
+            else if (!userState.getOnMatching())
+                directIntent = new Intent(context, RiderConfirmRiderActivity.class);
             else if (!userState.getActive())
                 directIntent = new Intent(context, RiderMatchingActivity.class);
             else if (!userState.getOnGoing())
                 directIntent = new Intent(context, RiderWaitingRideActivity.class);
-            else if (userState.getActive() && userState.getOnGoing())
+            else if (!userState.getOnArrived())
                 directIntent = new Intent(context, RiderOnGoingRequestActivity.class);
             else
-                directIntent = new Intent(context, RiderRequestActivity.class);
+                directIntent = new Intent(context, RiderReviewActivity.class);
         } else {
             if (!userState.getActive() && !userState.getOnGoing())
                 directIntent = new Intent(context, DriverBrowsingActivity.class);

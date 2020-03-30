@@ -307,11 +307,13 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                     return false;
                 }
                 Intent intent = new Intent(RiderSelectLocationActivity.this, RiderConfirmRiderActivity.class);
-                intent.putExtra("start location", start_location);
-                intent.putExtra("end location", end_location);
+//                intent.putExtra("start location", start_location);
+//                intent.putExtra("end location", end_location);
 
                 /* added for user state */
                 DatabaseHelper.getInstance().getUserState().setOnConfirm(true);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(start_location);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(end_location);
                 UserStateDataHelper.getInstance().recordState();
 
                 startActivity(intent);

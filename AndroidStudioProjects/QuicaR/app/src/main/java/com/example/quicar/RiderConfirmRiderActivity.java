@@ -101,10 +101,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
         //get data from intent, i.e., current address
-        Intent intent = getIntent();
-        start_location = (Location) intent.getSerializableExtra("start location");
-        end_location = (Location) intent.getSerializableExtra("end location");
+//        Intent intent = getIntent();
+//        start_location = (Location) intent.getSerializableExtra("start location");
+//        end_location = (Location) intent.getSerializableExtra("end location");
 
+        start_location = DatabaseHelper.getInstance().getUserState().getCurrentRequest().getStart();
+        end_location = DatabaseHelper.getInstance().getUserState().getCurrentRequest().getDestination();
 
         start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin");
         destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
@@ -187,6 +189,8 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             public void onClick(View v) {
                 /* added for user state */
                 DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(null);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(null);
                 UserStateDataHelper.getInstance().recordState();
 
                 finish();
