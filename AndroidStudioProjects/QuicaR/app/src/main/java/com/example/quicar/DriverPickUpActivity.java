@@ -252,7 +252,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             }
         } else {
             buildGoogleApiClient();
-//            mMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(true);
         }
 
 //
