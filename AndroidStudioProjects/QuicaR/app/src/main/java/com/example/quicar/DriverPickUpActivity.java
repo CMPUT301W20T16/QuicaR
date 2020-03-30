@@ -268,9 +268,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         }
         else {
             start = new MarkerOptions().position(latLng).title("origin");
-
         }
+        mMap.addMarker(start);
 
+        //upload current location to database
         LocationDataHelper.getInstance().updateLocation(DatabaseHelper.getInstance().getCurrentUserName(), new Location((double)location.getLatitude(), (double)location.getLongitude()));
 
     }
@@ -374,6 +375,13 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onCancelNotification() {
+
+        Toast.makeText(DriverPickUpActivity.this, "ride has been canceled by rider", Toast.LENGTH_SHORT).show();
+
+
+        Intent intent = new Intent(DriverPickUpActivity.this, DriverBrowsingActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 
