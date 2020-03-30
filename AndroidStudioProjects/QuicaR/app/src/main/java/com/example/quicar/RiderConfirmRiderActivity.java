@@ -56,21 +56,20 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private OnGetRequestDataListener listener = this;
 
-    LinearLayout linearLayout;
-    BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout linearLayout;
+    private BottomSheetBehavior bottomSheetBehavior;
 
 
-    Button confirmButton;
-    Button cancelButton;
-    Request currentRequest = null;
-    DirectionsResult directionsResult;
+    private Button confirmButton, cancelButton;
+    private Request currentRequest = null;
+    private DirectionsResult directionsResult;
 
-    TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
-    String travelTime, travelDistance;
-    Float travelFare;
+    private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
+    private String travelTime, travelDistance;
+    private Float travelFare;
 
-    Location start_location, end_location;
-    MarkerOptions start, destination;
+    private Location start_location, end_location;
+    private MarkerOptions start, destination;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
@@ -197,6 +196,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
         mMap = googleMap;
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
@@ -218,6 +218,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                 view_distance.setText(travelDistance);
                 view_time.setText(travelTime);
                 view_fare.setText("$ " + travelFare);
+            }
+            else{
+                Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+
             }
 
         }catch (Exception e){
@@ -281,14 +285,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         double fare;
 
         if(distance<1000){
-            fare = 7.0;
+            fare = 5.0;
 
         }
         else if (distance <= 5000 && distance >= 1000){
-            fare = 5 + (distance / 1000)*2.3;
+            fare = 5 + (distance / 1000)*3;
         }
         else{
-            fare = (distance/1000)*2.0;
+            fare = (distance/1000)*2.5;
         }
 
 

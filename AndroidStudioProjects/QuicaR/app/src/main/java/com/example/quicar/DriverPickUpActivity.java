@@ -29,7 +29,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -62,7 +61,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
-    Location start_location, end_location;
+    Location driver_start_location, driver_end_location;
     MarkerOptions start, destination;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
@@ -116,12 +115,17 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         riderName.setText(currentRequest.getRider().getName());
 
 
-        start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        end_location = currentRequest.getStart();
+        driver_start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        String driverCurrentAddress = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        driver_start_location.setAddressName(driverCurrentAddress);
+        driver_end_location = currentRequest.getStart();
+        String driverPickUpAddress = driver_end_location.getAddressName();
 
 
-        start = new MarkerOptions().position(new LatLng(start_location.getLat(), start_location.getLon())).title("origin").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
+
+
+        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon())).title("driver's current location");
+        destination = new MarkerOptions().position(new LatLng(driver_end_location.getLat(), driver_end_location.getLon())).title("rider's pick up location");
 
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
@@ -129,17 +133,14 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
         DateTime now = new DateTime();
 //        String start_address = start_location.getAddressName();
-        String start_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        String end_address = end_location.getAddressName();
-
-        System.out.println("-----start address name-----" + start_address);
-        System.out.println("-----end address name-------" + end_address);
+        System.out.println("-----start address name-----" );
+        System.out.println("-----end address name-------" );
 
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
-                    .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .mode(TravelMode.DRIVING).origin(driverCurrentAddress)
+                    .destination(driverPickUpAddress).departureTime(now)
                     .await();
 
         } catch (ApiException e) {
@@ -148,6 +149,14 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if(directionsResult == null){
+            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
+            startActivity(intent);
+            finish();
+
         }
 
 
@@ -173,10 +182,6 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             }
         });
 
-
-
-
-
     }
 
     /**
@@ -185,6 +190,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
+
         mMap = googleMap;
         mMap.addMarker(start);
         mMap.addMarker(destination);
@@ -197,20 +203,20 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
                     == PackageManager.PERMISSION_GRANTED) {
                 //Location Permission already granted
                 buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
+                //mMap.setMyLocationEnabled(true);
             } else {
                 //Request Location Permission
                 checkLocationPermission();
             }
         } else {
             buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
+//            mMap.setMyLocationEnabled(true);
         }
 
         //draw route
-        if (directionsResult != null) {
-                addPolyline(directionsResult, mMap);
-        }
+        addPolyline(directionsResult, mMap);
+
+
     }
 
 
@@ -247,6 +253,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         }
         else {
             start = new MarkerOptions().position(latLng).title("origin");
+
         }
 
     }
