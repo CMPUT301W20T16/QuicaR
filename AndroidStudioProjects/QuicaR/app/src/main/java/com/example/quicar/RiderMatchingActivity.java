@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 import java.util.ArrayList;
 
-import steelkiwi.com.library.DotsLoaderView;
+//import steelkiwi.com.library.DotsLoaderView;
 
 public class RiderMatchingActivity extends BaseActivity implements OnGetRequestDataListener {
 
@@ -36,7 +36,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     Request currentRequest = null;
     Button_SF_Pro_Display_Medium cancelButton;
-    DotsLoaderView dotsLoaderView;
+//    DotsLoaderView dotsLoaderView;
 
     private double radius = 5000;
 

@@ -70,7 +70,7 @@ public class RequestDataHelper {
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             Request request = doc.toObject(Request.class);
                             //  check if there is a change in the request status of current user
-                            if (databaseHelper.getCurrentMode() == "rider") {
+                            if (databaseHelper.getCurrentMode().equals("rider")) {
                                 checkActiveNotification(request);
                                 checkPickedUpNotification(request);
                                 checkArrivedNotification(request);
@@ -79,7 +79,7 @@ public class RequestDataHelper {
                             if (!request.getAccepted())
                                 openRequests.add(request);
                         }
-                        if (databaseHelper.getCurrentMode() == "driver") {
+                        if (databaseHelper.getCurrentMode().equals("driver")) {
                             notifyAllOpenRequests(openRequests);
                             checkCancelNotification(requests);
                         }

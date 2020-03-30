@@ -66,7 +66,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
     private String travelTime, travelDistance;
-    private Float travelFare;
+    private float travelFare;
 
     private Location start_location, end_location;
     private MarkerOptions start, destination;
@@ -153,13 +153,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             User newUser = new User();
             newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
+            User currentRider = DatabaseHelper.getInstance().getCurrentUser();
+
             //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    newUser, new User(), travelFare);
+                    currentRider, null, travelFare);
 
             currentRequest = request;
-
 
             RequestDataHelper.getInstance().addNewRequest(request, listener);
 
@@ -226,7 +227,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         }catch (Exception e){
             success = false;
-            Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RiderConfirmRiderActivity.this, "no route found！Please reselect!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
             startActivity(intent);
 
@@ -288,7 +289,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             fare = 5.0;
 
         }
-        else if (distance <= 5000 && distance >= 1000){
+        else if (distance <= 5000){
             fare = 5 + (distance / 1000)*3;
         }
         else{
