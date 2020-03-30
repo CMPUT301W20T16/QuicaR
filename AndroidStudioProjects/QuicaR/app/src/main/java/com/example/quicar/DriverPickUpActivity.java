@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -79,9 +80,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-        /**
-         * current request cannot be updated at driver end
-         */
+
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
         String riderNameStr = currentRequest.getRider().getName();
@@ -132,7 +131,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
 
 
-        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon())).title("driver's current location");
+        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon()))
+                .title("driver's current location")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
         destination = new MarkerOptions().position(new LatLng(driver_end_location.getLat(), driver_end_location.getLon())).title("rider's pick up location");
 
         markerOptionsList.add(start);
@@ -171,10 +172,10 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
 
-        RequestDataHelper
-                .getInstance()
-                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                        "driver", this);
+//        RequestDataHelper
+//                .getInstance()
+//                .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                        "driver", this);
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
