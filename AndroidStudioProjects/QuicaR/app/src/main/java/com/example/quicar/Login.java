@@ -1,16 +1,17 @@
 package com.example.quicar;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +22,15 @@ import androidx.core.view.GravityCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
-import com.example.datahelper.UserState;
 import com.example.datahelper.UserStateDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.listener.OnGetUserStateListener;
 import com.example.user.User;
+import com.example.util.ConnectivityReceiver;
 import com.example.util.MyUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.regex.Pattern;
 
 
-public class Login extends AppCompatActivity implements OnGetUserDataListener, OnGetUserStateListener {
+public class Login extends AppCompatActivity implements OnGetUserDataListener, OnGetUserStateListener, ConnectivityReceiver.ConnectivityReceiverListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
@@ -74,6 +76,10 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         signUpButton = findViewById(R.id.signUpText);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+
+        this.registerReceiver(MyApplication.receiver, MyApplication.filter);
+        MyApplication.getInstance().setConnectivityListener(this);
+        checkConnection();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,5 +326,64 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         MyUtil.goToIntent(Login.this);
+    }
+
+    // Method to manually check connection status
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    // Showing the status in Snackbar
+    private void showSnack(boolean isConnected) {
+        System.out.println("snack bar is showing here... ... ...");
+        String message;
+        int color;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+        } else {
+            message = "Sorry! Not connected to internet";
+            color = Color.RED;
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.login), message, Snackbar.LENGTH_LONG);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextColor(color);
+        FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)sbView.getLayoutParams();
+        params.gravity = Gravity.TOP;
+//        // calculate actionbar height
+//        TypedValue tv = new TypedValue();
+//        int actionBarHeight=0;
+//        if (getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
+//        {
+//            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+//        }
+//
+//        //  set margin
+//        params.setMargins(0, actionBarHeight, 0, 0);
+        sbView.setLayoutParams(params);
+        snackbar.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        System.out.println("connection changed here... ... ...");
+        showSnack(isConnected);
     }
 }
