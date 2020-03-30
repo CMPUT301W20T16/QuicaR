@@ -82,6 +82,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     Location rider_start_location, rider_end_location;
     MarkerOptions start, destination, driver_loc;
     DirectionsResult directionsResult;
+    Marker driverLoc;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -248,7 +249,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         mMap = googleMap;
         mMap.addMarker(start);
         mMap.addMarker(destination);
-        mMap.addMarker(driver_loc);
+        driverLoc = mMap.addMarker(driver_loc);
         showAllMarkers();
 
         //Initialize Google Play Services
@@ -292,27 +293,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     }
 
-//    @Override
-//    public void onLocationChanged(android.location.Location location) {
-//        mLastLocation = location;
-//
-//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//
-//        //move map camera
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//        if (driver_loc != null) {
-//            driver_loc.position(latLng);
-//        }
-//        else {
-//            driver_loc = new MarkerOptions().position(latLng).title("origin");
-//
-//        }
-//
-//    }
-
     protected GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
         geoApiContext.setQueryRateLimit(3)
@@ -352,13 +332,15 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         if (driver_loc != null) {
-            driver_loc.position(latLng);
+            driverLoc.remove();
+//            driver_loc.position(latLng);
         }
         else {
             driver_loc = new MarkerOptions().position(latLng).title("driver's current location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
+            markerOptionsList.add(driver_loc);
 
         }
-        mMap.addMarker(driver_loc);
+        driverLoc = mMap.addMarker(driver_loc);
     }
 
 
