@@ -2,12 +2,18 @@ package com.example.quicar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.datahelper.DatabaseHelper;
@@ -26,6 +32,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
     ListView cardList;
     ArrayAdapter<BankAccount> cardAdapter;
     ArrayList<BankAccount> cardDataList;
+    int currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,10 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
         cardDataList = user.getAccountInfo().getWallet().getBankAccountArrayList();
         cardAdapter = new CardList(this, cardDataList);
         cardList.setAdapter(cardAdapter);
+
+        //set context menu
+        registerForContextMenu(cardList);
+
 
         addCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +67,47 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
         });
     }
 
-//    @Override
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.card_actions_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e("", "Bad menuInfo", e);
+            return false;
+        }
+
+        switch (item.getItemId()) {
+            case R.id.delete:
+                cardDataList.remove(info.position);
+                cardAdapter.notifyDataSetChanged();
+                DatabaseHelper.getInstance().setCurrentUser(user);
+                UserDataHelper.getInstance().updateUserProfile(user, this);
+                System.out.println("DELETE------------------------");
+                break;
+
+            case R.id.edit:
+                currentPosition = info.position;
+                BankAccount chosedCard = (BankAccount) cardAdapter.getItem(info.position);
+                Intent intent = new Intent();
+                intent.setClass(ManageCardActivity.this, ValidateCardActivity.class);
+                intent.putExtra("chosed card", chosedCard);
+                startActivityForResult(intent, 2);
+
+        }
+        return super.onContextItemSelected(item);
+
+    }
+
+
+    //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item)
 //    {
 //        //according to different click control different action
@@ -86,6 +137,19 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
                     DatabaseHelper.getInstance().setCurrentUser(user);
                     UserDataHelper.getInstance().updateUserProfile(user, this);
                     System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
+                }
+                break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    BankAccount editCard = (BankAccount) data.getExtras().getSerializable("edited card");
+                    cardDataList.set(currentPosition, editCard);
+
+
+                    cardAdapter.notifyDataSetChanged();
+                    DatabaseHelper.getInstance().setCurrentUser(user);
+                    UserDataHelper.getInstance().updateUserProfile(user, this);
+                    System.out.println("222222222222222222222222222");
+
                 }
         }
     }

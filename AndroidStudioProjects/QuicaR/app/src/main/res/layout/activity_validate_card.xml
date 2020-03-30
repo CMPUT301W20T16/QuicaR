@@ -173,11 +173,10 @@
                         android:text="Name On Card"/>
 
 
-                    <com.example.font.TextViewSFProDisplayRegular
+                    <EditText
                         android:id="@+id/name_on"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rodan CCC"
                         android:layout_marginLeft="40dp"
                         android:textSize="14sp"
                         android:textColor="@color/paymentBackground"/>
@@ -205,15 +204,15 @@
                         android:text="Card Number"/>
 
 
-                    <com.santalu.maskedittext.MaskEditText
-                        android:id="@+id/card_num"
+
+                    <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5170123456789087"
+                        android:id="@+id/card_num"
                         android:layout_marginLeft="22dp"
                         android:textSize="14sp"
                         android:textColor="@color/paymentBackground"
-                        app:met_mask="#### #### #### ####"/>
+                        android:inputType="number"/>
 
                 </LinearLayout>
 
@@ -242,15 +241,14 @@
                             android:text="Expiry Date"/>
 
 
-                        <com.santalu.maskedittext.MaskEditText
-                            android:id="@+id/expiry_date"
+                        <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0820"
+                            android:id="@+id/expiry_date"
                             android:layout_marginLeft="22dp"
                             android:textSize="14sp"
                             android:textColor="@color/paymentBackground"
-                            app:met_mask="##/##"/>
+                            android:inputType="date"/>
 
                     </LinearLayout>
 
@@ -270,15 +268,14 @@
                             android:text="CCV"/>
 
 
-                        <com.santalu.maskedittext.MaskEditText
-                            android:id="@+id/ccv"
+                        <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="082"
+                            android:id="@+id/ccv"
                             android:layout_marginLeft="22dp"
                             android:textSize="14sp"
                             android:textColor="@color/paymentBackground"
-                            app:met_mask="###"/>
+                            android:inputType="number"/>
 
                     </LinearLayout>
 
