@@ -54,8 +54,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
-    TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress;
+    TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress,travelTime;
     TextViewSFProDisplayMedium riderName;
+
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
     Request currentRequest = null;
@@ -83,6 +84,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
          */
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
+        String riderNameStr = currentRequest.getRider().getName();
+
+
         LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -103,16 +107,20 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         riderEmail = linearLayout.findViewById(R.id.userEmail_textView);
         riderPhone = linearLayout.findViewById(R.id.userPhone_textView);
         riderName = linearLayout.findViewById(R.id.userName_textView);
+        travelTime = linearLayout.findViewById(R.id.estimate_fare);
         callButton = linearLayout.findViewById(R.id.call_rider_button);
         emailButton = linearLayout.findViewById(R.id.email_rider_button);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
+
+
 
         startAddress.setText(currentRequest.getStartAddrName());
         endAddress.setText(currentRequest.getDestAddrName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
+
 
 
         driver_start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
@@ -158,6 +166,9 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             finish();
 
         }
+
+
+        travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
 
         RequestDataHelper
