@@ -56,6 +56,8 @@ public class RiderRequestActivity extends BaseActivity {
         startLocation = findViewById(R.id.start_location);
 
 
+
+
         // if user trying to enter pick up location
         // the program will automatically generate user's current location
         // transfer to a new page where user can enter or select destination from historical destinations

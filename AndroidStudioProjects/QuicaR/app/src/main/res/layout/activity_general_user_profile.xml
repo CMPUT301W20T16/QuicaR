@@ -44,24 +44,7 @@
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/profile_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/profile_phone"
-            app:errorTextAppearance="@style/error"
-            app:errorEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:inputType="number"
-                android:padding="10dp"
-                android:maxLength="10"
-                android:singleLine="true"
-                android:background="@drawable/rounded_background" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/profile_username"
@@ -79,6 +62,25 @@
                 android:padding="10dp"
                 android:singleLine="true"
                 android:inputType="textPersonName"
+                android:background="@drawable/rounded_background" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profile_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_phone"
+            app:errorTextAppearance="@style/error"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:inputType="number"
+                android:padding="10dp"
+                android:maxLength="10"
+                android:singleLine="true"
                 android:background="@drawable/rounded_background" />
         </com.google.android.material.textfield.TextInputLayout>
 

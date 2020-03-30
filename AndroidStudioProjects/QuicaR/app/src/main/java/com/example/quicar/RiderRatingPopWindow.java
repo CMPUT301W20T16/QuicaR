@@ -138,16 +138,17 @@ public class RiderRatingPopWindow extends Activity implements OnGetUserDataListe
      *Design for update rate
      */
     public void updateDriverRate(int newRateLevel) {
-        int orderNumPre = currentUser.getAccountInfo().getDriverInfo().getOrderNumber();
-        double avgRatePre  = currentUser.getAccountInfo().getDriverInfo().getRating();
-        double preSumRate = orderNumPre * avgRatePre;
-
-        // plus one for current finished order
-        int orderNumNew = orderNumPre + 1;
-        double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
-        // update new order num and rate
-        currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
-        currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
+//        int orderNumPre = currentUser.getAccountInfo().getDriverInfo().getOrderNumber();
+//        double avgRatePre  = currentUser.getAccountInfo().getDriverInfo().getRating();
+//        double preSumRate = orderNumPre * avgRatePre;
+//
+//        // plus one for current finished order
+//        int orderNumNew = orderNumPre + 1;
+//        double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
+//        // update new order num and rate
+//        currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
+//        currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
+        currentUser.getAccountInfo().getDriverInfo().autoCmputAndSetRate((double) newRateLevel);
         UserDataHelper.getInstance().updateUserProfile(currentUser,listener);
 
     }

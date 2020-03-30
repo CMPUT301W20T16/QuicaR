@@ -56,21 +56,20 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private OnGetRequestDataListener listener = this;
 
-    LinearLayout linearLayout;
-    BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout linearLayout;
+    private BottomSheetBehavior bottomSheetBehavior;
 
 
-    Button confirmButton;
-    Button cancelButton;
-    Request currentRequest = null;
-    DirectionsResult directionsResult;
+    private Button confirmButton, cancelButton;
+    private Request currentRequest = null;
+    private DirectionsResult directionsResult;
 
-    TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
-    String travelTime, travelDistance;
-    Float travelFare;
+    private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
+    private String travelTime, travelDistance;
+    private Float travelFare;
 
-    Location start_location, end_location;
-    MarkerOptions start, destination;
+    private Location start_location, end_location;
+    private MarkerOptions start, destination;
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
 
@@ -118,12 +117,9 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         view_end.setText(end_location.getAddressName());
 
 
-        //mMap.clear();
         DateTime now = new DateTime();
         String start_address = start_location.getAddressName();
         String end_address = end_location.getAddressName();
-//        System.out.println("-----start address name-----"+start_address);
-//        System.out.println("-----end address name-------"+end_address);
         try {
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
@@ -169,12 +165,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
 
-            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
-//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
-
-            intent1.putExtra("current request", currentRequest);
-            startActivity(intent1);
-            finish();
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+////            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+//
+////            intent1.putExtra("current request", currentRequest);
+//            startActivity(intent1);
+//            finish();
 
         });
 
@@ -200,6 +196,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
         mMap = googleMap;
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
@@ -222,6 +219,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                 view_time.setText(travelTime);
                 view_fare.setText("$ " + travelFare);
             }
+            else{
+                Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
+
+            }
 
         }catch (Exception e){
             success = false;
@@ -230,16 +231,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
             startActivity(intent);
 
         }
-        if (success) {
-//            travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
-//            travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-//            travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
-//
-//            view_distance.setText(travelDistance);
-//            view_time.setText(travelTime);
-//            view_fare.setText("$ " + travelFare);
-        }
-
     }
 
     public void showAllMarkers() {
@@ -294,14 +285,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
         double fare;
 
         if(distance<1000){
-            fare = 7.0;
+            fare = 5.0;
 
         }
         else if (distance <= 5000 && distance >= 1000){
-            fare = 5 + (distance / 1000)*2.3;
+            fare = 5 + (distance / 1000)*3;
         }
         else{
-            fare = (distance/1000)*2.0;
+            fare = (distance/1000)*2.5;
         }
 
 
@@ -358,6 +349,13 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag == RequestDataHelper.ADD_REQ_TAG) {
             Toast.makeText(RiderConfirmRiderActivity.this, "rider request added successfully", Toast.LENGTH_SHORT).show();
+
+            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderMatchingActivity.class);
+//            Intent intent1 = new Intent(RiderConfirmRiderActivity.this, RiderWaitingRideActivity.class);
+
+//            intent1.putExtra("current request", currentRequest);
+            startActivity(intent1);
+            finish();
         }
 
     }
