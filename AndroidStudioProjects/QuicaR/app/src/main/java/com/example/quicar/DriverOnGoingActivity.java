@@ -10,6 +10,8 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +81,12 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
     DirectionsResult directionsResult;
 
+    //counter of time since app started, a background task
+    private long mStartTime = 0L;
+
+    //handler to handle the message to the timer task
+    private Handler mHandler = new Handler();
+
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
     /**
@@ -100,6 +108,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         //set up firebase connection
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
 
 
         LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -130,6 +139,15 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
+
+
+        //start timing the activity
+        if(mStartTime==0L){
+            mStartTime= SystemClock.uptimeMillis();
+            mHandler.removeCallbacks(mUpdateTimeTask);
+            mHandler.postDelayed(mUpdateTimeTask,100);
+        }
+
 
 
         start_location = currentRequest.getStart();
@@ -294,6 +312,20 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         });
 
     }
+
+    /**
+     * helper function for timing the activity
+     */
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            final long start = mStartTime;
+            long millis = SystemClock.uptimeMillis() - start;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+            mHandler.postDelayed(this, 200);
+        }
+    };
 
     /**
      * when add new request, following will be executed automatically

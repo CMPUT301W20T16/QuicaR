@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_clolor">
+<!--    tools:context=".feedbackactivity">-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/helpicon"
+                android:layout_marginTop="28sp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"/>
+
+
+            <com.example.font.TextViewSFProDisplayMedium
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How can we help you?"
+                android:textSize="15sp"
+                android:letterSpacing="0.0265"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginTop="30dp"/>
+
+            <com.example.font.TextViewSFProDisplayRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/we_take_importance_to_feed_back_from_you_and_we_work_hard_to_make_it_the_best_please_select_the_problem_and_let_us_know"
+                android:textSize="13sp"
+                android:textColor="#545454"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="2dp"
+                android:gravity="center"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <com.example.font.TextViewSFProDisplayRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#1d1d1d"
+                    android:textSize="13sp"
+                    android:letterSpacing="0.0265"
+                    android:text="What’s your feedback about?"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/spinner_rect"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/sp_car_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/custom_spinner"
+                        android:spinnerMode="dropdown"/>
+
+                </LinearLayout>
+
+
+                <com.example.font.TextViewSFProDisplayRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="#1d1d1d"
+                    android:text="Please tell us exactly what the problem is."/>
+
+
+                <com.example.font.EditTextSFProDisplayMedium
+                    android:id="@+id/myTextBox"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textColor="#a3a3a3"
+                    android:textColorHint="#a3a3a3"
+                    android:background="@drawable/spinner_rect"
+                    android:ems="10"
+                    android:hint="Tap to write..."
+                    android:inputType="textMultiLine"
+                    android:letterSpacing="0.0625"
+                    android:minLines="3"
+                    android:paddingBottom="100dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textSize="15dp">
+
+                </com.example.font.EditTextSFProDisplayMedium>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -139,7 +139,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-//        estimateFare.setText(mRequest.esti().toString());
+        estimateFare.setText(mRequest.getEstimatedCost().toString());
 
         //set Image View
         iconImage = linearLayout.findViewById(R.id.icon);
