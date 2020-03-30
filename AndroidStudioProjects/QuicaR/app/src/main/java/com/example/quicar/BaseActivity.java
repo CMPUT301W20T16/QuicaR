@@ -462,6 +462,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         switch (item.getItemId()) {
             case R.id.nav_account:
                 Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+//                Intent i = new Intent(getApplicationContext(), RiderReviewActivity.class);
                 startActivity(i);
                 break;
 

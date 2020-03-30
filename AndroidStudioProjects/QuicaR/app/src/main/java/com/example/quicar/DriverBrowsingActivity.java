@@ -1,6 +1,11 @@
 package com.example.quicar;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,6 +19,9 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Request;
 import com.example.listener.OnGetRequestDataListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
@@ -30,8 +38,11 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     private RequestAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Request> requestList;
+    private MarkerOptions start;
 
     private int currentPosition;
+
+    final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +62,17 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
         /* added by Jeremy */
         RequestDataHelper.getInstance().queryAllOpenRequests(this);
 
-        System.out.println("-------------current user name: " + DatabaseHelper.getInstance().getCurrentUserName());
-
         requestList = new ArrayList<>();
         buildRecyclerView();
+
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLastLocation = mLocationManager.getLastKnownLocation(PROVİDER);
+
+
 
 
     }
@@ -127,6 +145,27 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     }
 
     @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+        //move map camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+        if (start != null) {
+            start.position(latLng);
+        }
+        else {
+            start = new MarkerOptions().position(latLng).title("origin");
+
+        }
+
+    }
+
+    @Override
     public void onActiveNotification (Request request){
 
     }
@@ -161,10 +200,24 @@ public class DriverBrowsingActivity extends BaseActivity implements OnGetRequest
     public void onOkPressed() {
         //activate selected request
         Request request = (Request)requestList.get(currentPosition);
-        RequestDataHelper
-                .getInstance()
-                .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
-                        request.getEstimatedCost(), DriverBrowsingActivity.this);
+        Location riderPickUP = new Location("rider pick up");
+        riderPickUP.setLatitude(request.getStart().getLat());
+        riderPickUP.setLongitude(request.getStart().getLon());
+
+        float distance = mLastLocation.distanceTo(riderPickUP);
+        if(distance > 50000){
+            Toast.makeText(this, "Too far away! please select another one!",
+                    Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+
+
+            RequestDataHelper
+                    .getInstance()
+                    .setRequestActive(request.getRid(), DatabaseHelper.getInstance().getCurrentUser(),
+                            request.getEstimatedCost(), DriverBrowsingActivity.this);
+        }
 
     }
 }

@@ -11,7 +11,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -50,8 +50,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LogoActivity"/>
         <activity android:name=".Register" android:parentActivityName=".Login"/>
-        <activity android:name=".Login" /> <!-- [START firebase_service] -->
+        <activity android:name=".Login"/> <!-- [START firebase_service] -->
 
         <activity android:name=".UserProfileActivity"
             android:parentActivityName=".RiderRequestActivity">
@@ -79,14 +80,16 @@
         <!--        wen kai >-->
         <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderRequestActivity"/>
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
-        <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" android:label="Wallet"/>
+        <activity android:name=".PayPasswordChangeEnterActivity" android:parentActivityName=".WalletOverviewActivity" />
+        <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" />
+        <activity android:name=".RechargeActivity" android:parentActivityName=".WalletOverviewActivity" />
         <activity android:name=".PayPasswordSetActivity" android:parentActivityName=".RiderRequestActivity"/>
         <activity android:name=".PayPasswordEnterActivity" android:parentActivityName=".SetAmountActivity"/>
         <activity android:name=".QRPaymentActivity" />
         <activity android:name=".ManageCardActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ValidateCardActivity" android:parentActivityName=".ManageCardActivity"/>
-        <activity android:name=".SetAmountActivity" android:parentActivityName=".ScanTransferActivity"/>
-        <activity android:name=".ScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
+        <activity android:name=".SetAmountActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".DriverScanActivity" android:parentActivityName=".DriverPickUpActivity"/>
         <activity android:name=".RegisterDriverActivity" android:parentActivityName=".RiderRequestActivity"/>
 
 

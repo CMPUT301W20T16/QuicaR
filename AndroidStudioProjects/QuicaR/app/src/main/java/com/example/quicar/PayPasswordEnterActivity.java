@@ -7,7 +7,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.PayRecordDataHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.entity.PayRecord;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
 import com.hanks.passcodeview.PasscodeView;
@@ -20,9 +22,9 @@ public class PayPasswordEnterActivity extends AppCompatActivity implements OnGet
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_password);
+        setContentView(R.layout.activity_pay_password_enter);
 
-        System.out.println("222222222222222222222222222222");
+        //System.out.println("222222222222222222222222222222");
 
         passcodeView = findViewById(R.id.password_enter);
         passcodeView.setPasscodeType(PasscodeView.PasscodeViewType.TYPE_CHECK_PASSCODE);
@@ -45,6 +47,8 @@ public class PayPasswordEnterActivity extends AppCompatActivity implements OnGet
                 SetAmountActivity.toUser.getAccountInfo().getWallet().setBalance(SetAmountActivity.toUser.getAccountInfo().getWallet().getBalance() + SetAmountActivity.money);
                 UserDataHelper.getInstance().updateUserProfile(SetAmountActivity.fromUser, PayPasswordEnterActivity.this);
                 UserDataHelper.getInstance().updateUserProfile(SetAmountActivity.toUser, PayPasswordEnterActivity.this);
+                PayRecord payRecord = new PayRecord(SetAmountActivity.toUser, SetAmountActivity.fromUser, null, SetAmountActivity.money);
+                PayRecordDataHelper.getInstance().addPayRecord(payRecord);
                 Toast.makeText(getApplicationContext(), "Pay successfully. Go to wallet page to check your balance", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
             }

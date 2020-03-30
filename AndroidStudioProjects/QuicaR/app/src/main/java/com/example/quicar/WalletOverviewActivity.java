@@ -24,7 +24,9 @@ import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class WalletOverviewActivity extends AppCompatActivity implements OnGetUserDataListener{
 
@@ -32,12 +34,14 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     Button card_pay;
     Button camera_scan;
     Button card_info;
+    Button recharge;
     ImageView qr_code;
     TextView balance;
     Handler handler = new Handler();
     Handler handler2 = new Handler();
     String currentBalance;
     User user;
+    String time;
     private OnGetUserDataListener listener = this;
 
     // every 30 seconds refresh the qr code 1 time
@@ -52,21 +56,21 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     };
 
     // every 30 seconds refresh the qr code 1 time
-    private Runnable runnable2 = new Runnable() {
-        public void run() {
-            this.update();
-            handler2.postDelayed(runnable2, 1000 * 2);
-        }
-        void update() {
-            if (user != null) {
-                UserDataHelper.getInstance().updateUserProfile(user, listener);
-                user = DatabaseHelper.getInstance().getCurrentUser();
-                currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
-                balance.setText(currentBalance);
-                balance.bringToFront();
-            }
-        }
-    };
+//    private Runnable runnable2 = new Runnable() {
+//        public void run() {
+//            this.update();
+//            handler2.postDelayed(runnable2, 1000 * 2);
+//        }
+//        void update() {
+//            if (user != null) {
+//                UserDataHelper.getInstance().updateUserProfile(user, listener);
+//                user = DatabaseHelper.getInstance().getCurrentUser();
+//                currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+//                balance.setText(currentBalance);
+//                balance.bringToFront();
+//            }
+//        }
+//    };
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
@@ -78,13 +82,14 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         card_pay = (Button)findViewById(R.id.card_pay);
         camera_scan = (Button)findViewById(R.id.camera_scan);
         card_info = (Button)findViewById(R.id.card_information);
+        recharge = (Button)findViewById(R.id.recharge);
         balance = (TextView)findViewById(R.id.balance);
         UserDataHelper.getInstance().setOnNotifyListener(this);
 
         handler.postDelayed(runnable, 1000 * 30);
         generate_qr(qr_code);
 
-        handler2.postDelayed(runnable2, 1000 * 2);
+        //handler2.postDelayed(runnable2, 1000 * 2);
         user = DatabaseHelper.getInstance().getCurrentUser();
         if(user.getAccountInfo().getWallet() == null) {
             System.out.println(user.getAccountInfo().getUserName());
@@ -106,6 +111,13 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
                 startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
             }
         });
+
+        recharge.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+            }
+        });
     }
 
     @Override
@@ -115,7 +127,8 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     }
 
     protected void generate_qr(ImageView qr_code) {
-        String time = LocalDateTime.now().toString();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        time = df.format(LocalDateTime.now());
         Gson gson = new Gson();
         String json = gson.toJson(DatabaseHelper.getInstance().getCurrentUser());
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -157,6 +170,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
             case R.id.pay_record:
                 break;
             case R.id.change_password:
+                startActivity(new Intent(getApplicationContext(), PayPasswordChangeEnterActivity.class));
                 break;
         }
         return true;
@@ -169,16 +183,22 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
 
     @Override
     public void onUpdateNotification(User user) {
-//        if (user != null) {
-//            currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
-//            balance.setText(currentBalance);
-//            balance.bringToFront();
-//        }
+        if (user != null) {
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            currentBalance = "( $ " + decimalFormat.format(user.getAccountInfo().getWallet().getBalance()) + " )";
+            balance.setText(currentBalance);
+            balance.bringToFront();
+        }
     }
 
     @Override
     public void onFailure(String errorMessage) {
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
     }
 //        //according to different click control different action
 //        if (item.getItemId() == R.id.help){
