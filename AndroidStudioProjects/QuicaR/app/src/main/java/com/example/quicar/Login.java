@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
@@ -306,6 +307,11 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
 
     @Override
     public void onFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 

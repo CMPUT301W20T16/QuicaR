@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -175,8 +176,6 @@ public class RiderRatingPopWindow extends Activity implements OnGetUserDataListe
                 "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }
-
-
 
 
 }
