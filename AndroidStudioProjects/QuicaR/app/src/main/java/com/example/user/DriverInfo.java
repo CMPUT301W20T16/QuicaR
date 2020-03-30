@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class DriverInfo implements Serializable {
 
-    private Double rating = 0.;
+    private Double rating = 5.0;
     private Integer orderNumber = 0;
     private String plateNumber;
     private String license;
@@ -25,8 +25,12 @@ public class DriverInfo implements Serializable {
     }
 
     public void setRating(Double newRating) {
-        //this.rating = rating;
+        this.rating = newRating;
+//        this.rating = (this.rating * this.orderNumber + newRating) / (++this.orderNumber);
+    }
+    public void autoCmputAndSetRate(Double newRating) {
         this.rating = (this.rating * this.orderNumber + newRating) / (++this.orderNumber);
+
     }
 
     public Integer getOrderNumber() {

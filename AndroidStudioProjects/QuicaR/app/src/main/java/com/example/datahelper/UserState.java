@@ -8,7 +8,7 @@ import com.example.user.User;
  */
 public class UserState {
     private User currentUser = new User();
-    private String currentMode;
+    private String currentMode = "rider";
     private String token;
     private Boolean onConfirm = Boolean.FALSE;
     private Boolean onMatching = Boolean.FALSE;
