@@ -194,7 +194,13 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            try {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
+            catch(Exception e){
+
+
+            }
 
         }
     }

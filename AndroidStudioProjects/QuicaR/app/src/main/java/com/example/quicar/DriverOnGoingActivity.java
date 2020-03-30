@@ -51,7 +51,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener {
-
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -67,8 +66,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     DirectionsResult directionsResult;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
-
-
 
     /**
      * when going to this activity, following is executed automatically
@@ -121,8 +118,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderName.setText(currentRequest.getRider().getName());
 
 
-//        start_location = currentRequest.getStart();
-        start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
 
 
@@ -141,7 +137,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
             //GeoApiContext geoApiContext = getGeoContext();
             directionsResult = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(Instant.now())
+                    .destination(end_address).departureTime(now)
                     .await();
         } catch (ApiException e) {
             e.printStackTrace();
