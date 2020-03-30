@@ -227,12 +227,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                     travelTime = directionsResult.routes[0].legs[0].duration.humanReadable;
                     travelDistance = directionsResult.routes[0].legs[0].distance.humanReadable;
-//                    if (directionsResult.routes[0].legs[0].distance.inMeters >= 100000) {
-//                        Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 100 km!", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
+                    if (directionsResult.routes[0].legs[0].distance.inMeters >= 200000) {
+                        Toast.makeText(RiderConfirmRiderActivity.this, "cannot request for more than 200 km!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
                     travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
@@ -267,6 +267,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     }
 
+
+
+
+
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null)
@@ -274,6 +278,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
 
 
 
