@@ -5,41 +5,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
-import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.entity.Location;
 import com.example.entity.Request;
-
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayLight;
 import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetRequestDataListener;
-import com.example.user.User;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
@@ -57,15 +50,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
-public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener {
-
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
-
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
 
     TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress;
     TextViewSFProDisplayMedium riderName;
@@ -74,11 +61,11 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     Request currentRequest = null;
     DirectionsResult directionsResult;
 
-    LocationManager locationManager;
-    LocationListener locationListener;
-    Context context;
-    boolean gps_enabled,network_enabled;
+    Location driver_start_location, driver_end_location;
+    MarkerOptions start, destination;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
+    final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
 
     @Override
@@ -91,79 +78,23 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
-
-//
-//        requestPermission();
-//
-//
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-//        if (ActivityCompat.checkSelfPermission(DriverPickUpActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//            System.out.println("------PERMISSION DENIED!!!!!!!");
-//            finish();
-//        }
-//
-//        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverPickUpActivity.this, new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                if(location != null){
-//                    currentLocation = location;
-//                }
-//                else{
-//                    System.out.println("--------current location is indeed null!!!!!!!!!!");
-//
-//                }
-//
-//
-//            }
-//        });
-
-        //currentLocation = geocoder.getLastLocation()
-
-//        fetchLastLocation();
-
-        //System.out.println("----------current location:-"+currentLocation.getLatitude()+currentLocation.getLongitude());
-
-//        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
-
-
-
-        start = new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("origin");
-        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
-
-        markerOptionsList.add(start);
-        markerOptionsList.add(destination);
-
-        DateTime now = new DateTime();
-        String start_address = findAddress(currentLocation.getLatitude(),currentLocation.getLongitude());
-        String end_address = end_location.getAddressName();
-        System.out.println("-----start address name-----"+start_address);
-        System.out.println("-----end address name-------"+end_address);
-
-        try {
-            //GeoApiContext geoApiContext = getGeoContext();
-            directionsResult = DirectionsApi.newRequest(getGeoContext())
-                    .mode(TravelMode.DRIVING).origin(start_address)
-                    .destination(end_address).departureTime(now)
-                    .await();
-
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
         /**
          * current request cannot be updated at driver end
          */
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = mLocationManager.getLastKnownLocation(PROVİDER);
 
 
         //set up textView and buttons
@@ -184,38 +115,49 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         riderName.setText(currentRequest.getRider().getName());
 
 
-        start_location = currentRequest.getStart();
-        end_location = currentRequest.getDestination();
+        driver_start_location = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        String driverCurrentAddress = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        driver_start_location.setAddressName(driverCurrentAddress);
+        driver_end_location = currentRequest.getStart();
+        String driverPickUpAddress = driver_end_location.getAddressName();
 
 
 
-        destination = new MarkerOptions().position(new LatLng(end_location.getLat(), end_location.getLon())).title("destination");
 
-        //markerOptionsList.add(start);
-        //markerOptionsList.add(destination);
+        start = new MarkerOptions().position(new LatLng(driver_start_location.getLat(), driver_start_location.getLon())).title("driver's current location");
+        destination = new MarkerOptions().position(new LatLng(driver_end_location.getLat(), driver_end_location.getLon())).title("rider's pick up location");
+
+        markerOptionsList.add(start);
+        markerOptionsList.add(destination);
 
 
-//        DateTime now = new DateTime();
-//        String start_address = findAddress(currentLocation.getLatitude(),currentLocation.getLongitude());
-//        String end_address = end_location.getAddressName();
-//        System.out.println("-----start address name-----"+start_address);
-//        System.out.println("-----end address name-------"+end_address);
-//
-//        try {
-//            //GeoApiContext geoApiContext = getGeoContext();
-//            directionsResult = DirectionsApi.newRequest(getGeoContext())
-//                    .mode(TravelMode.DRIVING).origin(start_address)
-//                    .destination(end_address).departureTime(now)
-//                    .await();
-//
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        DateTime now = new DateTime();
+//        String start_address = start_location.getAddressName();
+        System.out.println("-----start address name-----" );
+        System.out.println("-----end address name-------" );
 
+        try {
+            //GeoApiContext geoApiContext = getGeoContext();
+            directionsResult = DirectionsApi.newRequest(getGeoContext())
+                    .mode(TravelMode.DRIVING).origin(driverCurrentAddress)
+                    .destination(driverPickUpAddress).departureTime(now)
+                    .await();
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(directionsResult == null){
+            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
+            startActivity(intent);
+            finish();
+
+        }
 
 
         RequestDataHelper
@@ -231,6 +173,7 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
                 if (currentRequest == null)
                     return;
                 /* End here */
+
                 RequestDataHelper
                         .getInstance()
                         .setRequestPickedUp(currentRequest.getRid(),
@@ -241,34 +184,62 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
+    /**
+     * Draw route methods
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        boolean success = true;
 
-    private void requestPermission(){
-        ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
+        mMap = googleMap;
+        mMap.addMarker(start);
+        mMap.addMarker(destination);
+        showAllMarkers();
+
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Location Permission already granted
+                buildGoogleApiClient();
+                //mMap.setMyLocationEnabled(true);
+            } else {
+                //Request Location Permission
+                checkLocationPermission();
+            }
+        } else {
+            buildGoogleApiClient();
+//            mMap.setMyLocationEnabled(true);
+        }
+
+        //draw route
+        addPolyline(directionsResult, mMap);
+
 
     }
 
-//    private void fetchLastLocation() {
-//
-//        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-//        task.addOnSuccessListener( new View.O {
-//            if(location != null) {
-//                System.out.println("--------current location is not null!!!!!!!!!!");
-//                currentLocation = location;
-//            }
-//            else{
-//                System.out.println("--------current location is indeed null!!!!!!!!!!");
-//
-//            }
-//        });
-//
-//
-//    }
-//
+
+    public void showAllMarkers() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (MarkerOptions m : markerOptionsList) {
+            builder.include(m.getPosition());
+
+        }
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.30);
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
+
+    }
 
     @Override
-    public void onLocationChanged(Location location) {
-
-        this.mLastLocation = location;
+    public void onLocationChanged(android.location.Location location) {
+        mLastLocation = location;
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -277,22 +248,24 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-
-        //update map radar
-        mapRadar.withLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-
-
-        //place a new circle behind map radar
-        if (mapCircle != null) {
-            mapCircle.remove();
+        if (start != null) {
+            start.position(latLng);
         }
+        else {
+            start = new MarkerOptions().position(latLng).title("origin");
 
-        circleOptions.center(latLng);
-        mapCircle = mMap.addCircle(circleOptions);
+        }
 
     }
 
+    /**
+     * helper function for address of selected location
+     * @param lat
+     * @param lng
+     * @return
+     */
 
+    // get address name in String from lat and long
     public String findAddress(double lat, double lng) {
         // set pick up location automatically as customer's current location
         geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
@@ -317,6 +290,35 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
     }
 
 
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
+    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null) {
+//            if (results.routes.length == 0)
+
+
+            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
+            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
+            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
+
+        }
+        else{
+            System.out.println("------- null request queried.--------------");
+
+        }
+    }
+
+
 
 
     /**
@@ -337,30 +339,6 @@ public class DriverPickUpActivity extends DrawRouteBaseActivity implements OnGet
 
     }
 
-
-
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        System.out.println("----------current location:-"+currentLocation.getLatitude()+currentLocation.getLongitude());
-
-        mMap = googleMap;
-        mMap.addMarker(start);
-        mMap.addMarker(destination);
-        showAllMarkers();
-        addPolyline(directionsResult,mMap);
-    }
-
-
-    @Override
-    public void onTaskDone(Object... values) {
-//        if (currentPolyline != null)
-//            currentPolyline.remove();
-//
-//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-
-    }
 
     @Override
     public void onActiveNotification(Request request) {

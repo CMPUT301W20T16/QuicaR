@@ -71,6 +71,8 @@ public abstract class DrawRouteBaseActivity extends BaseActivity implements Task
                 //Location Permission already granted
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
+
+
             } else {
                 //Request Location Permission
                 checkLocationPermission();
