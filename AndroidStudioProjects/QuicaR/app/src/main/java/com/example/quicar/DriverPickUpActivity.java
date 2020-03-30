@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.LocationDataHelper;
 import com.example.datahelper.RequestDataHelper;
 import com.example.entity.Location;
 import com.example.entity.Request;
@@ -24,6 +25,7 @@ import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.font.TextViewSFProDisplayLight;
 import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
+import com.example.listener.OnGetLocationDataListener;
 import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -51,7 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener {
+public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -80,6 +82,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         RequestDataHelper.getInstance().setOnNotifyListener(this);
+        LocationDataHelper.getInstance().setOnNotifyListener(this);
 
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
@@ -268,6 +271,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
         }
 
+        LocationDataHelper.getInstance().updateLocation(DatabaseHelper.getInstance().getCurrentUserName(), new Location((double)location.getLatitude(), (double)location.getLongitude()));
+
     }
 
     /**
@@ -379,6 +384,11 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     @Override
     public void onFailure(String errorMessage, String tag) {
+
+    }
+
+    @Override
+    public void onUpdate(Location location) {
 
     }
 }

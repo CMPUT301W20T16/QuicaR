@@ -400,7 +400,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     }
 
 
-    
+
 
     @Override
     public void onUpdate(Location location) {
