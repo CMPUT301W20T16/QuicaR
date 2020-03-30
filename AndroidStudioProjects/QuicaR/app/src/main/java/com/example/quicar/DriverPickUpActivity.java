@@ -227,16 +227,16 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         mMap.setBuildingsEnabled(true);
         mMap.setTrafficEnabled(true);
 
-        UiSettings mUiSettings = mMap.getUiSettings();
-        mUiSettings.setZoomControlsEnabled(true);
-        mUiSettings.setCompassEnabled(true);
-        mUiSettings.setScrollGesturesEnabled(true);
-        mUiSettings.setZoomGesturesEnabled(true);
-        mUiSettings.setTiltGesturesEnabled(true);
-        mUiSettings.setRotateGesturesEnabled(true);
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
+
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

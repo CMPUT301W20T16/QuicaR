@@ -163,21 +163,22 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        boolean success = true;
+
         mMap = googleMap;
         mMap.setBuildingsEnabled(true);
         mMap.setTrafficEnabled(true);
+
+
+
+        mMap.addMarker(start);
+        mMap.addMarker(destination);
+        showAllMarkers();
 
         UiSettings mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
         mUiSettings.setCompassEnabled(true);
         mUiSettings.setScrollGesturesEnabled(true);
         mUiSettings.setZoomGesturesEnabled(true);
-        mUiSettings.setTiltGesturesEnabled(true);
-        mUiSettings.setRotateGesturesEnabled(true);
-        mMap.addMarker(start);
-        mMap.addMarker(destination);
-        showAllMarkers();
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

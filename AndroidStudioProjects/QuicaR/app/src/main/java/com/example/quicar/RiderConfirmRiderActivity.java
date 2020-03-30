@@ -202,7 +202,10 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
+
         mMap.setBuildingsEnabled(true);
         mMap.setTrafficEnabled(true);
 
@@ -212,11 +215,11 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         UiSettings mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
-        mUiSettings.setCompassEnabled(true);
+
         mUiSettings.setScrollGesturesEnabled(true);
         mUiSettings.setZoomGesturesEnabled(true);
         mUiSettings.setTiltGesturesEnabled(true);
-        mUiSettings.setRotateGesturesEnabled(true);
+
         try {
             if (directionsResult != null) {
                 if (directionsResult.routes != null) {
