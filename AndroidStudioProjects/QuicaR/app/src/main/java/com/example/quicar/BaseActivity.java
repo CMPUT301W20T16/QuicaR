@@ -86,9 +86,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        
+
         MyApplication.getInstance().setConnectivityListener(this);
-        checkConnection();
 
         //initialize view
 

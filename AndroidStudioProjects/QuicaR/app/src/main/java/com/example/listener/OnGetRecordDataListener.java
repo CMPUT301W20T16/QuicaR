@@ -1,6 +1,7 @@
 package com.example.listener;
 
 import com.example.entity.Location;
+import com.example.entity.Record;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 public interface OnGetRecordDataListener {
 
     void onSuccess(ArrayList<Location> history);
+
+    void onGetAllRecords(ArrayList<Record> records);
 
     void onFailure(String errorMessage);
 }
