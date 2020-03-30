@@ -2,7 +2,6 @@ package com.example.quicar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,9 +20,9 @@ public class PayPasswordSetActivity extends AppCompatActivity implements OnGetUs
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_password);
+        setContentView(R.layout.activity_pay_password_set);
 
-        passcodeView = findViewById(R.id.password_enter);
+        passcodeView = findViewById(R.id.password_set);
         passcodeView.setPasscodeType(PasscodeView.PasscodeViewType.TYPE_SET_PASSCODE);
         passcodeView.setCorrectInputTip("Successfully set your password");
 

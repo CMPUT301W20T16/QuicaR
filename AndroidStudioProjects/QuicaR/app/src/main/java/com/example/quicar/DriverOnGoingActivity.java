@@ -3,13 +3,19 @@ package com.example.quicar;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -34,17 +40,24 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 
 import java.io.IOException;
+import java.sql.Driver;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +72,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
     Request currentRequest = null;
+    ImageView qrCode;
 
     Location start_location, end_location;
     MarkerOptions start, destination;
@@ -146,8 +160,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +311,21 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     }
 
 
+    protected void showQRBottom() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverOnGoingActivity.this, R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.driver_scan_qr, (LinearLayout) findViewById(R.id.qr_linear));
+        Button scan = (Button)bottomSheetView.findViewById(R.id.scan);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+        scan.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
+            }
+        });
+
+    }
+
     /**
      * when add new request, following will be executed automatically
      * @param requests
@@ -315,9 +342,11 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 //                            "rider", this);
 
             System.out.println("susccess------------------");
-            Intent intent = new Intent(DriverOnGoingActivity.this, ScanActivity.class);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(DriverOnGoingActivity.this, DriverScanActivity.class);
+//            startActivity(intent);
+//            finish();
+            showQRBottom();
+
         }
     }
 
