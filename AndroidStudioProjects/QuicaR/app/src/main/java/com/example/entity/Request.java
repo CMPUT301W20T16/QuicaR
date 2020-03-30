@@ -22,7 +22,7 @@ public class Request implements Serializable {
     private Boolean isAccepted;
     private Boolean isPickedUp;
     private Boolean hasArrived;
-    private float estimatedCost;
+    private Float estimatedCost;
 
     /**
      * This is an empty constructor (needed for storing into firebase directly)
@@ -43,7 +43,7 @@ public class Request implements Serializable {
      *  estimated cost of the request / order
      */
     public Request(Location start, String startAddrName, Location destination, String destAddrName,
-                   User rider, User driver, float estimatedCost) {
+                   User rider, User driver, Float estimatedCost) {
         this.start = start;
         this.startAddrName = startAddrName;
         this.destination = destination;

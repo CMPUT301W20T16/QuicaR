@@ -66,7 +66,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
     private String travelTime, travelDistance;
-    private float travelFare;
+    private Float travelFare;
 
     private Location start_location, end_location;
     private MarkerOptions start, destination;

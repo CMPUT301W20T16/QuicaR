@@ -31,8 +31,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.arsy.maps_library.MapRadar;
 
 
+import com.bumptech.glide.load.resource.bitmap.ImageHeaderParser;
 import com.example.datahelper.DatabaseHelper;
-import com.example.entity.Request;
 import com.example.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,13 +43,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -75,6 +73,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected FirebaseAuth mAuth;
 
     private double radius = 1000;
+
+//    ImageView imgHeaderHeadPro;
 
 
     @Override
@@ -112,21 +112,23 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         User currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Double rate = currentUser.getAccountInfo().getDriverInfo().getRating();
-        if (rate != null){
-            if (rate >= 0.0 & rate < 1.0 ) {
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
-            } else if(rate >= 1.0 & rate < 2.0){
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
-            } else if(rate >= 2.0 & rate < 3.0){
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headdog2);
-            } else if(rate >= 3.0 & rate < 4.0){
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headvan3);
-            } else if (rate >= 4.0 & rate < 5.0) {
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
-            } else if (rate >= 5.0 ){
-                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
-            }
-        }
+//        if (rate != null){
+//            if (rate >= 0.0 & rate < 1.0 ) {
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
+//            } else if(rate >= 1.0 & rate < 2.0){
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
+//            } else if(rate >= 2.0 & rate < 3.0){
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headdog2);
+//            } else if(rate >= 3.0 & rate < 4.0){
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headvan3);
+//            } else if (rate >= 4.0 & rate < 5.0) {
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
+//            } else if (rate >= 5.0 ){
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
+//            }
+//        }
+        Integer sourceID = generate_icon(rate);
+        imgHeaderHeadPro.setImageResource(sourceID);
 
 
 
@@ -529,6 +531,35 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * generate an icon based on user's rating
+     * @return
+     */
+    public int generate_icon(Double rate) {
+        if (rate != null){
+            if (rate >= 0.0 & rate < 1.0 ) {
+                return R.drawable.ic_headtuling5;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
+            } else if(rate >= 1.0 & rate < 2.0){
+                return R.drawable.ic_headjojo1;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
+            } else if(rate >= 2.0 & rate < 3.0){
+                return R.drawable.ic_headdog2;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headdog2);
+            } else if(rate >= 3.0 & rate < 4.0){
+                return R.drawable.ic_headvan3;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headvan3);
+            } else if (rate >= 4.0 & rate < 5.0) {
+                return R.drawable.ic_headtop4;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
+            } else if (rate >= 5.0 ){
+                return R.drawable.ic_headteemo0;
+//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
+            }
+        }
+        return 0;
     }
 
 }
