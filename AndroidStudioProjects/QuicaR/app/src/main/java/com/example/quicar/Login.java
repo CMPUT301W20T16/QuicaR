@@ -377,6 +377,18 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         MyApplication.getInstance().setConnectivityListener(this);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(MyApplication.receiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(MyApplication.receiver);
+    }
+
     /**
      * Callback will be triggered when there is change in
      * network connection
