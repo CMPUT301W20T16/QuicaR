@@ -64,7 +64,6 @@ public class RegisterDriverActivity extends AppCompatActivity implements OnGetUs
                             "register successfully", Toast.LENGTH_SHORT).show();
 
                 }
-                startActivity(new Intent(getApplicationContext(), DriverBrowsingActivity.class));
             }
         });
     }
@@ -182,6 +181,8 @@ public class RegisterDriverActivity extends AppCompatActivity implements OnGetUs
         if (tag == UserDataHelper.GET_USER_TAG){
             this.user = user;
             System.out.println("isSuccess");
+        } else if (tag == UserDataHelper.UPDATE_USER_TAG) {
+            startActivity(new Intent(getApplicationContext(), DriverBrowsingActivity.class));
         }
         System.out.println(user);
 

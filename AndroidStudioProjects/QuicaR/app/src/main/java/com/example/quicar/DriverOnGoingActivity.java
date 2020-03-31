@@ -10,6 +10,8 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +83,9 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
     DirectionsResult directionsResult;
 
+    long tStart;
+
+
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
     protected Polyline currentPolyline;
@@ -104,6 +109,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         //set up firebase connection
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
 
 
         LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -134,6 +140,11 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
+
+        // start timing the activity
+        long tStart = System.currentTimeMillis();
+
+
 
 
         start_location = currentRequest.getStart();
@@ -337,6 +348,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
     }
 
+
+
     /**
      * when add new request, following will be executed automatically
      * @param requests
@@ -346,16 +359,17 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.SET_ARRIVED_TAG)) {
 
-
-//            RequestDataHelper
-//                    .getInstance()
-//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-//                            "rider", this);
-
             System.out.println("susccess------------------");
-//            Intent intent = new Intent(DriverOnGoingActivity.this, DriverScanActivity.class);
-//            startActivity(intent);
-//            finish();
+
+            long tEnd = System.currentTimeMillis();
+            long tDelta = tEnd - tStart;
+            double elapsedSeconds = tDelta / 1000.0;
+
+
+            //if the ride is longer or shorter than expcetd
+            //charge 1 extra dollar per 5 minutes
+//            float extraCost = (elapsedSeconds - currentRequest.getEstimateTime()) / 5;
+//            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + extraCost);
             showQRBottom();
 
         }

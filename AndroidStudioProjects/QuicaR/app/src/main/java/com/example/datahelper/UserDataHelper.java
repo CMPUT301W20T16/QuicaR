@@ -163,7 +163,7 @@ public class UserDataHelper {
                 DocumentSnapshot snapshot = transaction.get(userDocRef);
                 System.out.println("docSnapshot---------" + snapshot);
                 User userTmp = snapshot.toObject(User.class);
-                System.out.println( "request temp---------" + userTmp);
+                System.out.println( "user temp---------" + userTmp);
                 if (true) {
                     //  might need to check for any validation (eg. username is unique)
                     transaction.set(userDocRef, user);
@@ -179,14 +179,13 @@ public class UserDataHelper {
                 Log.d(TAG, "Transaction success: " + userID);
                 listener.onSuccess(user, UserDataHelper.UPDATE_USER_TAG);
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Transaction failure.", e);
-                        listener.onFailure("Transaction failure. " + e);
-                    }
-                });
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Transaction failure.", e);
+                listener.onFailure("Transaction failure. " + e);
+            }
+        });
     }
 
     /**

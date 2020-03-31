@@ -24,7 +24,6 @@ public class Request implements Serializable {
     private Boolean hasArrived;
     private Float estimatedCost;
 
-
     /**
      * This is an empty constructor (needed for storing into firebase directly)
      */
@@ -255,14 +254,16 @@ public class Request implements Serializable {
         return estimatedCost;
     }
 
+    public void setEstimatedCost(Float estimatedCost) {
+        this.estimatedCost = estimatedCost;
+    }
+
     /**
      * This method set the estimated cost
      * @param estimatedCost
      *  estimated cost
      */
-    public void setEstimatedCost(Float estimatedCost) {
-        this.estimatedCost = estimatedCost;
-    }
-
-
+//    public void setEstimatedCost(float estimatedCost) {
+//        this.estimatedCost = estimatedCost;
+//    }
 }

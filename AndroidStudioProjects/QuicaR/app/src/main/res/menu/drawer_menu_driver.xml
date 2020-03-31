@@ -19,7 +19,7 @@
     <item android:title="Another func">
         <menu>
             <item android:id="@+id/rider_mode"
-                android:icon="@drawable/ic_money"
+                android:icon="@drawable/money_bg"
                 android:title="Rider Mode"/>
         </menu>
     </item>

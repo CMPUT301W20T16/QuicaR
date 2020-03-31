@@ -46,7 +46,6 @@ public class PopUpNotification {
      * This method send a pop up notification to this device
      */
     private void sendPopUpNotification() {
-        System.out.println("_---------------- notify please");
         new Notify().execute(title, msg);
     }
 

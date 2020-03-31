@@ -122,7 +122,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
                     Toast.makeText(RechargeActivity.this,"Please fill all the information",Toast.LENGTH_SHORT ).show();
                 }
                 else if (!isDate(stringDate)){
-                    Toast.makeText(RechargeActivity.this,"Please enter valid date in the format yyyy/MM/dd",Toast.LENGTH_SHORT ).show();
+                    Toast.makeText(RechargeActivity.this,"Please enter valid date in the format MM/yy",Toast.LENGTH_SHORT ).show();
                 }
                 else if (!isValidCardInfo(select_card, date, stringCcv)){
                     Toast.makeText(RechargeActivity.this,"Card information does not match",Toast.LENGTH_SHORT ).show();
@@ -148,7 +148,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
 
     private Boolean isDate(String Date){
         try {
-            date = new SimpleDateFormat("yyyy/MM/dd").parse(Date);
+            date = new SimpleDateFormat("MM/yy").parse(Date);
             return true;
         } catch (ParseException e) {
             return false;
