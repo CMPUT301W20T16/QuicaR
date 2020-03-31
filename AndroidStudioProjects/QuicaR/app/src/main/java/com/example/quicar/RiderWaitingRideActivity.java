@@ -146,6 +146,8 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
         estimateFare.setText("$" + Float.toString(mRequest.getEstimatedCost()));
+        startAddress.setText(mRequest.getStart().getAddressName());
+        endAddress.setText(mRequest.getDestination().getAddressName());
 
         //set Image View
         iconImage = linearLayout.findViewById(R.id.icon);

@@ -44,7 +44,7 @@ public class Request implements Serializable {
      *  estimated cost of the request / order
      */
     public Request(Location start, String startAddrName, Location destination, String destAddrName,
-                   User rider, User driver, Float estimatedCost) {
+                   User rider, User driver, Float estimatedCost, Integer timeRecording) {
         this.start = start;
         this.startAddrName = startAddrName;
         this.destination = destination;
@@ -55,6 +55,7 @@ public class Request implements Serializable {
         this.isPickedUp = false;
         this.hasArrived = false;
         this.estimatedCost = estimatedCost;
+        this.timeRecording = timeRecording;
     }
 
     /**

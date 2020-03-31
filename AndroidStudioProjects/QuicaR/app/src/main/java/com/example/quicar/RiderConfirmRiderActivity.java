@@ -164,10 +164,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 //            User newUser = new User();
 //            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
+            //parse travel time, now is "14 min"
+            String[] estimateTime = travelTime.split("\\s+");
+
+
             //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    DatabaseHelper.getInstance().getCurrentUser(), new User(), travelFare);
+                    DatabaseHelper.getInstance().getCurrentUser(), new User(), travelFare, Integer.parseInt(estimateTime[0]));
 
             currentRequest = request;
 
@@ -254,19 +258,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                 }
             }
-//                else {
-//                    Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//
-//                }
-//            }else {
-//                Toast.makeText(RiderConfirmRiderActivity.this, "no valid route found", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
 
         }catch (Exception e){
 
