@@ -427,23 +427,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         System.out.println("New location -----------" + location_temp.getLatitude() + " " + location_temp.getLongitude());
         onLocationChanged(location_temp);
 
-//        LatLng latLng = new LatLng(location.getLat(), location.getLon());
-//
-//        //move map camera
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//
-//        if (driver_loc != null) {
-//            driver_loc.position(latLng);
-//
-//        }
-//        else {
-////            driver_loc = new MarkerOptions().position(latLng).title("driver's current location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-////            markerOptionsList.add(driver_loc);
-//        }
-//
-////        showAllMarkers();
 
     }
 }
