@@ -109,6 +109,8 @@ public class LocationDataHelper {
 
         if (databaseHelper.getUserState().getCurrentRequest() == null)
             return;
+        else if (databaseHelper.getUserState().getCurrentRequest().getRid() == null)
+            return;
 
         if (currentMode.equals("rider")) {
             if (userName.equals(databaseHelper.getUserState().getCurrentRequest().getDriver().getName()))
