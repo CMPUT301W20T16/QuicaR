@@ -115,25 +115,10 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         // head image in the nav header.xml
-        ImageView imgHeaderHeadPro = (ImageView) headerView.findViewById(R.id.head_image);
+        ImageView imgHeaderHeadPro = (ImageView) headerView.findViewById(R.id.icon);
 
         User currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Double rate = currentUser.getAccountInfo().getDriverInfo().getRating();
-//        if (rate != null){
-//            if (rate >= 0.0 & rate < 1.0 ) {
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtuling5);
-//            } else if(rate >= 1.0 & rate < 2.0){
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headjojo1);
-//            } else if(rate >= 2.0 & rate < 3.0){
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headdog2);
-//            } else if(rate >= 3.0 & rate < 4.0){
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headvan3);
-//            } else if (rate >= 4.0 & rate < 5.0) {
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headtop4);
-//            } else if (rate >= 5.0 ){
-//                imgHeaderHeadPro.setImageResource(R.drawable.ic_headteemo0);
-//            }
-//        }
         Integer sourceID = generate_icon(rate);
         imgHeaderHeadPro.setImageResource(sourceID);
 
@@ -535,6 +520,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                     DatabaseHelper.getInstance().setCurrentMode("rider");
                     UserStateDataHelper.getInstance().recordState();
 
+                    finish();
                     Intent intent3 = new Intent(getApplicationContext(), RiderRequestActivity.class);
                     startActivity(intent3);
                 }

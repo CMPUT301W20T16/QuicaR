@@ -10,6 +10,8 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +36,12 @@ import com.example.listener.OnGetRequestDataListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -63,7 +67,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener {
+public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestDataListener, TaskLoadedCallback {
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -79,7 +83,12 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     List<MarkerOptions> markerOptionsList = new ArrayList<>();
     DirectionsResult directionsResult;
 
+    long tStart;
+
+
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
+
+    protected Polyline currentPolyline;
 
     /**
      * when going to this activity, following is executed automatically
@@ -100,6 +109,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         //set up firebase connection
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
 
 
         LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -131,6 +141,11 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
 
+        // start timing the activity
+        long tStart = System.currentTimeMillis();
+
+
+
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
@@ -141,6 +156,9 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
+
+        new FetchURL(DriverOnGoingActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
 
 
         DateTime now = new DateTime();
@@ -186,9 +204,20 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         showAllMarkers();
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+
+
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -208,9 +237,33 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         }
 
         //draw route
-        if (directionsResult != null) {
-            addPolyline(directionsResult, mMap);
-        }
+//        if (directionsResult != null) {
+//            addPolyline(directionsResult, mMap);
+//        }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
     }
 
     public void showAllMarkers() {
@@ -295,6 +348,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
     }
 
+
+
     /**
      * when add new request, following will be executed automatically
      * @param requests
@@ -304,16 +359,17 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.SET_ARRIVED_TAG)) {
 
-
-//            RequestDataHelper
-//                    .getInstance()
-//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-//                            "rider", this);
-
             System.out.println("susccess------------------");
-//            Intent intent = new Intent(DriverOnGoingActivity.this, DriverScanActivity.class);
-//            startActivity(intent);
-//            finish();
+
+            long tEnd = System.currentTimeMillis();
+            long tDelta = tEnd - tStart;
+            double elapsedSeconds = tDelta / 1000.0;
+
+
+            //if the ride is longer or shorter than expcetd
+            //charge 1 extra dollar per 5 minutes
+//            float extraCost = (elapsedSeconds - currentRequest.getEstimateTime()) / 5;
+//            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + extraCost);
             showQRBottom();
 
         }
