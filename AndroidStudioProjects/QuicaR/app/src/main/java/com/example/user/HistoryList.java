@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.DatabaseHelper;
 import com.example.entity.Record;
 import com.example.quicar.R;
 
@@ -43,6 +44,7 @@ public class HistoryList extends ArrayAdapter<Record>{
 
         Record record = records.get(position);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA);
+        User user = DatabaseHelper.getInstance().getCurrentUser();
 
         TextView riderNum = view.findViewById(R.id.rider_num);
         TextView driver = view.findViewById(R.id.driver_name);
@@ -51,7 +53,11 @@ public class HistoryList extends ArrayAdapter<Record>{
         TextView date = view.findViewById(R.id.travel_date);
 
         riderNum.setText("Order#: " + record.getRequest().getRid());
-        driver.setText("Driver: " + record.getRequest().getDriver().getName());
+        if (record.getRequest().getDriver().getName().equals(user.getName())){
+            driver.setText("Passenger: " + record.getRequest().getRider().getName());
+        }else{
+            driver.setText("Driver: " + record.getRequest().getDriver().getName());
+        }
         startLocation.setText("Start Location: " + record.getRequest().getStart().getName());
         destination.setText("Destination: " + record.getRequest().getDestination().getName());
         date.setText(sdf.format(record.getDateTime()));
