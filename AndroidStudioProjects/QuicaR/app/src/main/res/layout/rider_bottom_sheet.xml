@@ -4,8 +4,9 @@
     android:orientation="vertical"
     android:id="@+id/rider_linear"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
+    android:layout_height="wrap_content"
+    android:background="@drawable/driver_bottom_sheet_background"
+    android:padding="10dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +14,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="190dp"
+            android:layout_height="160dp"
             android:alpha="0.2"
             android:background="@drawable/cardmapbg"/>
 
@@ -21,12 +22,12 @@
             android:id="@+id/theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rider Info"
+            android:text="Order Info"
             android:textColor="@color/white"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:textSize="24sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/rider_username"
@@ -36,7 +37,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:textSize="18sp"/>
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/start_place"
@@ -46,7 +48,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:textSize="18sp" />
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/destination_place"
@@ -56,7 +59,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:textSize="18sp"/>
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/total_money"
@@ -67,7 +71,8 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp"
-            android:textSize="18sp"/>
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
 
     </RelativeLayout>
 

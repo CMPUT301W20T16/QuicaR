@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,6 +45,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     User user;
     String time;
     private OnGetUserDataListener listener = this;
+    DecimalFormat decimalFormat = new DecimalFormat(".00");
 
     // every 30 seconds refresh the qr code 1 time
     private Runnable runnable = new Runnable() {
@@ -95,7 +97,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         if(user.getAccountInfo().getWallet() == null) {
             System.out.println(user.getAccountInfo().getUserName());
         }
-        String currentBalance = "( $ " + user.getAccountInfo().getWallet().getBalance().toString() + " )";
+        String currentBalance = "( $ " + decimalFormat.format(user.getAccountInfo().getWallet().getBalance()) + " )";
         balance.setText(currentBalance);
         balance.bringToFront();
 
@@ -116,7 +118,12 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         recharge.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+                if (DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBankAccountArrayList().size() != 0) {
+                    startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+                }else{
+                    Toast.makeText(getApplicationContext(), "You haven't bind a card, please bind a card first", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
+                }
             }
         });
     }
@@ -170,9 +177,13 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
                 startActivity(new Intent(getApplicationContext(), WalletIntro.class));
                 break;
             case R.id.pay_record:
+                startActivity(new Intent(getApplicationContext(), PayHistoryActivity.class));
                 break;
             case R.id.change_password:
                 startActivity(new Intent(getApplicationContext(), PayPasswordChangeEnterActivity.class));
+                break;
+            case R.id.reset:
+                startActivity(new Intent(getApplicationContext(), ResetWalletActivity.class));
                 break;
         }
         return true;
@@ -186,7 +197,6 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     @Override
     public void onUpdateNotification(User user) {
         if (user != null) {
-            DecimalFormat decimalFormat = new DecimalFormat(".00");
             currentBalance = "( $ " + decimalFormat.format(user.getAccountInfo().getWallet().getBalance()) + " )";
             balance.setText(currentBalance);
             balance.bringToFront();

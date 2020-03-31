@@ -116,8 +116,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
 
 
-        startAddress.setText(currentRequest.getStartAddrName());
-        endAddress.setText(currentRequest.getDestAddrName());
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());

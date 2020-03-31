@@ -120,7 +120,7 @@ public class Record {
      *  date and time as a string in standard format
      */
     public String getDateTimeString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.CANADA);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM dd,yyyy HH:mm", Locale.CANADA);
         if (dateTime == null)
             throw new IllegalArgumentException();
         return sdf.format(dateTime);

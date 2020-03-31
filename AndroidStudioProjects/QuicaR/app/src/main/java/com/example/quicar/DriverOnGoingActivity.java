@@ -369,8 +369,9 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
             //if the ride is longer or shorter than expcetd
             //charge 1 extra dollar per 5 minutes
-            float extraCost = (elapsedSeconds - currentRequest.getTimeRecording()) / 5;
-            currentRequest.setTimeRecording(currentRequest.getTimeRecording() + extraCost);
+            double extraCost = (elapsedSeconds/6000 - currentRequest.getTimeRecording()) / 5;
+            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + (float)extraCost);
+            currentRequest.setTimeRecording((int)elapsedSeconds/60000);
             showQRBottom();
 
         }
@@ -408,4 +409,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onFailure(String errorMessage, String tag) {
 
     }
+
+
 }

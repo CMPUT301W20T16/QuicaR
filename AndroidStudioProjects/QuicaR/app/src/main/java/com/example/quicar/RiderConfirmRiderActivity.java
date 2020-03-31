@@ -164,10 +164,13 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 //            User newUser = new User();
 //            newUser.setName(DatabaseHelper.getInstance().getCurrentUserName());
 
+            //parse travel time, now is "14 min"
+            String[] estimateTime = travelTime.split("\\s+");
+
             //add new request to the data base
             Request request = new Request(start_location, start_location.getAddressName(),
                     end_location, end_location.getAddressName(),
-                    DatabaseHelper.getInstance().getCurrentUser(), new User(), travelFare, travelTime);
+                    DatabaseHelper.getInstance().getCurrentUser(), new User(), travelFare, Integer.parseInt(estimateTime[0]));
 
             currentRequest = request;
 
