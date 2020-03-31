@@ -6,7 +6,7 @@
     app:background="@color/paymentBackground">
 
     <item
-        android:id="@+id/confirm_button"
+        android:id="@+id/call_button"
         android:icon="@drawable/call"
         android:title="call"
         app:showAsAction="always">
