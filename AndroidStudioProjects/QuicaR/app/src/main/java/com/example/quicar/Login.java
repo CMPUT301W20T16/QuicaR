@@ -380,13 +380,15 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(MyApplication.receiver);
+        if (ConnectivityReceiver.connectivityReceiverListener != null)
+            unregisterReceiver(MyApplication.receiver);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(MyApplication.receiver);
+        if (ConnectivityReceiver.connectivityReceiverListener != null)
+            unregisterReceiver(MyApplication.receiver);
     }
 
     /**
