@@ -401,6 +401,7 @@
                     <com.example.font.TextViewSFProDisplayRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/estimate_fare"
                         android:text="$xxx"
                         android:textColor="#5a595e"
                         android:textSize="14sp" />
