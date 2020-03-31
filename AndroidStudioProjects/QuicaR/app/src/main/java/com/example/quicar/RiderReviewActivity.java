@@ -65,7 +65,7 @@ import java.util.Date;
 public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnGetUserDataListener, OnGetRequestDataListener {
 
     TextView currentDate, totalFare, totalTime;
-    TextViewSFProDisplayMedium startAddress, endAddress;
+    TextViewSFProDisplayMedium startAddress, endAddress, driverName;
     TextViewSFProDisplaySemibold RatingButton;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
@@ -104,6 +104,11 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
 
+        //get
+        Intent intent = getIntent();
+        Float extraCost = intent.getFloatExtra("extra cost", 0.0f);
+        Integer timeRecord = intent.getIntExtra("real time", 0);
+
 
         //set up view
         RatingButton = findViewById(R.id.rating_button);
@@ -114,11 +119,21 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         currentDate = findViewById(R.id.today_date);
         tip_rate = findViewById(R.id.tip_rate);
         rateSpinner = findViewById(R.id.enter_rate);
+        driverName = findViewById(R.id.driver_name);
 
-        totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost()));
-        totalTime.setText(Integer.toString(currentRequest.getTimeRecording()) + "min");
-//        startAddress.setText(currentRequest.getStart().getAddressName());
-//        endAddress.setText(currentRequest.getDestination().getAddressName());
+        if (extraCost != null && timeRecord != null) {
+            totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost() + extraCost));
+            totalTime.setText(Integer.toString(timeRecord) + "min");
+        }
+        else {
+            totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost()));
+            totalTime.setText(Integer.toString(currentRequest.getTimeRecording()) + "min");
+        }
+
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
+
+        driverName.setText(currentRequest.getDriver().getName());
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 //        String formatted = df.format(new Date());
