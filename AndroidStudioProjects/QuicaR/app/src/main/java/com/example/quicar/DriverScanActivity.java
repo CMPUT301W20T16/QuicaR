@@ -122,15 +122,11 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
                 UserDataHelper.getInstance().updateUserProfile(currentUser, DriverScanActivity.this);
                 PayRecord payRecord = new PayRecord(currentUser, rider, null, amount);
                 PayRecordDataHelper.getInstance().addPayRecord(payRecord);
-                Toast.makeText(getApplicationContext(), "Rider completed", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
 
             }
         });
-        ScanView.stopCamera();
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
     }
 
     /**
@@ -147,7 +143,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         // update new order num and rate
         currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
         currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
-        UserDataHelper.getInstance().updateUserProfile(currentUser, this);
+//        UserDataHelper.getInstance().updateUserProfile(currentUser, this);
 
     }
 
@@ -188,7 +184,8 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
 
     @Override
     public void onSuccess(User user, String tag) {
-
+        Toast.makeText(getApplicationContext(), "Rider completed", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
     }
 
     @Override

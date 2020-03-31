@@ -82,6 +82,7 @@
         <activity android:name=".HistoryActivity" android:parentActivityName=".RiderRequestActivity"/>
         <activity android:name=".SuggestionAndComplaintActivity" android:parentActivityName=".RiderRequestActivity"/>
         <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".ResetWalletActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".PayHistoryActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".PayPasswordChangeEnterActivity" android:parentActivityName=".WalletOverviewActivity" />
