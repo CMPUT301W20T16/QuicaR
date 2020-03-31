@@ -296,6 +296,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         int y = point.y;
         int icon = x < y ? x : y;
         icon = icon * 3 / 4;
+        System.out.println("1111111111111111111111111111111111111111111          "+rateLevel);
         QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json + "\n"  + money_df.format(money) + "\n" + Integer.toString(rateLevel), BarcodeFormat.QR_CODE.toString(), icon);
         try {
             Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
@@ -346,8 +347,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 break;
         }
 
-        rateLevel = smileRating.getRating(); // level is from 1 to 5
-
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
@@ -358,18 +357,23 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 switch (smiley) {
                     case SmileRating.BAD:
                         Log.i(TAG, "Bad");
+                        rateLevel = 2;
                         break;
                     case SmileRating.GOOD:
                         Log.i(TAG, "Good");
+                        rateLevel = 4;
                         break;
                     case SmileRating.GREAT:
                         Log.i(TAG, "Great");
+                        rateLevel = 5;
                         break;
                     case SmileRating.OKAY:
                         Log.i(TAG, "Okay");
+                        rateLevel = 3;
                         break;
                     case SmileRating.TERRIBLE:
                         Log.i(TAG, "Terrible");
+                        rateLevel = 1;
                         break;
                 }
             }

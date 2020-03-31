@@ -40,7 +40,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     Integer MY_PERMISSION_REQUEST_CAMERA = 1;
     User currentUser;
     User rider;
-    DecimalFormat df = new DecimalFormat("0.00");
+    DecimalFormat df = new DecimalFormat("0.0");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,11 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         TextView destination_place = bottomSheetView.findViewById(R.id.destination_place);
         TextView money = bottomSheetView.findViewById(R.id.total_money);
         String[] info = rawResult.getText().split("\n");
+        if (info.length != 4){
+            Toast.makeText(DriverScanActivity.this,
+                    "Cannot identify your QR,please scan again", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
+        }
         String time = info[0];
         String rider_name = info[1];
         Gson gson = new Gson();
@@ -109,6 +114,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Float amount = Float.parseFloat(info[2]);
         Float rateLevel = Float.parseFloat(info[3]);
+        System.out.println("11111111111111111111111111111111111111111 " + rateLevel + " " + info[3]);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +148,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         // plus one for current finished order
         int orderNumNew = orderNumPre + 1;
         double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
+        avgRateNew = Double.parseDouble(df.format(avgRateNew));
         // update new order num and rate
         currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
         currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
@@ -187,7 +194,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     @Override
     public void onSuccess(User user, String tag) {
         Toast.makeText(getApplicationContext(), "Rider completed", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
+        startActivity(new Intent(getApplicationContext(), DriverBrowsingActivity.class));
     }
 
     @Override
