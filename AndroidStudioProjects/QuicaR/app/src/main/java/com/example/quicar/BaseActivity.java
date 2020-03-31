@@ -554,6 +554,11 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             case R.id.suggestion_and_complaint:
                 Intent intent5 = new Intent(getApplicationContext(), SuggestionAndComplaintActivity.class);
                 startActivity(intent5);
+                break;
+            case R.id.nav_history:
+                Intent intent6 = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(intent6);
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);

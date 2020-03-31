@@ -171,6 +171,7 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
                 startActivity(new Intent(getApplicationContext(), WalletIntro.class));
                 break;
             case R.id.pay_record:
+                startActivity(new Intent(getApplicationContext(), PayHistoryActivity.class));
                 break;
             case R.id.change_password:
                 startActivity(new Intent(getApplicationContext(), PayPasswordChangeEnterActivity.class));
@@ -187,7 +188,6 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
     @Override
     public void onUpdateNotification(User user) {
         if (user != null) {
-
             currentBalance = "( $ " + decimalFormat.format(user.getAccountInfo().getWallet().getBalance()) + " )";
             balance.setText(currentBalance);
             balance.bringToFront();
