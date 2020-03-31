@@ -17,13 +17,13 @@
 
 
         <TextView
-            android:id="@+id/start_address"
+            android:id="@+id/start_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="1dp"
             android:textColor="#1C1C1C" />
         <TextView
-            android:id="@+id/end_address"
+            android:id="@+id/start_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="1dp"

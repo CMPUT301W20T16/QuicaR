@@ -52,9 +52,12 @@ import com.google.zxing.WriterException;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnGetUserDataListener, OnGetRequestDataListener {
 
@@ -73,6 +76,8 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
 
     protected FirebaseAuth mAuth;
 
+    private Request currentRequest;
+
 
     private static final String TAG = "RiderRatingWindow";
     private OnGetUserDataListener listener = this;
@@ -87,6 +92,12 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_review);
 
+        //connect to database
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+
+        //set up view
         RatingButton = findViewById(R.id.rating_button);
         totalFare = findViewById(R.id.total_fare);
         totalTime = findViewById(R.id.total_time);
@@ -95,6 +106,16 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         currentDate = findViewById(R.id.today_date);
         tip_rate = findViewById(R.id.tip_rate);
         rateSpinner = findViewById(R.id.enter_rate);
+
+        totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost()));
+//        totalTime.setText();
+//        startAddress.setText(currentRequest.getStartAddrName());
+//        endAddress.setText(currentRequest.getDestAddrName());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//        String formatted = df.format(new Date());
+        currentDate.setText(df.format(new Date()));
+
 
         // set up the action tool bar
         Toolbar toolbar = findViewById(R.id.tool_bar);
