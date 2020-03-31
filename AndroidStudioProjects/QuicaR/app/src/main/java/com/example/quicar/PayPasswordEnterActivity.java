@@ -47,10 +47,6 @@ public class PayPasswordEnterActivity extends AppCompatActivity implements OnGet
                 SetAmountActivity.toUser.getAccountInfo().getWallet().setBalance(SetAmountActivity.toUser.getAccountInfo().getWallet().getBalance() + SetAmountActivity.money);
                 UserDataHelper.getInstance().updateUserProfile(SetAmountActivity.fromUser, PayPasswordEnterActivity.this);
                 UserDataHelper.getInstance().updateUserProfile(SetAmountActivity.toUser, PayPasswordEnterActivity.this);
-                PayRecord payRecord = new PayRecord(SetAmountActivity.toUser, SetAmountActivity.fromUser, null, SetAmountActivity.money);
-                PayRecordDataHelper.getInstance().addPayRecord(payRecord);
-                Toast.makeText(getApplicationContext(), "Pay successfully. Go to wallet page to check your balance", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
             }
         });
         // System.out.println("8888888888888888888888888888888888888");
@@ -58,7 +54,10 @@ public class PayPasswordEnterActivity extends AppCompatActivity implements OnGet
 
     @Override
     public void onSuccess(User user, String tag) {
-
+        PayRecord payRecord = new PayRecord(SetAmountActivity.toUser, SetAmountActivity.fromUser, null, SetAmountActivity.money);
+        PayRecordDataHelper.getInstance().addPayRecord(payRecord);
+        Toast.makeText(getApplicationContext(), "Pay successfully. Go to wallet page to check your balance", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), WalletOverviewActivity.class));
     }
 
     @Override

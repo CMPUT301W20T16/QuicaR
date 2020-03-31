@@ -454,7 +454,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         switch (item.getItemId()) {
             case R.id.nav_account:
                 Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
-                finish();
+                //Intent i = new Intent(getApplicationContext(), RiderReviewActivity.class);
                 startActivity(i);
                 break;
 
@@ -541,6 +541,14 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                     finish();
                     startActivity(intent4);
                 }
+                break;
+            case R.id.suggestion_and_complaint:
+                Intent intent5 = new Intent(getApplicationContext(), SuggestionAndComplaintActivity.class);
+                startActivity(intent5);
+                break;
+            case R.id.nav_history:
+                Intent intent6 = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(intent6);
                 break;
         }
 
