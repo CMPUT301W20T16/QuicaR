@@ -77,6 +77,7 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
      * 1. Need to draw route? Or just display rider(driver)'s current location?
      * @param savedInstanceState
      */
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
