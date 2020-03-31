@@ -2,6 +2,7 @@ package com.example.quicar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.UserDataHelper;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
+import com.example.util.MyUtil;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -73,5 +75,16 @@ public class ResetWalletActivity extends AppCompatActivity implements OnGetUserD
     @Override
     public void onFailure(String errorMessage) {
 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
+            View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+            if (MyUtil.isShouldHideKeyboard(v, me)) { //判断用户点击的是否是输入框以外的区域
+                MyUtil.disableSoftInputFromAppearing(this);  //收起键盘
+            }
+        }
+        return super.dispatchTouchEvent(me);
     }
 }

@@ -49,7 +49,11 @@ public class ScanTransferActivity extends AppCompatActivity implements ZXingScan
         if (duration > 0.5){
             Toast.makeText(getApplicationContext(), "The QR code has been generated more than 30 seconds, please scan the updated one.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), ScanTransferActivity.class));
-        }else {
+        }
+        else if(rawResult.getText().split("\n").length != 2){
+            Toast.makeText(getApplicationContext(), "Cannot identify your QR,please scan again", Toast.LENGTH_SHORT).show();
+        }
+        else {
             result = rawResult;
             startActivity(new Intent(getApplicationContext(), SetAmountActivity.class));
             //Toast.makeText(DriverScanActivity.this,"The rider done.",Toast.LENGTH_SHORT ).show();

@@ -39,7 +39,7 @@ public class DatabaseHelper {
                 .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
                 .build();
 
-        db.setFirestoreSettings(settings);
+        //db.setFirestoreSettings(settings);
 
         userState = new UserState();
 
