@@ -12,7 +12,7 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -80,7 +80,11 @@
         <activity android:name=".DriverBrowsingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
-        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".HistoryActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".SuggestionAndComplaintActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".ResetWalletActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".PayHistoryActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".PayPasswordChangeEnterActivity" android:parentActivityName=".WalletOverviewActivity" />
         <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" />

@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.zxing.Result;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -39,6 +40,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     Integer MY_PERMISSION_REQUEST_CAMERA = 1;
     User currentUser;
     User rider;
+    DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     @Override
     public void handleResult(Result rawResult) {
         //textUsername.setText(rawResult.getText());
-        showQRBottom(rawResult);
+        showRideBottom(rawResult);
         //Toast.makeText(DriverScanActivity.this,"The rider done.",Toast.LENGTH_SHORT ).show();
         //startActivity(new Intent(getApplicationContext(), MainActivity.class));
         //onBackPressed();
@@ -73,7 +75,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         ScanView.startCamera();
     }
 
-    protected void showQRBottom(Result rawResult) {
+    protected void showRideBottom(Result rawResult) {
         RequestDataHelper.getInstance().setOnNotifyListener(this);
         Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverScanActivity.this, R.style.BottomSheetDialogTheme);
@@ -90,8 +92,8 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         if (rider_name != null){
             rider = gson.fromJson(rider_name, User.class);
             User fromQr = currentRequest.getRider();
-            System.out.println("11111111111111111111111111111111111111111 " + rider.getName() + " " + fromQr.getName());
-            if (rider.getName() != fromQr.getName()){
+            //System.out.println("11111111111111111111111111111111111111111 " + rider.getName() + " " + fromQr.getName());
+            if (!rider.getName().equals(fromQr.getName())){
                 Toast.makeText(DriverScanActivity.this,
                         "Scan a QR from a wrong user, please scan again", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
@@ -100,10 +102,10 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
             Toast.makeText(DriverScanActivity.this,
                     "Cannot transfer to a user not exists.", Toast.LENGTH_SHORT).show();
         }
-        rider_username.setText(rider.getName());
-        start_place.setText(currentRequest.getStartAddrName());
-        destination_place.setText(currentRequest.getDestAddrName());
-        money.setText(info[2]);
+        rider_username.setText("Passenger: " + rider.getName());
+        start_place.setText("Start Location: " + currentRequest.getStart().getName());
+        destination_place.setText("Destination: " + currentRequest.getDestination().getName());
+        money.setText("Total Fare: " + info[2]);
         currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Float amount = Float.parseFloat(info[2]);
         Float rateLevel = Float.parseFloat(info[3]);
@@ -122,14 +124,11 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
                 UserDataHelper.getInstance().updateUserProfile(currentUser, DriverScanActivity.this);
                 PayRecord payRecord = new PayRecord(currentUser, rider, null, amount);
                 PayRecordDataHelper.getInstance().addPayRecord(payRecord);
-                Toast.makeText(getApplicationContext(), "Rider completed", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
 
             }
         });
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
     }
 
     /**
@@ -146,7 +145,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
         // update new order num and rate
         currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
         currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
-        UserDataHelper.getInstance().updateUserProfile(currentUser, this);
+//        UserDataHelper.getInstance().updateUserProfile(currentUser, this);
 
     }
 
@@ -187,7 +186,8 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
 
     @Override
     public void onSuccess(User user, String tag) {
-
+        Toast.makeText(getApplicationContext(), "Rider completed", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), RiderRequestActivity.class));
     }
 
     @Override
