@@ -53,7 +53,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-    Marker marker;
     PlacesClient placesClient;
 
     private RecyclerView mRecyclerView;
@@ -82,7 +81,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.paymentBackground)));
-
 
 
         String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
