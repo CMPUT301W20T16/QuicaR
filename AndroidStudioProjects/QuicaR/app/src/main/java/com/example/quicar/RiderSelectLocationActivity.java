@@ -93,6 +93,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         placesClient = Places.createClient(this);
 
 
+
+
         start_location = new Location();
         end_location = new Location();
 
@@ -177,7 +179,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         Place.Field.ID,
                         Place.Field.LAT_LNG,
                         Place.Field.PHONE_NUMBER,
-                        Place.Field.ADDRESS
+                        Place.Field.ADDRESS,
+                        Place.Field.NAME
                 )
         );
 
@@ -186,11 +189,13 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                     @Override
                     public void onPlaceSelected(@NonNull Place place) {
                         LatLng latLng = place.getLatLng();
+                        String name = place.getName();
                         currentLat = latLng.latitude;
                         currentLng = latLng.longitude;
 
                         location.setLat(currentLat);
                         location.setLon(currentLng);
+                        location.setName(name);
 //
 
                         phone = place.getPhoneNumber();
@@ -204,22 +209,19 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         try {
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
-                                String current_adminiArea = addresses.get(0).getAdminArea();
-                                if (adminiArea != null){
-                                    if(!current_adminiArea.equals(adminiArea)){
-                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
-
-                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
-                                        startActivity(intent);
-
-
-
-                                    }
-                                }
-                                else{
-                                    adminiArea = current_adminiArea;
-                                }
-
+//                                String current_adminiArea = addresses.get(0).getAdminArea();
+//                                if (adminiArea != null){
+//                                    if(!current_adminiArea.equals(adminiArea)){
+//                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
+//
+//                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
+//                                        startActivity(intent);
+//
+//                                    }
+//                                }
+//                                else{
+//                                    adminiArea = current_adminiArea;
+//                                }
 
 
                                 //set address in Location object

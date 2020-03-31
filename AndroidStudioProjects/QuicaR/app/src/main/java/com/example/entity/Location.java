@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Location implements Serializable {
     private Double lat;
     private Double lon;
-    private String addressName;
+    private String addressName, name;
 
 
     public Location() {
@@ -93,14 +93,14 @@ public class Location implements Serializable {
         return addressName;
     }
 
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 //
 //    public String getAdminArea() {
 //        return adminArea;

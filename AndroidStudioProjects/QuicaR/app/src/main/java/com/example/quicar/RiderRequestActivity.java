@@ -1,6 +1,7 @@
 package com.example.quicar;
 
 import android.content.Intent;
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -64,10 +65,19 @@ public class RiderRequestActivity extends BaseActivity {
         startLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mLastLocation == null){
+                    Toast.makeText(RiderRequestActivity.this, "Cannot access current location", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(RiderRequestActivity.this,RiderRequestActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
                 String current_address = findAddress(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                //String current_featureName = findFeatureName(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 if (current_address != null && DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBalance() > 0) {
                     Location currentLocation = new Location(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                     currentLocation.setAddressName(current_address);
+                    currentLocation.setName(current_address);
                     Intent intent = new Intent(RiderRequestActivity.this, RiderSelectLocationActivity.class);
                     intent.putExtra("current pos", current_address);
                     intent.putExtra("current location", currentLocation);
@@ -95,12 +105,16 @@ public class RiderRequestActivity extends BaseActivity {
 
     // get address name in String from lat and long
     public String findAddress(double lat, double lng) {
+
         // set pick up location automatically as customer's current location
         geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
         if (lat != 0 && lng != 0) {
             try {
                 addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -116,6 +130,34 @@ public class RiderRequestActivity extends BaseActivity {
         return null;
 
     }
+
+//    public String findFeatureName (double lat, double lng) {
+//        String featureName = null;
+//        // set pick up location automatically as customer's current location
+//        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+//
+//        if (lat != 0 && lng != 0) {
+//            try {
+//                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (addresses != null) {
+//                Address obj = addresses.get(0);
+//                featureName = obj.getSubLocality(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//
+//                    return featureName;
+//
+//            }
+//
+//        }
+//        return null;
+//
+//    }
 
 
 
