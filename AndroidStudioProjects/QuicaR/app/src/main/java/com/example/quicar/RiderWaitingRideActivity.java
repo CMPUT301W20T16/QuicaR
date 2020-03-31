@@ -175,6 +175,9 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
 
+        new FetchURL(RiderWaitingRideActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
+
 
         //draw route
         DateTime now = new DateTime();
@@ -284,6 +287,9 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
     }
 
+
+
+
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null)
@@ -291,6 +297,20 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
     }
 
     public void showAllMarkers() {
