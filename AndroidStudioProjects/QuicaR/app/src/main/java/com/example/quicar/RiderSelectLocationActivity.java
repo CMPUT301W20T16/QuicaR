@@ -98,7 +98,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
         locationList = new ArrayList<>();
-        locationList.add(new Location(0.0,0.0,"apple shit"));
+//        locationList.add(new Location(0.0,0.0,"apple shit"));
         RecordDataHelper
                 .getInstance()
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
@@ -164,22 +164,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-//        // if user long clicked on of the past address
-        mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                currentPosition = position;
-                /**
-                 * 问题：
-                 * 1.没法确定选择的location是start还是end location
-                 */
-                start_location = (Location) locationList.get(position);
-                System.out.println(start_location.getLon() + start_location.getLat());
-
-
-            }
-        });
     }
 
     /**

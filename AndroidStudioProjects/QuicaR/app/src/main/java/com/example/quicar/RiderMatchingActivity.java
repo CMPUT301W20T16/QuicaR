@@ -160,10 +160,10 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-//            RequestDataHelper
-//                    .getInstance()
-//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-//                            "rider", this);
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+                            "rider", this);
             /* added for user state */
             DatabaseHelper.getInstance().getUserState().setOnMatching(true);
             UserStateDataHelper.getInstance().recordState();
