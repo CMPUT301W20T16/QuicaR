@@ -52,6 +52,7 @@ import com.google.zxing.WriterException;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     float rate;
     String time;
     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
+    DecimalFormat money_df = new DecimalFormat("0.00");
     ArrayList<String> rateList;
     MyAdapter rateAdapter;
     int rateLevel;
@@ -149,7 +151,8 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                         rateSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                                rate = arg2 / 100;
+                                rate = (float)arg2 / 100;
+                                System.out.println("11111111111111111111111111111111111111111111111111            " + arg2 + rate);
                                 arg0.setVisibility(View.VISIBLE);
                                 showRatingBottom();
                             }
@@ -293,7 +296,8 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         int y = point.y;
         int icon = x < y ? x : y;
         icon = icon * 3 / 4;
-        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json + "\n"  + money.toString() + "\n" + Integer.toString(rateLevel), BarcodeFormat.QR_CODE.toString(), icon);
+        System.out.println("1111111111111111111111111111111111111111111          "+rateLevel);
+        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json + "\n"  + money_df.format(money) + "\n" + Integer.toString(rateLevel), BarcodeFormat.QR_CODE.toString(), icon);
         try {
             Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
             qr_code.setImageBitmap(bitmap);
@@ -343,8 +347,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 break;
         }
 
-        rateLevel = smileRating.getRating(); // level is from 1 to 5
-
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
@@ -355,18 +357,23 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 switch (smiley) {
                     case SmileRating.BAD:
                         Log.i(TAG, "Bad");
+                        rateLevel = 2;
                         break;
                     case SmileRating.GOOD:
                         Log.i(TAG, "Good");
+                        rateLevel = 4;
                         break;
                     case SmileRating.GREAT:
                         Log.i(TAG, "Great");
+                        rateLevel = 5;
                         break;
                     case SmileRating.OKAY:
                         Log.i(TAG, "Okay");
+                        rateLevel = 3;
                         break;
                     case SmileRating.TERRIBLE:
                         Log.i(TAG, "Terrible");
+                        rateLevel = 1;
                         break;
                 }
             }

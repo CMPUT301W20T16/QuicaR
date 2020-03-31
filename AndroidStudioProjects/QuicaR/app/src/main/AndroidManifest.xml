@@ -51,7 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LogoActivity"/>
         <activity android:name=".Register" android:parentActivityName=".Login"/>
         <activity android:name=".Login"/> <!-- [START firebase_service] -->
 
@@ -80,7 +79,11 @@
         <activity android:name=".DriverBrowsingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--        wen kai >-->
-        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".HistoryActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".SuggestionAndComplaintActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".WalletOverviewActivity" android:parentActivityName=".RiderRequestActivity"/>
+        <activity android:name=".ResetWalletActivity" android:parentActivityName=".WalletOverviewActivity"/>
+        <activity android:name=".PayHistoryActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".ScanTransferActivity" android:parentActivityName=".WalletOverviewActivity"/>
         <activity android:name=".PayPasswordChangeEnterActivity" android:parentActivityName=".WalletOverviewActivity" />
         <activity android:name=".WalletIntro" android:parentActivityName=".WalletOverviewActivity" />

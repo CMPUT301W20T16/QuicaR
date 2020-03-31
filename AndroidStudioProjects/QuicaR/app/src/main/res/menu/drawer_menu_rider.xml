@@ -17,6 +17,10 @@
         <item android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="Logout"/>
+        <item
+            android:id="@+id/suggestion_and_complaint"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Suggestion and Complaint" />
     </group>
 
     <item android:title="Another func">

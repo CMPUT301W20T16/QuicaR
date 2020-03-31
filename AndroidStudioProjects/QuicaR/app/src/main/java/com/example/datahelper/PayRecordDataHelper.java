@@ -87,9 +87,15 @@ public class PayRecordDataHelper {
                                        break;
                                    Log.d(TAG, document.getId() + " => " + document.getData());
                                    query = document.toObject(PayRecord.class);
-                                   if (query.getFromUser().getName().equals(userName)
-                                           || query.getToUser().getName().equals(userName)) {
-                                       records.add(query);
+                                   if (query.getFromUser() != null) {
+                                       if (query.getFromUser().getName().equals(userName)
+                                               || query.getToUser().getName().equals(userName)) {
+                                           records.add(query);
+                                       }
+                                   }else{
+                                       if (query.getToUser().getName().equals(userName)) {
+                                           records.add(query);
+                                       }
                                    }
                                }
                                if (query == null) {
@@ -106,6 +112,5 @@ public class PayRecordDataHelper {
                    }
                 );
     }
-
 
 }
