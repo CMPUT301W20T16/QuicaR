@@ -168,8 +168,8 @@
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="22sp"
                                         android:layout_marginLeft="7dp"
+                                        android:layout_marginTop="22sp"
                                         android:layout_marginBottom="10dp"
                                         android:orientation="horizontal">
 
@@ -177,19 +177,19 @@
                                         <com.example.font.TextViewSFProDisplaySemibold
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Total Fare: "
                                             android:lineSpacingExtra="2dp"
-                                            android:textSize="15sp"
-                                            android:textColor="@color/white"/>
+                                            android:text="Total Fare: "
+                                            android:textColor="@color/white"
+                                            android:textSize="15sp" />
 
                                         <com.example.font.TextViewSFProDisplaySemibold
                                             android:id="@+id/total_fare"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="$13.8"
                                             android:lineSpacingExtra="2dp"
-                                            android:textSize="15sp"
-                                            android:textColor="@color/white"/>
+                                            android:text="$13.8"
+                                            android:textColor="@color/white"
+                                            android:textSize="15sp" />
                                     </LinearLayout>
                                 </LinearLayout>
 
