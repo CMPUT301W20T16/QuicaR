@@ -25,6 +25,7 @@ import com.example.datahelper.UserState;
 import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
+import com.example.font.TextViewSFProDisplayMedium;
 import com.example.font.TextViewSFProDisplayRegular;
 import com.example.listener.OnGetLocationDataListener;
 import com.example.listener.OnGetRequestDataListener;
@@ -73,11 +74,11 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     BottomSheetBehavior bottomSheetBehavior;
 
     TextView driverDistance;
-    TextView driverName, driverRating, driverEmail, driverPhone, estimateFare, startAddress, endAddress;
+    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress;
 
     Button DetailButton;
     TextViewSFProDisplayRegular CallButton;
-    TextViewSFProDisplayRegular EmailButton;
+    TextViewSFProDisplayRegular EmailButton, estimateFare;
     Button_SF_Pro_Display_Medium CancelButton;
     CircleImageView iconImage;
 
@@ -139,7 +140,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
-        estimateFare.setText(Float.toString(mRequest.getEstimatedCost()));
+        estimateFare.setText("$" + Float.toString(mRequest.getEstimatedCost()));
 
         //set Image View
         iconImage = linearLayout.findViewById(R.id.icon);
