@@ -193,6 +193,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
                         .getInstance()
                         .setRequestArrived(currentRequest.getRid(),
                                 DriverOnGoingActivity.this);
+                showQRBottom();
 
             }
         });
@@ -371,7 +372,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
             //charge 1 extra dollar per 5 minutes
 //            float extraCost = (elapsedSeconds - currentRequest.getEstimateTime()) / 5;
 //            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + extraCost);
-            showQRBottom();
+
 
         }
     }
