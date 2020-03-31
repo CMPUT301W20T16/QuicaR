@@ -75,6 +75,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     TextViewSFProDisplayMedium riderName;
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
+
     Request currentRequest = null;
     ImageView qrCode;
 
