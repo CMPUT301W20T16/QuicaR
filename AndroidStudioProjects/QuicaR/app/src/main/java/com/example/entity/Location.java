@@ -10,7 +10,9 @@ public class Location implements Serializable {
     private Double lon;
     private String addressName;
 
+
     public Location() {
+
     }
 
     /**
@@ -90,4 +92,21 @@ public class Location implements Serializable {
     public String getAddressName() {
         return addressName;
     }
+
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//
+//    public String getAdminArea() {
+//        return adminArea;
+//    }
+//
+//    public void setAdminArea(String adminArea) {
+//        this.adminArea = adminArea;
+//    }
 }

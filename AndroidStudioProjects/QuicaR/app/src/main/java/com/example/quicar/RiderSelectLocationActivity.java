@@ -47,17 +47,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
     private int currentPosition;
 
-    String address,adminiArea = null,phone;
+    String address,adminiArea = null,phone,addressName;
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-    Marker marker;
+
     PlacesClient placesClient;
 
     private RecyclerView mRecyclerView;
     private LocationAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Location> locationList;
+
 
     ImageView swapIcon;
     TextView start, end;
@@ -96,7 +97,14 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
         locationList = new ArrayList<>();
-        locationList.add(new Location(0.0,0.0,"apple shit"));
+
+
+        locationList.add(new Location(53.526882, -113.523588,"cameron library"));
+        locationList.add(new Location(53.518771, -113.518288,"windsor park plaza"));
+        locationList.add(new Location(53.525902,  -113.520666,"HUB Mall"));
+        locationList.add(new Location(53.522675,  -113.624158,"West Edmonton Mall"));
+
+
         RecordDataHelper
                 .getInstance()
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
@@ -131,6 +139,15 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
         onCreateAutoCompletion(pickUpAutoComplete, start_location, true);
         onCreateAutoCompletion(destinationAutoComplete, end_location, false);
+//        if(!start_location.getAdminArea().equals(end_location.getAdminArea())){
+//            Toast.makeText(RiderSelectLocationActivity.this, "Start and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
+//
+//            Intent intent1 = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
+//            startActivity(intent1);
+//
+//        }
+
+
 
         //enable user to swap start and end address
         swapIcon.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +209,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         Place.Field.LAT_LNG,
                         Place.Field.PHONE_NUMBER,
                         Place.Field.ADDRESS
+
                 )
         );
 
@@ -199,16 +217,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                 new PlaceSelectionListener() {
                     @Override
                     public void onPlaceSelected(@NonNull Place place) {
+
                         LatLng latLng = place.getLatLng();
+
                         currentLat = latLng.latitude;
                         currentLng = latLng.longitude;
 
                         location.setLat(currentLat);
                         location.setLon(currentLng);
-//
+//                        location.setName(place.getName());
+                        location.setAddressName(place.getAddress());
 
-                        phone = place.getPhoneNumber();
-                        address = place.getAddress();
+                        //address = place.getAddress();
 
 
                         Geocoder gcd =  new Geocoder(getBaseContext(), Locale.getDefault());
@@ -219,32 +239,18 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
                                 String current_adminiArea = addresses.get(0).getAdminArea();
-                                if (adminiArea != null){
-                                    if(!current_adminiArea.equals(adminiArea)){
-                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
-
-                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
-                                        startActivity(intent);
-
-
-
-                                    }
-                                }
-                                else{
-                                    adminiArea = current_adminiArea;
-                                }
-
-
-
+//                                location.setAdminArea(current_adminiArea);
+//
                                 //set address in Location object
-                                location.setAddressName(place.getAddress());
+
+
                                 //System.out.println(destinationAutoComplete);
+                                //location.setAddressName(place.getAddress());
                                 if (isStart) {
                                     start.setText(place.getAddress());
                                 } else {
                                     end.setText(place.getAddress());
                                 }
-
 
                             }
 
@@ -256,18 +262,23 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
 
+
+
+
+
+
+
                     }
 
                     @Override
                     public void onError(@NonNull Status status) {
+
 
                     }
                 }
         );
 
     }
-
-
 
 
     // Used to add check bar on top right of the app bar.
@@ -277,7 +288,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         getMenuInflater().inflate(R.menu.action_bar_confirm, menu);
         return true;
     }
-
 
 
     // When user clicks on the tick button, this function checks if any of the entries are left blank.
@@ -314,16 +324,22 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
+
         switch (item.getItemId()) {
             case 1:
                 start_location = (Location) locationList.get(currentPosition);
                 start.setText(start_location.getAddressName());
+
+
+
                 break;
 
             case 2:
                 end_location = (Location) locationList.get(currentPosition);
                 end.setText(end_location.getAddressName());
+
                 break;
+
         }
 
         return super.onContextItemSelected(item);
