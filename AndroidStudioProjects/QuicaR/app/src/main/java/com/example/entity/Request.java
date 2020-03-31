@@ -251,7 +251,7 @@ public class Request implements Serializable {
      *  estimated cost
      */
     public Float getEstimatedCost() {
-        return estimatedCost;
+        return this.estimatedCost;
     }
 
     public void setEstimatedCost(Float estimatedCost) {
