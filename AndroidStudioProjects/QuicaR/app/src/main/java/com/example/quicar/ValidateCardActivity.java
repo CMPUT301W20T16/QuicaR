@@ -26,6 +26,9 @@ public class ValidateCardActivity extends AppCompatActivity {
     EditText ccv;
     Date date;
 
+    BankAccount card = null;
+    BankAccount chosedCard = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,41 +39,79 @@ public class ValidateCardActivity extends AppCompatActivity {
         expiryDate = (EditText)findViewById(R.id.expiry_date);
         ccv = (EditText)findViewById(R.id.ccv) ;
 
-        BankAccount card = (BankAccount) getIntent().getSerializableExtra("card");
-//        name.setText(card.getNameOnCard());
-//        cardNum.setText(card.getCardnumber());
-//        expiryDate.setText(card.getExpireDate().toString());
-//        ccv.setText(card.getCcvCode());
+        /*** added by Ruohan Chen ***/
+        card = (BankAccount) getIntent().getSerializableExtra("card");
+        chosedCard = (BankAccount) getIntent().getSerializableExtra("chosed card");
+
+        if (chosedCard != null) {
+            name.setText(chosedCard.getNameOnCard());
+            cardNum.setText(chosedCard.getCardnumber());
+            expiryDate.setText(Integer.parseInt(new SimpleDateFormat("MM").format(chosedCard.getExpireDate())) + "/" + (new SimpleDateFormat("yy").format(chosedCard.getExpireDate())));
+            ccv.setText(chosedCard.getCcvCode());
+        }
+
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                BankAccount card_1 = new BankAccount();
-                String stringDate = expiryDate.getText().toString();
-                if (name.getText().toString().length() == 0 || ccv.getText().toString().length() == 0
-                        || expiryDate.getText().toString().length() == 0){
-                    Toast.makeText(ValidateCardActivity.this,"Please fill all the information",Toast.LENGTH_SHORT ).show();
+
+                /*** If condition is added by Ruohan Chen ***/
+                if (chosedCard == null) {
+                    BankAccount card_1 = new BankAccount();
+                    String stringDate = expiryDate.getText().toString();
+                    if (name.getText().toString().length() == 0 || ccv.getText().toString().length() == 0
+                            || expiryDate.getText().toString().length() == 0){
+                        Toast.makeText(ValidateCardActivity.this,"Please fill all the information",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (cardNum.getText().toString().length() != 16){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid card number with length 16",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (!isDate(stringDate)){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid date in the format yyyy/MM/dd",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (ccv.getText().toString().length() != 3){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid ccv number with length 3",Toast.LENGTH_SHORT ).show();
+                    }
+                    else {
+                        card_1.setNameOnCard(name.getText().toString());
+                        card_1.setCardnumber(cardNum.getText().toString());
+                        card_1.setCcvCode(ccv.getText().toString());
+                        card_1.setType(null);
+                        card_1.setExpireDate(date);
+                        intent.putExtra("card_1", card_1);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                } else {
+//                    BankAccount card_1 = new BankAccount();
+                    String stringDate = expiryDate.getText().toString();
+                    if (name.getText().toString().length() == 0 || ccv.getText().toString().length() == 0
+                            || expiryDate.getText().toString().length() == 0){
+                        Toast.makeText(ValidateCardActivity.this,"Please fill all the information",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (cardNum.getText().toString().length() != 16){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid card number with length 16",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (!isDate(stringDate)){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid date in the format yyyy/MM/dd",Toast.LENGTH_SHORT ).show();
+                    }
+                    else if (ccv.getText().toString().length() != 3){
+                        Toast.makeText(ValidateCardActivity.this,"Please enter valid ccv number with length 3",Toast.LENGTH_SHORT ).show();
+                    }
+                    else {
+                        chosedCard.setNameOnCard(name.getText().toString());
+                        chosedCard.setCardnumber(cardNum.getText().toString());
+                        chosedCard.setCcvCode(ccv.getText().toString());
+                        chosedCard.setType(null);
+                        chosedCard.setExpireDate(date);
+                        intent.putExtra("edited card", chosedCard);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 }
-                else if (cardNum.getText().toString().length() != 16){
-                    Toast.makeText(ValidateCardActivity.this,"Please enter valid card number with length 16",Toast.LENGTH_SHORT ).show();
-                }
-                else if (!isDate(stringDate)){
-                    Toast.makeText(ValidateCardActivity.this,"Please enter valid date in the format yyyy/MM/dd",Toast.LENGTH_SHORT ).show();
-                }
-                else if (ccv.getText().toString().length() != 3){
-                    Toast.makeText(ValidateCardActivity.this,"Please enter valid ccv number with length 3",Toast.LENGTH_SHORT ).show();
-                }
-                else {
-                    card_1.setNameOnCard(name.getText().toString());
-                    card_1.setCardnumber(cardNum.getText().toString());
-                    card_1.setCcvCode(ccv.getText().toString());
-                    card_1.setType(null);
-                    card_1.setExpireDate(date);
-                    intent.putExtra("card_1", card_1);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+
             }
         });
     }
@@ -88,7 +129,8 @@ public class ValidateCardActivity extends AppCompatActivity {
 
     private Boolean isDate(String Date){
         try {
-            date = new SimpleDateFormat("yyyy/MM/dd").parse(Date);
+            /* changed by Ruohan */
+            date = new SimpleDateFormat("MM/yy").parse(Date);
             return true;
         } catch (ParseException e) {
             return false;

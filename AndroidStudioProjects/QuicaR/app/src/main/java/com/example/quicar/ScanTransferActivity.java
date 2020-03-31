@@ -52,7 +52,7 @@ public class ScanTransferActivity extends AppCompatActivity implements ZXingScan
         }else {
             result = rawResult;
             startActivity(new Intent(getApplicationContext(), SetAmountActivity.class));
-            //Toast.makeText(ScanActivity.this,"The rider done.",Toast.LENGTH_SHORT ).show();
+            //Toast.makeText(DriverScanActivity.this,"The rider done.",Toast.LENGTH_SHORT ).show();
             //startActivity(new Intent(getApplicationContext(), MainActivity.class));
             //onBackPressed();
         }

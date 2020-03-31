@@ -35,7 +35,7 @@ public class QRPaymentActivity extends AppCompatActivity {
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ScanActivity.class));
+                startActivity(new Intent(getApplicationContext(), DriverScanActivity.class));
             }
         });
         */

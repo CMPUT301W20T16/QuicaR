@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.arsy.maps_library.MapRadar;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
@@ -28,7 +29,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 import java.util.ArrayList;
 
-import steelkiwi.com.library.DotsLoaderView;
 
 public class RiderMatchingActivity extends BaseActivity implements OnGetRequestDataListener {
 
@@ -36,7 +36,6 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     Request currentRequest = null;
     Button_SF_Pro_Display_Medium cancelButton;
-    DotsLoaderView dotsLoaderView;
 
     private double radius = 5000;
 
@@ -75,7 +74,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
                             .getInstance()
                             .cancelRequest(currentRequest.getRid(), RiderMatchingActivity.this);
                 } else {
-                    System.out.println("Unable to retrieve current Request!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.println("Unable to retrieve current Request!!");
                 }
             }
         });
@@ -161,17 +160,18 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "rider", this);
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnMatching(true);
+            UserStateDataHelper.getInstance().recordState();
 
             Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
             startActivity(intent);
             finish();
         }
-
-
     }
 
     /**
@@ -205,8 +205,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onArrivedNotification(Request request) {
-        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(RiderMatchingActivity.this,RiderOnGoingRequestActivity.class);
+//        startActivity(intent);
 
     }
 
@@ -222,6 +222,9 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onFailure(String errorMessage, String tag) {
+        if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+            Toast.makeText(RiderMatchingActivity.this, "unable to cancel current request!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

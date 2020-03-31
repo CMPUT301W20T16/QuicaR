@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,7 +26,9 @@ import android.widget.Toast;
 //import com.example.quicar.R;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RecordDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Location;
+import com.example.entity.Record;
 import com.example.listener.OnGetRecordDataListener;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -43,18 +46,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class RiderSelectLocationActivity extends AppCompatActivity implements OnGetRecordDataListener {
-    private EditText pickUp;
-    private EditText destination;
-    private Button confirmButton;
 
     private int currentPosition;
 
-
     String address,adminiArea = null,phone;
-    //    TextView txtaddress, txtlocality, txtsubLocality, txtstate,txtpostalCode,txtcountry,txtknownname,txtphone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
-
 
     Marker marker;
     PlacesClient placesClient;
@@ -99,10 +96,9 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         start_location = new Location();
         end_location = new Location();
 
-        /**
-         * 问题：history location得在点击auto complete fragment之后才显示
-         */
+
         locationList = new ArrayList<>();
+//        locationList.add(new Location(0.0,0.0,"apple shit"));
         RecordDataHelper
                 .getInstance()
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
@@ -133,8 +129,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
         /* End here */
 
-//        pickUpAutoComplete.setHint(pick_up_address);
-//        destinationAutoComplete.setHint("Select Destination");
         start.setText(pick_up_address);
 
         onCreateAutoCompletion(pickUpAutoComplete, start_location, true);
@@ -170,22 +164,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        // if user clicked on of the past address
-        mAdapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                currentPosition = position;
-                /**
-                 * 问题：
-                 * 1.没法确定选择的location是start还是end location
-                 */
-                start_location = (Location) locationList.get(position);
-                System.out.println(start_location.getLon() + start_location.getLat());
-
-
-            }
-        });
     }
 
     /**
@@ -287,6 +265,7 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     }
 
 
+
     // When user clicks on the tick button, this function checks if any of the entries are left blank.
     // If so, a Toast object is used to notify that the
     // user left a field empty. Otherwise, we add the measurement.
@@ -306,8 +285,15 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                     return false;
                 }
                 Intent intent = new Intent(RiderSelectLocationActivity.this, RiderConfirmRiderActivity.class);
-                intent.putExtra("start location", start_location);
-                intent.putExtra("end location", end_location);
+//                intent.putExtra("start location", start_location);
+//                intent.putExtra("end location", end_location);
+
+                /* added for user state */
+                DatabaseHelper.getInstance().getUserState().setOnConfirm(true);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(start_location);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(end_location);
+                UserStateDataHelper.getInstance().recordState();
+
                 startActivity(intent);
                 return true;
 
@@ -318,6 +304,29 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         }
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 1:
+                start_location = (Location) locationList.get(currentPosition);
+                start.setText(start_location.getAddressName());
+                break;
+
+            case 2:
+                end_location = (Location) locationList.get(currentPosition);
+                end.setText(end_location.getAddressName());
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+
+    /**
+     * Record datahelper method
+     * @param history
+     */
 
     @Override
     public void onSuccess(ArrayList<Location> history) {
@@ -327,6 +336,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
         }
+    }
+
+    @Override
+    public void onGetAllRecords(ArrayList<Record> records) {
+
     }
 
     @Override

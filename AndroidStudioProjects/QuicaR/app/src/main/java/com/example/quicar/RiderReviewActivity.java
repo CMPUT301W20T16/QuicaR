@@ -34,7 +34,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.listener.OnGetUserDataListener;
@@ -42,6 +45,7 @@ import com.example.user.User;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -52,7 +56,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnGetUserDataListener, OnGetRequestDataListener {
+public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnGetUserDataListener, OnGetRequestDataListener {
 
     TextView currentDate, totalFare, totalTime, startAddress, endAddress, RatingButton;
     protected DrawerLayout drawer;
@@ -65,6 +69,10 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
     ArrayList<String> rateList;
     MyAdapter rateAdapter;
+    int rateLevel;
+
+    protected FirebaseAuth mAuth;
+
 
     private static final String TAG = "RiderRatingWindow";
     private OnGetUserDataListener listener = this;
@@ -202,6 +210,20 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 startActivityForResult(intent, 2);
                 break;
 
+            // logout activity start
+            case R.id.nav_logout:
+
+//                startActivity(intentLogout);
+// log out directly
+//                mAuth.getInstance().signOut();
+                //log out directly
+                mAuth.getInstance().signOut();
+                Intent intentLogout = new Intent(getApplicationContext(), Login.class);
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intentLogout);
+                return true;
+
 
             case R.id.nav_driver_mode:
                 if(DatabaseHelper.getInstance().getCurrentMode() == "rider") {
@@ -254,25 +276,11 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     }
 
 
-    /**
-     *Design for update rate
-     */
-    protected void updateDriverRate(int newRateLevel) {
-        int orderNumPre = currentUser.getAccountInfo().getDriverInfo().getOrderNumber();
-        double avgRatePre  = currentUser.getAccountInfo().getDriverInfo().getRating();
-        double preSumRate = orderNumPre * avgRatePre;
-
-        // plus one for current finished order
-        int orderNumNew = orderNumPre + 1;
-        double avgRateNew = (preSumRate + newRateLevel) / orderNumNew;
-        // update new order num and rate
-        currentUser.getAccountInfo().getDriverInfo().setOrderNumber(orderNumNew);
-        currentUser.getAccountInfo().getDriverInfo().setRating(avgRateNew);
-        UserDataHelper.getInstance().updateUserProfile(currentUser,listener);
-
-    }
-
     protected void generate_qr(ImageView qr_code) {
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        Float money = currentRequest.getEstimatedCost();
+        money = money * (1 + rate);
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         time = df.format(LocalDateTime.now());
         Gson gson = new Gson();
@@ -285,7 +293,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         int y = point.y;
         int icon = x < y ? x : y;
         icon = icon * 3 / 4;
-        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json, BarcodeFormat.QR_CODE.toString(), icon);
+        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(time + "\n" + json + "\n"  + money.toString() + "\n" + Integer.toString(rateLevel), BarcodeFormat.QR_CODE.toString(), icon);
         try {
             Bitmap bitmap = qrCodeGenerator.encodeAsBitmap();
             qr_code.setImageBitmap(bitmap);
@@ -335,7 +343,7 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 break;
         }
 
-        int rateLevel = smileRating.getRating(); // level is from 1 to 5
+        rateLevel = smileRating.getRating(); // level is from 1 to 5
 
 
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
@@ -363,9 +371,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
                 }
             }
         });
-
-        // update rate first
-        updateDriverRate(rateLevel);
 
         smileRating.setOnRatingSelectedListener(new SmileRating.OnRatingSelectedListener() {
             @Override
@@ -408,10 +413,6 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onFailure(String errorMessage) {
-        System.out.println("isFalse");
-        System.out.println(errorMessage);
-        Toast.makeText(RiderReviewActivity.this,
-                "Error loading user data, try later", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -445,6 +446,15 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         Toast.makeText(RiderReviewActivity.this,
                 "The rider completed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), RiderRequestActivity.class);
+        UserState userState = DatabaseHelper.getInstance().getUserState();
+        userState.setOnConfirm(Boolean.FALSE);
+        userState.setOnMatching(Boolean.FALSE);
+        userState.setActive(Boolean.FALSE);
+        userState.setOnGoing(Boolean.FALSE);
+        userState.setOnArrived(Boolean.FALSE);
+        userState.setCurrentRequest(new Request());
+        DatabaseHelper.getInstance().setUserState(userState);
+        UserStateDataHelper.getInstance().recordState();
         startActivity(intent);
     }
 

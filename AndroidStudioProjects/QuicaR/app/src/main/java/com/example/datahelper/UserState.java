@@ -8,13 +8,14 @@ import com.example.user.User;
  */
 public class UserState {
     private User currentUser = new User();
-    private String currentMode;
+    private String currentMode = "rider";
     private String token;
+    private Boolean onConfirm = Boolean.FALSE;
+    private Boolean onMatching = Boolean.FALSE;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
-    private Request currentRequest;
-    private String activityState;
+    private Request currentRequest = new Request();
 
     /**
      * This is the empty constructor for UserState
@@ -93,6 +94,22 @@ public class UserState {
         this.token = token;
     }
 
+    public Boolean getOnConfirm() {
+        return onConfirm;
+    }
+
+    public void setOnConfirm(Boolean onConfirm) {
+        this.onConfirm = onConfirm;
+    }
+
+    public Boolean getOnMatching() {
+        return onMatching;
+    }
+
+    public void setOnMatching(Boolean onMatching) {
+        this.onMatching = onMatching;
+    }
+
     /**
      * This method return the activity state of current user's request
      * @return
@@ -147,24 +164,6 @@ public class UserState {
         this.onArrived = onArrived;
     }
 
-    /**
-     * This method return the activity state of the user
-     * @return
-     *  activity state of the user
-     */
-    public String getActivityState() {
-        return activityState;
-    }
-
-    /**
-     * This method set the activity state of the user
-     * @param activityState
-     *  candidiate activity state
-     */
-    public void setActivityState(String activityState) {
-        this.activityState = activityState;
-    }
-
     public String getRequestID() {
         return currentRequest.getRid();
     }
@@ -175,5 +174,15 @@ public class UserState {
 
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
+    }
+
+    public void setState(ProxyUserState proxyUserState) {
+        this.currentMode = proxyUserState.getCurrentMode();
+        this.onConfirm = proxyUserState.getOnConfirm();
+        this.onMatching = proxyUserState.getOnMatching();
+        this.active = proxyUserState.getActive();
+        this.onGoing = proxyUserState.getOnGoing();
+        this.onArrived = proxyUserState.getOnArrived();
+        this.currentRequest = proxyUserState.getCurrentRequest();
     }
 }

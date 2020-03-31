@@ -68,9 +68,14 @@
     <string name="first">1. How to pay a payment?</string>
     <string name="second">2. How to receive a payment?</string>
     <string name="second_content">In the wallet interface, if you want to receive money from others, then show the QR code and wait for the payer to complete the payment operation. If the payment is successful, you can directly see the change of the wallet balance in the \"change balance\" at the bottom of the QR code. The qr code is automatically updated every half minute to keep the money safe.</string>
+    <string name="finding_your_ride">Finding your ride...</string>
     <string name="help">Help</string>
     <string name="pay_record">Pay Record</string>
     <string name="change_password">Change Password</string>
+    <string name="we_take_importance_to_feed_back_from_you_and_we_work_hard_to_make_it_the_best_please_select_the_problem_and_let_us_know">We take importance to feed back from you and\nwe work hard to make it the best, please select\nthe problem and let us know.</string>
+    <string name="verify_or_complete_your_card_information">Verify or complete your card information</string>
+    <string name="cart_details">Cart Details</string>
+
 
     <!-- [end] -->
 
