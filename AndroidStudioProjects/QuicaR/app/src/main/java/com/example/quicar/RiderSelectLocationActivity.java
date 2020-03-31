@@ -53,7 +53,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-    Marker marker;
     PlacesClient placesClient;
 
     private RecyclerView mRecyclerView;
@@ -84,7 +83,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.paymentBackground)));
 
 
-
         String apiKey= "AIzaSyCyECZAmZ2NxQz10Qijm-ngagqBdHJblzk";
         if (!Places.isInitialized()){
             Places.initialize(getApplicationContext(),apiKey);
@@ -104,7 +102,8 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
         RecordDataHelper
                 .getInstance()
                 .queryHistoryLocation(DatabaseHelper.getInstance().getCurrentUserName(), 10, this);
-        buildRecyclerView();
+
+//        buildRecyclerView();
 
 
 
@@ -209,20 +208,6 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                         try {
                             addresses = gcd.getFromLocation(currentLat,currentLng,1);
                             if (addresses.size()> 0){
-//                                String current_adminiArea = addresses.get(0).getAdminArea();
-//                                if (adminiArea != null){
-//                                    if(!current_adminiArea.equals(adminiArea)){
-//                                        Toast.makeText(RiderSelectLocationActivity.this, "Start place and end place must be within the same administration area!", Toast.LENGTH_SHORT).show();
-//
-//                                        Intent intent = new Intent(RiderSelectLocationActivity.this,RiderRequestActivity.class);
-//                                        startActivity(intent);
-//
-//                                    }
-//                                }
-//                                else{
-//                                    adminiArea = current_adminiArea;
-//                                }
-
 
                                 //set address in Location object
                                 location.setAddressName(place.getAddress());
@@ -333,11 +318,13 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
     @Override
     public void onSuccess(ArrayList<Location> history) {
         for (Location loc: history) {
-            System.out.println(loc.getLat() + " " + loc.getLon() + " --------- history here");
-            locationList.add(loc);
-
-
+            if (!locationList.contains(loc)) {
+                System.out.println(loc.getLat() + " " + loc.getLon() + " --------- history here");
+                locationList.add(loc);
+            }
         }
+        buildRecyclerView();
+
     }
 
     @Override

@@ -39,6 +39,8 @@ import com.example.datahelper.UserDataHelper;
 import com.example.datahelper.UserState;
 import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
+import com.example.font.TextViewSFProDisplayMedium;
+import com.example.font.TextViewSFProDisplaySemibold;
 import com.example.listener.OnGetRequestDataListener;
 import com.example.listener.OnGetUserDataListener;
 import com.example.user.User;
@@ -52,14 +54,19 @@ import com.google.zxing.WriterException;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RiderReviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnGetUserDataListener, OnGetRequestDataListener {
 
-    TextView currentDate, totalFare, totalTime, startAddress, endAddress, RatingButton;
+    TextView currentDate, totalFare, totalTime;
+    TextViewSFProDisplayMedium startAddress, endAddress, driverName;
+    TextViewSFProDisplaySemibold RatingButton;
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
     ImageView qrCode;
@@ -68,12 +75,16 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
     float rate;
     String time;
     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
-    DecimalFormat money_df = new DecimalFormat("0.00");
     ArrayList<String> rateList;
     MyAdapter rateAdapter;
     int rateLevel;
 
     protected FirebaseAuth mAuth;
+
+    private Request currentRequest;
+
+    DecimalFormat money_df = new DecimalFormat("0.00");
+
 
 
     private static final String TAG = "RiderRatingWindow";
@@ -89,6 +100,17 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_review);
 
+        //connect to database
+        RequestDataHelper.getInstance().setOnNotifyListener(this);
+        currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+
+        //get
+        Intent intent = getIntent();
+        Float extraCost = intent.getFloatExtra("extra cost", 0.0f);
+        Integer timeRecord = intent.getIntExtra("real time", 0);
+
+
+        //set up view
         RatingButton = findViewById(R.id.rating_button);
         totalFare = findViewById(R.id.total_fare);
         totalTime = findViewById(R.id.total_time);
@@ -97,6 +119,26 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
         currentDate = findViewById(R.id.today_date);
         tip_rate = findViewById(R.id.tip_rate);
         rateSpinner = findViewById(R.id.enter_rate);
+        driverName = findViewById(R.id.driver_name);
+
+        if (extraCost != null && timeRecord != null) {
+            totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost() + extraCost));
+            totalTime.setText(Integer.toString(timeRecord) + "min");
+        }
+        else {
+            totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost()));
+            totalTime.setText(Integer.toString(currentRequest.getTimeRecording()) + "min");
+        }
+
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
+
+        driverName.setText(currentRequest.getDriver().getName());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//        String formatted = df.format(new Date());
+        currentDate.setText(df.format(new Date()));
+
 
         // set up the action tool bar
         Toolbar toolbar = findViewById(R.id.tool_bar);

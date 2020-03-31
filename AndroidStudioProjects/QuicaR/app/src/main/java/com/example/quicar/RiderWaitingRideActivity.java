@@ -33,11 +33,13 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.DirectionsApi;
@@ -68,7 +70,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * (rider can only cancel ride in a reasonable amount of time)
  */
 
-public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener {
+public class RiderWaitingRideActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener, TaskLoadedCallback {
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
@@ -86,6 +88,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     MarkerOptions start, destination, driver_loc;
     DirectionsResult directionsResult;
     Marker driverLoc;
+    protected Polyline currentPolyline;
+    Request mRequest;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -141,6 +146,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
         estimateFare.setText("$" + Float.toString(mRequest.getEstimatedCost()));
+        startAddress.setText(mRequest.getStart().getAddressName());
+        endAddress.setText(mRequest.getDestination().getAddressName());
 
         //set Image View
         iconImage = linearLayout.findViewById(R.id.icon);
@@ -240,10 +247,20 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
 
+
+
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         mMap.setMyLocationEnabled(true);
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+
         driverLoc = mMap.addMarker(driver_loc);
         showAllMarkers();
 
@@ -267,6 +284,14 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     }
 
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+    }
 
     public void showAllMarkers() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -312,6 +337,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         }
     }
+
+
 
     @Override
     public void onLocationChanged(android.location.Location location) {
@@ -425,23 +452,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         System.out.println("New location -----------" + location_temp.getLatitude() + " " + location_temp.getLongitude());
         onLocationChanged(location_temp);
 
-//        LatLng latLng = new LatLng(location.getLat(), location.getLon());
-//
-//        //move map camera
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//
-//        if (driver_loc != null) {
-//            driver_loc.position(latLng);
-//
-//        }
-//        else {
-////            driver_loc = new MarkerOptions().position(latLng).title("driver's current location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-////            markerOptionsList.add(driver_loc);
-//        }
-//
-////        showAllMarkers();
 
     }
 }
