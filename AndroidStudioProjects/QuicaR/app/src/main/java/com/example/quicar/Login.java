@@ -21,8 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.RequestDataHelper;
 import com.example.datahelper.UserDataHelper;
+import com.example.datahelper.UserState;
 import com.example.datahelper.UserStateDataHelper;
+import com.example.entity.Request;
+import com.example.listener.OnGetRequestDataListener;
 import com.example.listener.OnGetUserDataListener;
 import com.example.listener.OnGetUserStateListener;
 import com.example.user.User;
@@ -44,10 +48,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 
-public class Login extends AppCompatActivity implements OnGetUserDataListener, OnGetUserStateListener, ConnectivityReceiver.ConnectivityReceiverListener {
+public class Login extends AppCompatActivity implements OnGetUserDataListener, OnGetUserStateListener, OnGetRequestDataListener, ConnectivityReceiver.ConnectivityReceiverListener {
     private TextInputLayout userID, pwd;
     private Button loginButton;
     private TextView signUpButton;
@@ -322,13 +327,25 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
 
     @Override
     public void onStateUpdated() {
-        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
-        pgsBar.setVisibility(View.INVISIBLE);
-        MyUtil.goToIntent(Login.this);
+        Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
+        if (currentRequest.getRid() != null) {
+            RequestDataHelper
+                    .getInstance()
+                    .queryUserRequest(DatabaseHelper
+                                    .getInstance()
+                                    .getUserState()
+                                    .getCurrentRequest()
+                                    .getRid()
+                            , this);
+        } else {
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+            pgsBar.setVisibility(View.INVISIBLE);
+            MyUtil.goToIntent(Login.this);
+        }
     }
-
+//      Network connection part
     // Method to manually check connection status
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
@@ -386,5 +403,70 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
     public void onNetworkConnectionChanged(boolean isConnected) {
         System.out.println("connection changed here... ... ...");
         showSnack(isConnected);
+    }
+
+//    request listener part
+    @Override
+    public void onSuccess(ArrayList<Request> requests, String tag) {
+        if (tag.equals(RequestDataHelper.USER_REQ_TAG)) {
+            Request request = requests.get(0);
+            UserState userState = DatabaseHelper.getInstance().getUserState();
+            userState.setCurrentRequest(request);
+            userState.setActive(request.getAccepted());
+            userState.setOnGoing(request.getPickedUp());
+            userState.setOnArrived(request.getHasArrived());
+            DatabaseHelper.getInstance().setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+            pgsBar.setVisibility(View.INVISIBLE);
+            MyUtil.goToIntent(this);
+        }
+    }
+
+    @Override
+    public void onActiveNotification(Request request) {
+
+    }
+
+    @Override
+    public void onPickedUpNotification(Request request) {
+
+    }
+
+    @Override
+    public void onArrivedNotification(Request request) {
+
+    }
+
+    @Override
+    public void onCancelNotification() {
+
+    }
+
+    @Override
+    public void onCompleteNotification() {
+
+    }
+
+    @Override
+    public void onFailure(String errorMessage, String tag) {
+        if (tag.equals(RequestDataHelper.USER_REQ_TAG)) {
+
+            UserState userState = DatabaseHelper.getInstance().getUserState();
+            userState.setCurrentRequest(new Request());
+            userState.setOnConfirm(Boolean.FALSE);
+            userState.setOnMatching(Boolean.FALSE);
+            userState.setActive(Boolean.FALSE);
+            userState.setOnArrived(Boolean.FALSE);
+            DatabaseHelper.getInstance().setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+            pgsBar.setVisibility(View.INVISIBLE);
+            MyUtil.goToIntent(this);
+        }
     }
 }
