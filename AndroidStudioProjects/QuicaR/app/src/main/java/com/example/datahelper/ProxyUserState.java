@@ -3,60 +3,31 @@ package com.example.datahelper;
 import com.example.entity.Request;
 import com.example.user.User;
 
-/**
- * This is an object that store the user's acitivity state for convenient
- */
-public class UserState {
-    private User currentUser = new User();
-    private String currentMode = "rider";
-    private String token;
+public class ProxyUserState {
+    private String currentMode;
     private Boolean onConfirm = Boolean.FALSE;
     private Boolean onMatching = Boolean.FALSE;
     private Boolean active = Boolean.FALSE;
     private Boolean onGoing = Boolean.FALSE;
     private Boolean onArrived = Boolean.FALSE;
-    private Request currentRequest = new Request();
+    private Request currentRequest;
 
     /**
      * This is the empty constructor for UserState
      */
-    UserState() {
+    public ProxyUserState() {}
+
+
+    public ProxyUserState(UserState userState) {
+        this.currentMode = userState.getCurrentMode();
+        this.onConfirm = userState.getOnConfirm();
+        this.onMatching = userState.getOnMatching();
+        this.active = userState.getActive();
+        this.onGoing = userState.getOnGoing();
+        this.onArrived = userState.getOnArrived();
+        this.currentRequest = userState.getCurrentRequest();
     }
 
-    /**
-     * This method return current user
-     * @return
-     *  current user object
-     */
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    /**
-     * This method set the value of current user
-     * @param currentUser
-     *  candidate user object
-     */
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    /**
-     * This method return the name of current user
-     * @return
-     */
-    public String getCurrentUserName() {
-        return currentUser.getName();
-    }
-
-    /**
-     * This method set the name of current user
-     * @param currentUserName
-     *  candidate name of current user
-     */
-    public void setCurrentUserName(String currentUserName) {
-        currentUser.setName(currentUserName);
-    }
 
     /**
      * This method return current mode of the user ("rider" or "driver")
@@ -74,24 +45,6 @@ public class UserState {
      */
     public void setCurrentMode(String currentMode) {
         this.currentMode = currentMode;
-    }
-
-    /**
-     * This method return the token of current user's device
-     * @return
-     *  token of current device
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
-     * This method set the value of token of current user's device
-     * @param token
-     *  candidate value of token of current device
-     */
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public Boolean getOnConfirm() {
@@ -164,25 +117,11 @@ public class UserState {
         this.onArrived = onArrived;
     }
 
-    public String getRequestID() {
-        return currentRequest.getRid();
-    }
-
     public Request getCurrentRequest() {
         return currentRequest;
     }
 
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
-    }
-
-    public void setState(ProxyUserState proxyUserState) {
-        this.currentMode = proxyUserState.getCurrentMode();
-        this.onConfirm = proxyUserState.getOnConfirm();
-        this.onMatching = proxyUserState.getOnMatching();
-        this.active = proxyUserState.getActive();
-        this.onGoing = proxyUserState.getOnGoing();
-        this.onArrived = proxyUserState.getOnArrived();
-        this.currentRequest = proxyUserState.getCurrentRequest();
     }
 }

@@ -185,7 +185,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
+//                .setContentIntent(pendingIntent)
                 .setTicker(aTitle)
                 .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
 

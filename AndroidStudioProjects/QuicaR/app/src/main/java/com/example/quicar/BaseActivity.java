@@ -11,6 +11,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,7 +35,11 @@ import com.arsy.maps_library.MapRadar;
 
 import com.bumptech.glide.load.resource.bitmap.ImageHeaderParser;
 import com.example.datahelper.DatabaseHelper;
+import com.example.datahelper.UserState;
+import com.example.datahelper.UserStateDataHelper;
+import com.example.entity.Request;
 import com.example.user.User;
+import com.example.util.ConnectivityReceiver;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -49,11 +55,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
     protected GoogleMap mMap;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation = null;
@@ -74,13 +81,13 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
     private double radius = 1000;
 
-//    ImageView imgHeaderHeadPro;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        MyApplication.getInstance().setConnectivityListener(this);
 
         //initialize view
 
@@ -461,8 +468,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_account:
-                Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
-//                Intent i = new Intent(getApplicationContext(), RiderReviewActivity.class);
+                //Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+                Intent i = new Intent(getApplicationContext(), RiderReviewActivity.class);
                 startActivity(i);
                 break;
 
@@ -493,12 +500,20 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
                     User currentUser = DatabaseHelper.getInstance().getCurrentUser();
                     if(currentUser.isDriver()){
+
+                        UserState userState = DatabaseHelper.getInstance().getUserState();
+                        if (userState.getOnMatching() || userState.getOnArrived() || userState.getOnGoing()) {
+                            Toast.makeText(BaseActivity.this, "You are still on a ride request...", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+
                         Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
                         startActivity(intent2);
 
                     }
 
                     else{
+
                         Intent intent2 = new Intent(getApplicationContext(), RegisterDriverActivity.class);
                         startActivity(intent2);
                     }
@@ -510,7 +525,17 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 if(DatabaseHelper.getInstance().getCurrentMode() == "driver") {
                     //Toast.makeText(this, "Enter if statement!", Toast.LENGTH_LONG).show();
 
+                    UserState userState = DatabaseHelper.getInstance().getUserState();
+                    if (userState.getOnMatching() || userState.getOnArrived() || userState.getOnGoing()) {
+                        Toast.makeText(BaseActivity.this, "You are still on a ride request...", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
 
+
+                    DatabaseHelper.getInstance().setCurrentMode("rider");
+                    UserStateDataHelper.getInstance().recordState();
+
+                    finish();
                     Intent intent3 = new Intent(getApplicationContext(), RiderRequestActivity.class);
                     startActivity(intent3);
                 }
@@ -560,6 +585,66 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             }
         }
         return 0;
+    }
+
+
+    // Method to manually check connection status
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    // Showing the status in Snackbar
+    private void showSnack(boolean isConnected) {
+        System.out.println("snack bar is showing here... ... ...");
+        String message;
+        int color;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+        } else {
+            message = "Sorry! Not connected to internet";
+            color = Color.RED;
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.map), message, Snackbar.LENGTH_LONG);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextColor(color);
+        FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)sbView.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        // calculate actionbar height
+        TypedValue tv = new TypedValue();
+        int actionBarHeight=0;
+        if (getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        //  set margin
+        params.setMargins(0, actionBarHeight + 50, 0, 0);
+        sbView.setLayoutParams(params);
+        snackbar.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        System.out.println("connection changed here... ... ...");
+        showSnack(isConnected);
     }
 
 }

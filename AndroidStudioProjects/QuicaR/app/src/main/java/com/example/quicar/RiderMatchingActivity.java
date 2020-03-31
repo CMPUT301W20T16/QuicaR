@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.arsy.maps_library.MapRadar;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RequestDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.font.Button_SF_Pro_Display_Medium;
 import com.example.listener.OnGetRequestDataListener;
@@ -161,17 +162,18 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "rider", this);
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnMatching(true);
+            UserStateDataHelper.getInstance().recordState();
 
             Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
             startActivity(intent);
             finish();
         }
-
-
     }
 
     /**

@@ -26,7 +26,9 @@ import android.widget.Toast;
 //import com.example.quicar.R;
 import com.example.datahelper.DatabaseHelper;
 import com.example.datahelper.RecordDataHelper;
+import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Location;
+import com.example.entity.Record;
 import com.example.listener.OnGetRecordDataListener;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -299,8 +301,15 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
                     return false;
                 }
                 Intent intent = new Intent(RiderSelectLocationActivity.this, RiderConfirmRiderActivity.class);
-                intent.putExtra("start location", start_location);
-                intent.putExtra("end location", end_location);
+//                intent.putExtra("start location", start_location);
+//                intent.putExtra("end location", end_location);
+
+                /* added for user state */
+                DatabaseHelper.getInstance().getUserState().setOnConfirm(true);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(start_location);
+                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(end_location);
+                UserStateDataHelper.getInstance().recordState();
+
                 startActivity(intent);
                 return true;
 
@@ -343,6 +352,11 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
 
         }
+    }
+
+    @Override
+    public void onGetAllRecords(ArrayList<Record> records) {
+
     }
 
     @Override

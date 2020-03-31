@@ -8,8 +8,7 @@ import android.net.NetworkInfo;
 
 import com.example.quicar.MyApplication;
 
-public class ConnectivityReceiver
-        extends BroadcastReceiver {
+public class ConnectivityReceiver extends BroadcastReceiver {
 
     public static ConnectivityReceiverListener connectivityReceiverListener;
 
@@ -22,8 +21,7 @@ public class ConnectivityReceiver
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = activeNetwork != null;
 
         if (connectivityReceiverListener != null) {
             connectivityReceiverListener.onNetworkConnectionChanged(isConnected);

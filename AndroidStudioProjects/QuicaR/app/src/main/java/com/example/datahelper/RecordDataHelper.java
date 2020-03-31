@@ -174,6 +174,48 @@ public class RecordDataHelper {
     }
 
     /**
+     * This method will query for all records that the user is a rider to obtain selected
+     * locations in the past and sort them by date and time of the record in descending order.
+     * @param userName
+     *  User name
+     * @param listener
+     *  listener for notification
+     */
+    public void queryHistory(final String userName, final Integer limit,
+                                     final OnGetRecordDataListener listener) {
+        collectionReferenceRec
+                .orderBy("dateTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                       @Override
+                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                           if (task.isSuccessful()) {
+                               Record query = null;
+                               ArrayList<Record> records = new ArrayList<>();
+                               for (QueryDocumentSnapshot document : task.getResult()) {
+                                   if (limit != null && records.size() == limit)
+                                       break;
+                                   Log.d(TAG, document.getId() + " => " + document.getData());
+                                   query = document.toObject(Record.class);
+                                   //  add record of rider name is current user name
+                                   records.add(query);
+                               }
+                               if (query == null) {
+                                   listener.onFailure(userName + " has no history");
+                               } else {
+                                   listener.onGetAllRecords(records);
+                               }
+
+                           } else {
+                               Log.d(TAG, "Error getting documents: ", task.getException());
+                               listener.onFailure("Error getting documents: " + task.getException());
+                           }
+                       }
+                   }
+                );
+    }
+
+    /**
      * This method check if there is a notification needed to be sent to the rider
      * that the rider's request is completed
      * @param records
@@ -186,6 +228,10 @@ public class RecordDataHelper {
             return;
 
         UserState userState = databaseHelper.getUserState();
+
+        if (userState.getRequestID() == null)
+            return;
+
         for (Record record: records) {
             if (record.getRequest().getRider().getName().equals(databaseHelper.getCurrentUserName())
                     && databaseHelper.getCurrentMode().equals("rider")
@@ -200,6 +246,7 @@ public class RecordDataHelper {
                 userState.setOnArrived(Boolean.FALSE);
                 userState.setCurrentRequest(null);
                 databaseHelper.setUserState(userState);
+                UserStateDataHelper.getInstance().recordState();
                 RequestDataHelper.getInstance().notifyComplete();
                 System.out.println("-------- Notification sent --------");
                 break;
