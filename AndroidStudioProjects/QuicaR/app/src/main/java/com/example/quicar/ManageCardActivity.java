@@ -93,13 +93,13 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
                 System.out.println("DELETE------------------------");
                 break;
 
-            case R.id.edit:
-                currentPosition = info.position;
-                BankAccount chosedCard = (BankAccount) cardAdapter.getItem(info.position);
-                Intent intent = new Intent();
-                intent.setClass(ManageCardActivity.this, ValidateCardActivity.class);
-                intent.putExtra("chosed card", chosedCard);
-                startActivityForResult(intent, 2);
+//            case R.id.edit:
+//                currentPosition = info.position;
+//                BankAccount chosedCard = (BankAccount) cardAdapter.getItem(info.position);
+//                Intent intent = new Intent();
+//                intent.setClass(ManageCardActivity.this, ValidateCardActivity.class);
+//                intent.putExtra("chosed card", chosedCard);
+//                startActivityForResult(intent, 2);
 
         }
         return super.onContextItemSelected(item);
@@ -139,18 +139,18 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
                     System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
                 }
                 break;
-            case 2:
-                if (resultCode == RESULT_OK) {
-                    BankAccount editCard = (BankAccount) data.getExtras().getSerializable("edited card");
-                    cardDataList.set(currentPosition, editCard);
-
-
-                    cardAdapter.notifyDataSetChanged();
-                    DatabaseHelper.getInstance().setCurrentUser(user);
-                    UserDataHelper.getInstance().updateUserProfile(user, this);
-                    System.out.println("222222222222222222222222222");
-
-                }
+//            case 2:
+//                if (resultCode == RESULT_OK) {
+//                    BankAccount editCard = (BankAccount) data.getExtras().getSerializable("edited card");
+//                    cardDataList.set(currentPosition, editCard);
+//
+//
+//                    cardAdapter.notifyDataSetChanged();
+//                    DatabaseHelper.getInstance().setCurrentUser(user);
+//                    UserDataHelper.getInstance().updateUserProfile(user, this);
+//                    System.out.println("222222222222222222222222222");
+//
+//                }
         }
     }
 
