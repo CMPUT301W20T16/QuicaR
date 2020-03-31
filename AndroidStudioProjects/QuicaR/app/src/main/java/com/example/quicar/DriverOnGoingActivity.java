@@ -136,8 +136,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
 
-        startAddress.setText(currentRequest.getStartAddrName());
-        endAddress.setText(currentRequest.getDestAddrName());
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
         riderEmail.setText(currentRequest.getRider().getAccountInfo().getEmail());
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
@@ -408,4 +408,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     public void onFailure(String errorMessage, String tag) {
 
     }
+
+
 }

@@ -37,7 +37,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activiry_manage_card);
+        setContentView(R.layout.activity_manage_card);
 
         user = DatabaseHelper.getInstance().getCurrentUser();
         addCard = (Button)findViewById(R.id.add_card);

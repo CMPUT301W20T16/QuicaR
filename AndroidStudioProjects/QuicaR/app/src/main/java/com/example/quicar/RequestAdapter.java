@@ -81,8 +81,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         Request currentItem = mRequestList.get(position);
 
         holder.riderName.setText("Rider: " + currentItem.getRider().getName());
-        holder.startAdresse.setText("From: " + currentItem.getStartAddrName());
-        holder.endAdresse.setText("To: " + currentItem.getDestAddrName());
+        holder.startAdresse.setText("From: " + currentItem.getStart().getAddressName());
+        holder.endAdresse.setText("To: " + currentItem.getDestination().getAddressName());
 
         holder.estimateFare.setText("Estimated Fare: " + currentItem.getEstimatedCost());
     }

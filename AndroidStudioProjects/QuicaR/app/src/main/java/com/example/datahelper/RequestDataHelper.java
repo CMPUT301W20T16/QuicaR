@@ -342,46 +342,43 @@ public class RequestDataHelper {
 
     /**
      * This method will check if the request is opened and return request data to listener
-     * @param userName
-     *  user name of query
-     * @param mode
+     * @param requestID
      *  mode of the user
      * @param listener
      *  listener for notification and obtain return value
      */
-    public void queryUserRequest(final String userName, final String mode,
-                                             final OnGetRequestDataListener listener) {
-        if (userName == null || userName.length() == 0) {
-            listener.onFailure("invalid parameters", USER_REQ_TAG);
-            return;
-        }
-        String field;
-        if (mode == "rider")
-            field = "rider.account.userName";
-        else
-            field = "driver.account.userName";
+    public void queryUserRequest(final String requestID, final OnGetRequestDataListener listener) {
 
         collectionReferenceReq
-                .whereEqualTo(field, userName)
+                .whereEqualTo("requestID", requestID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                         if (task.isSuccessful()) {
                             //  this for loop should only loop for once
                             //  user should not have more than one requests exist in the db
                             int count = 0;
-                            ArrayList<Request> requests = new ArrayList<>();
+                            Request query = null;
+//                            String docID = "";
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                requests.add(document.toObject(Request.class));
+                                query = document.toObject(Request.class);
+//                                docID = document.getId();
                                 count++;
                             }
-                            listener.onSuccess(requests, USER_REQ_TAG);
+                            if (query == null) {
+                                listener.onFailure(requestID + " does not exist",
+                                        USER_REQ_TAG);
+                            } else{
+                                ArrayList<Request> requests = new ArrayList<>();
+                                requests.add(query);
+                                listener.onSuccess(requests, USER_REQ_TAG);
+                            }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            listener.onFailure(
-                                    "Error getting documents: " + task.getException(),
+                            listener.onFailure("Error getting documents: " + task.getException(),
                                     USER_REQ_TAG);
                         }
                     }
