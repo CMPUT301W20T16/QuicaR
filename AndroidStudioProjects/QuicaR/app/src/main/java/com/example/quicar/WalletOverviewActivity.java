@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -117,7 +118,12 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         recharge.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+                if (DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBankAccountArrayList().size() != 0) {
+                    startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+                }else{
+                    Toast.makeText(getApplicationContext(), "You haven't bind a card, please bind a card first", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
+                }
             }
         });
     }
