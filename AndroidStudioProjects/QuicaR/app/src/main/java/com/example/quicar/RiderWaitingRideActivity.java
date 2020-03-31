@@ -76,7 +76,7 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
     BottomSheetBehavior bottomSheetBehavior;
 
     TextView driverDistance;
-    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress;
+    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress, driverPlateNumber;
 
     Button DetailButton;
     TextViewSFProDisplayRegular CallButton;
@@ -99,8 +99,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
     /**
-     * 问题：
-     * 1.目前还不能更新bottom sheet的detail
      * @param savedInstanceState
      */
 
@@ -139,8 +137,11 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         estimateFare = linearLayout.findViewById(R.id.estimate_fare);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
+        driverPlateNumber = linearLayout.findViewById(R.id.driver_plate_number);
+
 
         driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+        driverPlateNumber.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getPlateNumber());
 
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
@@ -472,23 +473,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         System.out.println("New location -----------" + location_temp.getLatitude() + " " + location_temp.getLongitude());
         onLocationChanged(location_temp);
 
-//        LatLng latLng = new LatLng(location.getLat(), location.getLon());
-//
-//        //move map camera
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//
-//        if (driver_loc != null) {
-//            driver_loc.position(latLng);
-//
-//        }
-//        else {
-////            driver_loc = new MarkerOptions().position(latLng).title("driver's current location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-////            markerOptionsList.add(driver_loc);
-//        }
-//
-////        showAllMarkers();
 
     }
 }
