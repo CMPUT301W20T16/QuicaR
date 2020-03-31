@@ -121,6 +121,8 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
         driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();

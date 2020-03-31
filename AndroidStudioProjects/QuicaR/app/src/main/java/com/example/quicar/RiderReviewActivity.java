@@ -109,8 +109,8 @@ public class RiderReviewActivity extends AppCompatActivity implements Navigation
 
         totalFare.setText("$" + Float.toString(currentRequest.getEstimatedCost()));
 //        totalTime.setText();
-//        startAddress.setText(currentRequest.getStartAddrName());
-//        endAddress.setText(currentRequest.getDestAddrName());
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 //        String formatted = df.format(new Date());
