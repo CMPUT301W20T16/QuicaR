@@ -74,7 +74,7 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
                             .getInstance()
                             .cancelRequest(currentRequest.getRid(), RiderMatchingActivity.this);
                 } else {
-                    System.out.println("Unable to retrieve current Request!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.println("Unable to retrieve current Request!!");
                 }
             }
         });
@@ -160,10 +160,10 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onSuccess(ArrayList<Request> requests, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
 
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
-                            "rider", this);
+//            RequestDataHelper
+//                    .getInstance()
+//                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
+//                            "rider", this);
             /* added for user state */
             DatabaseHelper.getInstance().getUserState().setOnMatching(true);
             UserStateDataHelper.getInstance().recordState();
@@ -222,6 +222,9 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 
     @Override
     public void onFailure(String errorMessage, String tag) {
+        if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
+            Toast.makeText(RiderMatchingActivity.this, "unable to cancel current request!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

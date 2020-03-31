@@ -157,7 +157,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
     @Override
     public void onSuccess(User user, String tag) {
         Toast.makeText(ManageCardActivity.this,
-                "Successfully add a new card", Toast.LENGTH_SHORT).show();
+                "Successfully update card information", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -168,6 +168,6 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
     @Override
     public void onFailure(String errorMessage) {
         Toast.makeText(ManageCardActivity.this,
-                "Failure to  add a new card", Toast.LENGTH_SHORT).show();
+                "Failure to update card information", Toast.LENGTH_SHORT).show();
     }
 }

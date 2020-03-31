@@ -242,6 +242,7 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         mMap = googleMap;
         mMap.addMarker(start);
         mMap.addMarker(destination);
+        mMap.setMyLocationEnabled(true);
         driverLoc = mMap.addMarker(driver_loc);
         showAllMarkers();
 
@@ -259,11 +260,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
             }
         } else {
             buildGoogleApiClient();
-//            mMap.setMyLocationEnabled(true);
+            //mMap.setMyLocationEnabled(true);
         }
-
-        //draw route
-        addPolyline(directionsResult, mMap);
 
 
     }

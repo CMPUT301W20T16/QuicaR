@@ -9,7 +9,7 @@
             android:icon="@drawable/ic_person"
             android:title="User Profile"/>
         <item android:id="@+id/nav_wallet"
-            android:icon="@drawable/money_bg"
+            android:icon="@drawable/ic_money"
             android:title="My Wallet"/>
         <item android:id="@+id/nav_history"
             android:icon="@drawable/ic_history"

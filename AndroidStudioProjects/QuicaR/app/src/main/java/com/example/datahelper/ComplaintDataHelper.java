@@ -17,7 +17,7 @@ public class ComplaintDataHelper {
 
     private ComplaintDataHelper() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        collectionReferenceCom = db.collection("PayRecords");
+        collectionReferenceCom = db.collection("Complaints");
     }
 
     /**

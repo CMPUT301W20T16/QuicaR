@@ -228,6 +228,10 @@ public class RecordDataHelper {
             return;
 
         UserState userState = databaseHelper.getUserState();
+
+        if (userState.getRequestID() == null)
+            return;
+
         for (Record record: records) {
             if (record.getRequest().getRider().getName().equals(databaseHelper.getCurrentUserName())
                     && databaseHelper.getCurrentMode().equals("rider")
