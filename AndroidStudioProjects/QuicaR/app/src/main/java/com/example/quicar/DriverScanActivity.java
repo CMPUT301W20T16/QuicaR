@@ -101,8 +101,8 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
                     "Cannot transfer to a user not exists.", Toast.LENGTH_SHORT).show();
         }
         rider_username.setText(rider.getName());
-        start_place.setText(currentRequest.getStartAddrName());
-        destination_place.setText(currentRequest.getDestAddrName());
+        start_place.setText(currentRequest.getStart().getAddressName());
+        destination_place.setText(currentRequest.getDestination().getAddressName());
         money.setText(info[2]);
         currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Float amount = Float.parseFloat(info[2]);
