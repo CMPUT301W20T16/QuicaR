@@ -50,10 +50,10 @@ public class HistoryList extends ArrayAdapter<Record>{
         TextView destination = view.findViewById(R.id.destination);
         TextView date = view.findViewById(R.id.travel_date);
 
-        riderNum.setText("Rider#: " + record.getRequest().getRid());
+        riderNum.setText("Order#: " + record.getRequest().getRid());
         driver.setText("Driver: " + record.getRequest().getDriver().getName());
-        startLocation.setText("Start Location: " + record.getRequest().getStartAddrName());
-        destination.setText("Destination: " + record.getRequest().getDestAddrName());
+        startLocation.setText("Start Location: " + record.getRequest().getStart().getName());
+        destination.setText("Destination: " + record.getRequest().getDestination().getName());
         date.setText(sdf.format(record.getDateTime()));
 
         return view;

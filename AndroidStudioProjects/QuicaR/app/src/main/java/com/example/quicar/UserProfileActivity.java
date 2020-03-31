@@ -1,6 +1,7 @@
 package com.example.quicar;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -145,8 +146,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                     }
 
                     UserDataHelper.getInstance().updateUserProfile(user,listener);
-                    Toast.makeText(UserProfileActivity.this,
-                            "Saved successfully", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -609,6 +608,12 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             this.user = user;
             this.issuccess = true;
             System.out.println("isSuccess");
+        } else if (tag == UserDataHelper.UPDATE_USER_TAG) {
+            Toast.makeText(UserProfileActivity.this,
+                    "Saved successfully", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(UserProfileActivity.this, RiderRequestActivity.class);
+//            startActivity(intent);
+            MyUtil.goToIntent(this);
         }
         System.out.println(user);
         this.setDefault();

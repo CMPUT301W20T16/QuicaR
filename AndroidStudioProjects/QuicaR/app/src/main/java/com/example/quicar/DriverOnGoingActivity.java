@@ -100,6 +100,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         super.onCreate(savedInstanceState);
 
         //set up view
+        navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_on_going, frameLayout);
 

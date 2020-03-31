@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.zxing.Result;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -39,6 +40,7 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
     Integer MY_PERMISSION_REQUEST_CAMERA = 1;
     User currentUser;
     User rider;
+    DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +102,10 @@ public class DriverScanActivity extends AppCompatActivity implements ZXingScanne
             Toast.makeText(DriverScanActivity.this,
                     "Cannot transfer to a user not exists.", Toast.LENGTH_SHORT).show();
         }
-        rider_username.setText(rider.getName());
-        start_place.setText(currentRequest.getStartAddrName());
-        destination_place.setText(currentRequest.getDestAddrName());
-        money.setText(info[2]);
+        rider_username.setText("Passenger: " + rider.getName());
+        start_place.setText("Start Location: " + currentRequest.getStart().getName());
+        destination_place.setText("Destination: " + currentRequest.getDestination().getName());
+        money.setText("Total Fare: " + info[2]);
         currentUser = DatabaseHelper.getInstance().getCurrentUser();
         Float amount = Float.parseFloat(info[2]);
         Float rateLevel = Float.parseFloat(info[3]);

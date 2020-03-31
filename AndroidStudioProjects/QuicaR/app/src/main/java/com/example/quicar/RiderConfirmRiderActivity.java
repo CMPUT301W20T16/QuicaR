@@ -124,8 +124,8 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                 .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
 
         //update start and end address on bottom sheet
-        view_start.setText(start_location.getAddressName());
-        view_end.setText(end_location.getAddressName());
+        view_start.setText(start_location.getName());
+        view_end.setText(end_location.getName());
 
 
         DateTime now = new DateTime();

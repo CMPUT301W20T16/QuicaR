@@ -77,7 +77,6 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
-        this.registerReceiver(MyApplication.receiver, MyApplication.filter);
         MyApplication.getInstance().setConnectivityListener(this);
         checkConnection();
 
@@ -325,6 +324,8 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
     public void onStateUpdated() {
         Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+        pgsBar.setVisibility(View.INVISIBLE);
         MyUtil.goToIntent(Login.this);
     }
 
@@ -375,18 +376,6 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
 
         // register connection status listener
         MyApplication.getInstance().setConnectivityListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(MyApplication.receiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(MyApplication.receiver);
     }
 
     /**
