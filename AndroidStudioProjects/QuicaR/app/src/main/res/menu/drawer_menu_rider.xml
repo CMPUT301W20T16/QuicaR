@@ -22,7 +22,7 @@
     <item android:title="Another func">
         <menu>
             <item android:id="@+id/nav_driver_mode"
-                android:icon="@drawable/money_bg"
+                android:icon="@drawable/ic_money"
                 android:title="Driver Mode"/>
         </menu>
     </item>

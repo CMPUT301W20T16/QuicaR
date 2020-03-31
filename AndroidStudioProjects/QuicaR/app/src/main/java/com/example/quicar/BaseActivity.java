@@ -453,8 +453,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_account:
-                //Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
-                Intent i = new Intent(getApplicationContext(), RiderReviewActivity.class);
+                Intent i = new Intent(getApplicationContext(), UpdateAccountActivity.class);
+                finish();
                 startActivity(i);
                 break;
 
@@ -469,6 +469,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 Intent intentLogout = new Intent(getApplicationContext(), Login.class);
                 intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                finish();
                 startActivity(intentLogout);
                 return true;
 //                break;
@@ -476,6 +477,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             case R.id.nav_profile:
                 // profile activity start
                 Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                finish();
                 startActivityForResult(intent, 2);
                 break;
 
@@ -493,6 +495,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                         }
 
                         Intent intent2 = new Intent(getApplicationContext(), DriverBrowsingActivity.class);
+                        finish();
                         startActivity(intent2);
 
                     }
@@ -530,10 +533,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 if (user.getAccountInfo().getWallet().isOpen()){
                     Intent intent4 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
                     //Intent intent4 = new Intent(getApplicationContext(), PayPasswordEnterActivity.class);
+                    finish();
                     startActivity(intent4);
                 }else{
                     //Intent intent4 = new Intent(getApplicationContext(), WalletOverviewActivity.class);
                     Intent intent4 = new Intent(getApplicationContext(), PayPasswordSetActivity.class);
+                    finish();
                     startActivity(intent4);
                 }
                 break;
@@ -620,6 +625,17 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         // register connection status listener
         MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(MyApplication.receiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
