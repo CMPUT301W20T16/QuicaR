@@ -159,7 +159,7 @@ public class SuggestionAndComplaintActivity extends AppCompatActivity implements
         ArrayList<String> riderList = new ArrayList<String>();
         for (int i = 0; i < recordsHistory.size(); i++){
             Record singleRecord = recordsHistory.get(i);
-            riderList.add("Rider#:" + singleRecord.getRequest().getRid() + "       Date:"+ singleRecord.getDateTimeString() + "\nStart Location:" + singleRecord.getRequest().getStartAddrName() + "\nDestination" + singleRecord.getRequest().getDestAddrName());
+            riderList.add("Rider#:" + singleRecord.getRequest().getRid() + "       Date:"+ singleRecord.getDateTimeString() + "\nStart Location:" + singleRecord.getRequest().getStart().getAddressName() + "\nDestination" + singleRecord.getRequest().getDestination().getAddressName());
         }
         riderList.add("Select the rider");
         MyAdapter riderAdapter = new MyAdapter<String>(this, android.R.layout.simple_spinner_item, riderList);

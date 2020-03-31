@@ -23,8 +23,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logo);
-        handler.postDelayed(runnable, 1000 * 2);
+        System.out.println(DatabaseHelper.getInstance().getUserState().getCurrentUserName());
+        if (DatabaseHelper.getInstance().getUserState().getCurrentUserName() != null)
+            MyUtil.goToIntent(this);
+        else {
+            setContentView(R.layout.activity_logo);
+            handler.postDelayed(runnable, 1000 * 2);
+        }
     }
 
 }
