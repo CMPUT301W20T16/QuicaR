@@ -15,10 +15,10 @@ public class ProxyUserState {
     /**
      * This is the empty constructor for UserState
      */
-    ProxyUserState() {}
+    public ProxyUserState() {}
 
 
-    ProxyUserState(UserState userState) {
+    public ProxyUserState(UserState userState) {
         this.currentMode = userState.getCurrentMode();
         this.onConfirm = userState.getOnConfirm();
         this.onMatching = userState.getOnMatching();

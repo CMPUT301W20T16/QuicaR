@@ -535,6 +535,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                     DatabaseHelper.getInstance().setCurrentMode("rider");
                     UserStateDataHelper.getInstance().recordState();
 
+                    finish();
                     Intent intent3 = new Intent(getApplicationContext(), RiderRequestActivity.class);
                     startActivity(intent3);
                 }
