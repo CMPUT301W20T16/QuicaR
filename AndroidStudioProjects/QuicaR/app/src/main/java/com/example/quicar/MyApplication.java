@@ -18,6 +18,12 @@ public class MyApplication extends Application {
         mInstance = this;
         filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new ConnectivityReceiver();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            this.registerReceiver(receiver, filter);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     public static synchronized MyApplication getInstance() {

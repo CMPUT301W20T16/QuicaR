@@ -79,6 +79,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.drawer_menu_driver);
         View rootView = getLayoutInflater().inflate(R.layout.activity_driver_pick_up, frameLayout);
 
