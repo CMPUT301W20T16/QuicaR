@@ -76,7 +76,7 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
     BottomSheetBehavior bottomSheetBehavior;
 
     TextView driverDistance;
-    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress;
+    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress, driverPlateNumber;
 
     Button DetailButton;
     TextViewSFProDisplayRegular CallButton;
@@ -99,8 +99,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
     /**
-     * 问题：
-     * 1.目前还不能更新bottom sheet的detail
      * @param savedInstanceState
      */
 
@@ -139,8 +137,11 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
         estimateFare = linearLayout.findViewById(R.id.estimate_fare);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
+        driverPlateNumber = linearLayout.findViewById(R.id.driver_plate_number);
+
 
         driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+        driverPlateNumber.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getPlateNumber());
 
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
