@@ -408,7 +408,21 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
 //    request listener part
     @Override
     public void onSuccess(ArrayList<Request> requests, String tag) {
-
+        if (tag.equals(RequestDataHelper.USER_REQ_TAG)) {
+            Request request = requests.get(0);
+            UserState userState = DatabaseHelper.getInstance().getUserState();
+            userState.setCurrentRequest(request);
+            userState.setActive(request.getAccepted());
+            userState.setOnGoing(request.getPickedUp());
+            userState.setOnArrived(request.getHasArrived());
+            DatabaseHelper.getInstance().setUserState(userState);
+            UserStateDataHelper.getInstance().recordState();
+            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
+            pgsBar.setVisibility(View.INVISIBLE);
+            MyUtil.goToIntent(this);
+        }
     }
 
     @Override
