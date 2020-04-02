@@ -13,11 +13,6 @@ public class DriverInfo implements Serializable {
     private String sinNumber;
 
     public DriverInfo(){
-//        this.rating = 0.0;
-//        this.orderNumber = 0;
-//        this.plateNumber = null;
-//        this.license = null;
-//        this.sinNumber = null;
     }
 
     public Double getRating() {
