@@ -152,24 +152,6 @@ public abstract class DrawRouteBaseActivity extends BaseActivity implements Task
     }
 
 
-//    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-//        if (results != null) {
-////            if (results.routes.length == 0)
-//
-//
-//            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-//            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
-//            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-//            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-//
-//        }
-//        else{
-//            System.out.println("------- null request queried.--------------");
-//
-//        }
-//    }
-
-
 
 
     @Override
