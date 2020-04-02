@@ -61,7 +61,10 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
         user = DatabaseHelper.getInstance().getCurrentUser();
         cardDataList = user.getAccountInfo().getWallet().getBankAccountArrayList();
         cardNumList = new ArrayList<String>();
+
+        // Design for check card number in list
         for (int i = 0; i < cardDataList.size(); i++){
+            // could check here
             //System.out.println(cardDataList.get(i).getCardnumber());
             cardNumList.add("**** **** **** " + cardDataList.get(i).getCardnumber().substring(12));
         }
@@ -71,6 +74,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
         card_spinner.setAdapter(cardAdapter);
         card_spinner.setSelection(cardNumList.size() - 1, true);
 
+        // if click card spinner will get card info in select_card
         card_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -84,7 +88,7 @@ public class RechargeActivity extends AppCompatActivity implements OnGetUserData
             }
 
         });
-
+        // if charge ammount get select will set it in amount
         recharge_amount.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

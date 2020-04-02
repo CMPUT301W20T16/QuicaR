@@ -25,6 +25,10 @@ public class LocationDataHelper {
     private OnGetLocationDataListener notifyListener;
     private static LocationDataHelper locationDataHelper;
 
+    /**
+     * This is the constructor of database helper which initialize the firebase instance
+     * and set up values for interacting.
+     */
     private LocationDataHelper() {
         collectionReferenceLoc = FirebaseFirestore.getInstance().collection("locations");
 
@@ -70,6 +74,14 @@ public class LocationDataHelper {
         notifyListener = listener;
     }
 
+    /**
+     * This method update user's location on firebase so that others can obtain the latest location
+     * of this user
+     * @param userName
+     *  user name
+     * @param location
+     *  location of the user
+     */
     public void updateLocation(final String userName, final Location location) {
         final DocumentReference locDocRef = collectionReferenceLoc.document(userName);
 
@@ -98,11 +110,22 @@ public class LocationDataHelper {
         });
     }
 
+    /**
+     * This method is will notify the listener when there is location updated
+     * @param location
+     */
     void notifyUpdate(final Location location) {
         if (notifyListener != null)
             notifyListener.onUpdate(location);
     }
 
+    /**
+     * This method check if there is any update for user related to current request
+     * @param userName
+     *  user name of updated location
+     * @param location
+     *  updated location
+     */
     void checkUpdateNotification(final String userName, final Location location) {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         String currentMode = databaseHelper.getCurrentMode();

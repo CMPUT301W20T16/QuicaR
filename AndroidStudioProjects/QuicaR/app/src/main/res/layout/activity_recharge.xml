@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="135dp"
+            android:layout_marginStart="80dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
@@ -62,12 +62,13 @@
 
             <EditText
                 android:id="@+id/enter_amount"
+                android:layout_width="41dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="-1dp"
                 android:layout_marginTop="-1dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:visibility="invisible"/>
+                android:maxLength="4"
+                android:visibility="invisible" />
         </RadioGroup>
 
         <Spinner

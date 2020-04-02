@@ -94,18 +94,38 @@ public class UserState {
         this.token = token;
     }
 
+    /**
+     * This method return the onConfirm state of the user
+     * @return
+     *  onConfirm state of the user
+     */
     public Boolean getOnConfirm() {
         return onConfirm;
     }
 
+    /**
+     * This method set the onConfirm state of user
+     * @param onConfirm
+     *  onConfirm state of the user
+     */
     public void setOnConfirm(Boolean onConfirm) {
         this.onConfirm = onConfirm;
     }
 
+    /**
+     * This method set the onMatching state of user
+     * @return
+     *  onMatching state of user
+     */
     public Boolean getOnMatching() {
         return onMatching;
     }
 
+    /**
+     * This method set the onMatching state of user
+     * @param onMatching
+     *  onMatching state of user
+     */
     public void setOnMatching(Boolean onMatching) {
         this.onMatching = onMatching;
     }
@@ -164,18 +184,38 @@ public class UserState {
         this.onArrived = onArrived;
     }
 
+    /**
+     * This method return thecID of current request
+     * @return
+     * current request's ID
+     */
     public String getRequestID() {
         return currentRequest.getRid();
     }
 
+    /**
+     * This method return current request of the user
+     * @return
+     *  current request of the user
+     */
     public Request getCurrentRequest() {
         return currentRequest;
     }
 
+    /**
+     * This method set current request of the user
+     * @param currentRequest
+     *  candidate current request
+     */
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
     }
 
+    /**
+     * This method convert proxy user state to user state
+     * @param proxyUserState
+     *  proxy user state to be converted
+     */
     public void setState(ProxyUserState proxyUserState) {
         this.currentMode = proxyUserState.getCurrentMode();
         this.onConfirm = proxyUserState.getOnConfirm();

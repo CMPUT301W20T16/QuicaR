@@ -517,8 +517,10 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+//            System.out.println("xi xi");
         } else {
             super.onBackPressed();
+//            System.out.println(" xi pi");
         }
     }
 

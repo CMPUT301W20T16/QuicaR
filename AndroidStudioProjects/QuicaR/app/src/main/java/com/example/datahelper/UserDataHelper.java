@@ -80,6 +80,11 @@ public class UserDataHelper {
         return userDataHelper;
     }
 
+    /**
+     * This method set a listener of user data helper class for update notification
+     * @param listener
+     *  listener for notification
+     */
     public void setOnNotifyListener(OnGetUserDataListener listener) {
         notifyListener = listener;
     }

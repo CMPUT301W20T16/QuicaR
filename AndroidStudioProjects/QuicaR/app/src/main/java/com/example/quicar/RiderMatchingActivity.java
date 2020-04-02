@@ -224,6 +224,8 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
     public void onFailure(String errorMessage, String tag) {
         if (tag.equals(RequestDataHelper.CANCEL_REQ_TAG)) {
             Toast.makeText(RiderMatchingActivity.this, "unable to cancel current request!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(RiderMatchingActivity.this,
+//                    errorMessage, Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -138,6 +138,11 @@ public class RequestDataHelper {
         }
     }
 
+    /**
+     * This method notify the listener when current request has arrived
+     * @param request
+     *  request that arrived
+     */
     void notifyArrived(Request request) {
         if (notifyListener != null) {
             notifyListener.onArrivedNotification(request);
