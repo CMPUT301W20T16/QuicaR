@@ -4,6 +4,8 @@ package com.example.quicar;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 
 import org.junit.Test;
 
@@ -42,6 +44,33 @@ public class GoogleMapTest {
 
 
     }
+
+
+
+    @Test
+    public void testBuilder() throws Exception {
+
+            DirectionsResult result =
+                    DirectionsApi.newRequest(getGeoContext())
+                            .mode(TravelMode.BICYCLING)
+                            .avoid(
+                                    DirectionsApi.RouteRestriction.HIGHWAYS,
+                                    DirectionsApi.RouteRestriction.TOLLS,
+                                    DirectionsApi.RouteRestriction.FERRIES)
+                            .units(Unit.METRIC)
+                            .region("au")
+                            .origin("Sydney")
+                            .destination("Melbourne")
+                            .await();
+
+            assertNotNull(result.routes);
+            assertEquals(1, result.routes.length);
+            
+
+
+    }
+
+
 
 
 
