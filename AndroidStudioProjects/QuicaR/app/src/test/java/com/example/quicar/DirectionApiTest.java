@@ -83,7 +83,7 @@ public class DirectionApiTest {
 
             assertEquals(1, result.routes.length);
             assertEquals(1, result.routes[0].legs.length);
-            
+
 
     }
 
