@@ -145,14 +145,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="3dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginRight="3dp"
                 android:background="#f1f1f1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="7dp"
                 android:orientation="vertical"
                 android:layout_gravity="center_horizontal">
 
@@ -233,32 +232,6 @@
                             android:layout_marginRight="15dp"
                             android:background="#f1f1f1" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="9dp"
-                            android:layout_marginBottom="20dp"
-                            android:orientation="horizontal">
-
-                            <com.example.font.TextViewSFProDisplayMedium
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Estimated Fair"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
-
-
-                            <com.example.font.TextViewSFProDisplayRegular
-                                android:id="@+id/estimate_fare"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$xxx"
-                                android:textColor="#5a595e"
-                                android:textSize="14sp" />
-                        </LinearLayout>
 
                         <com.example.font.Button_SF_Pro_Display_Medium
                             android:id="@+id/confirm_button"

@@ -18,6 +18,12 @@ public class ProxyUserState {
     public ProxyUserState() {}
 
 
+    /**
+     * Proxy User state constructor. An object that delegate user state class. It is used to retain
+     * the previous state of user activity when exit the app and re-enter.
+     * @param userState
+     *  user state to be convert to proxy user state
+     */
     public ProxyUserState(UserState userState) {
         this.currentMode = userState.getCurrentMode();
         this.onConfirm = userState.getOnConfirm();
@@ -47,18 +53,38 @@ public class ProxyUserState {
         this.currentMode = currentMode;
     }
 
+    /**
+     * This method return the onConfirm state
+     * @return
+     *  onConfirm state
+     */
     public Boolean getOnConfirm() {
         return onConfirm;
     }
 
+    /**
+     * This method set the onConfirm state
+     * @param onConfirm
+     *  candidate onConfirm state
+     */
     public void setOnConfirm(Boolean onConfirm) {
         this.onConfirm = onConfirm;
     }
 
+    /**
+     * This method return the onMatching state
+     * @return
+     *  onMatching state
+     */
     public Boolean getOnMatching() {
         return onMatching;
     }
 
+    /**
+     * This method set the onMatching state
+     * @param onMatching
+     *  candidate onMatching state
+     */
     public void setOnMatching(Boolean onMatching) {
         this.onMatching = onMatching;
     }
@@ -117,10 +143,20 @@ public class ProxyUserState {
         this.onArrived = onArrived;
     }
 
+    /**
+     * This method return current request of the user
+     * @return
+     *  current request
+     */
     public Request getCurrentRequest() {
         return currentRequest;
     }
 
+    /**
+     * This method set current reuqest of user
+     * @param currentRequest
+     *  candidate current request
+     */
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
     }

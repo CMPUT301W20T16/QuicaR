@@ -39,6 +39,9 @@ public class UserStateDataHelper {
         return userStateDataHelper;
     }
 
+    /**
+     * This method will record current user state to firebase
+     */
     public void recordState() {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         UserState userState = databaseHelper.getUserState();
@@ -61,6 +64,11 @@ public class UserStateDataHelper {
                 });
     }
 
+    /**
+     * This method query the user's state from firebase
+     * @param listener
+     *  listener for return value
+     */
     public void getUserState(final OnGetUserStateListener listener) {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         UserState userState = databaseHelper.getUserState();

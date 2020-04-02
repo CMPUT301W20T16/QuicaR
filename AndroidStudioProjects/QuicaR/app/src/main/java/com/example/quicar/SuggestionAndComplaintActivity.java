@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.example.entity.Location;
 import com.example.entity.Record;
 import com.example.listener.OnGetRecordDataListener;
 import com.example.user.User;
+import com.example.util.MyUtil;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class SuggestionAndComplaintActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         feedbackType = (Spinner)findViewById(R.id.feedback_type);
         feedback = (EditText)findViewById(R.id.feedback);
@@ -129,6 +132,17 @@ public class SuggestionAndComplaintActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
+            View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+            if (MyUtil.isShouldHideKeyboard(v, me)) { //判断用户点击的是否是输入框以外的区域
+                MyUtil.disableSoftInputFromAppearing(this);  //收起键盘
+            }
+        }
+        return super.dispatchTouchEvent(me);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu second_menu)
     {
         getMenuInflater().inflate(R.menu.feedback, second_menu);
@@ -159,7 +173,7 @@ public class SuggestionAndComplaintActivity extends AppCompatActivity implements
         ArrayList<String> riderList = new ArrayList<String>();
         for (int i = 0; i < recordsHistory.size(); i++){
             Record singleRecord = recordsHistory.get(i);
-            riderList.add("Rider#:" + singleRecord.getRequest().getRid() + "       Date:"+ singleRecord.getDateTimeString() + "\nStart Location:" + singleRecord.getRequest().getStartAddrName() + "\nDestination" + singleRecord.getRequest().getDestAddrName());
+            riderList.add("Rider#:" + singleRecord.getRequest().getRid() + "       Date:"+ singleRecord.getDateTimeString() + "\nStart Location:" + singleRecord.getRequest().getStart().getAddressName() + "\nDestination" + singleRecord.getRequest().getDestination().getAddressName());
         }
         riderList.add("Select the rider");
         MyAdapter riderAdapter = new MyAdapter<String>(this, android.R.layout.simple_spinner_item, riderList);

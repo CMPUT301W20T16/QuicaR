@@ -23,6 +23,7 @@ public class Request implements Serializable {
     private Boolean isPickedUp;
     private Boolean hasArrived;
     private Float estimatedCost;
+    private Integer timeRecording;
 
     /**
      * This is an empty constructor (needed for storing into firebase directly)
@@ -43,7 +44,7 @@ public class Request implements Serializable {
      *  estimated cost of the request / order
      */
     public Request(Location start, String startAddrName, Location destination, String destAddrName,
-                   User rider, User driver, Float estimatedCost) {
+                   User rider, User driver, Float estimatedCost, Integer timeRecording) {
         this.start = start;
         this.startAddrName = startAddrName;
         this.destination = destination;
@@ -54,6 +55,7 @@ public class Request implements Serializable {
         this.isPickedUp = false;
         this.hasArrived = false;
         this.estimatedCost = estimatedCost;
+        this.timeRecording = timeRecording;
     }
 
     /**
@@ -95,48 +97,48 @@ public class Request implements Serializable {
         this.start = start;
     }
 
-    /**
-     * This method return the name of start address
-     * @return
-     *  name of start address
-     */
-    @PropertyName("startingAddress")
-    public String getStartAddrName() {
-        return startAddrName;
-    }
+//    /**
+//     * This method return the name of start address
+//     * @return
+//     *  name of start address
+//     */
+//    @PropertyName("startingAddress")
+//    public String getStartAddrName() {
+//        return startAddrName;
+//    }
+//
+//    /**
+//     * This method set the value of the name of start address
+//     * @param startAddrName
+//     *  candidate start address name
+//     */
+//    @PropertyName("startingAddress")
+//    public void setStartAddrName(String startAddrName) {
+//        this.startAddrName = startAddrName;
+//    }
+//
+//    /**
+//     * This method return the name of destination address
+//     * @return
+//     *  name of destination address
+//     */
+//    @PropertyName("destinationAddress")
+//    public String getDestAddrName() {
+//        return destAddrName;
+//    }
+//
+//    /**
+//     * This method set the value of the name of destination
+//     * @param destAddrName
+//     *  candidate destination address name
+//     */
+//    @PropertyName("destinationAddress")
+//    public void setDestAddrName(String destAddrName) {
+//        this.destAddrName = destAddrName;
+//    }
 
     /**
-     * This method set the value of the name of start address
-     * @param startAddrName
-     *  candidate start address name
-     */
-    @PropertyName("startingAddress")
-    public void setStartAddrName(String startAddrName) {
-        this.startAddrName = startAddrName;
-    }
-
-    /**
-     * This method return the name of destination address
-     * @return
-     *  name of destination address
-     */
-    @PropertyName("destinationAddress")
-    public String getDestAddrName() {
-        return destAddrName;
-    }
-
-    /**
-     * This method set the value of the name of destination
-     * @param destAddrName
-     *  candidate destination address name
-     */
-    @PropertyName("destinationAddress")
-    public void setDestAddrName(String destAddrName) {
-        this.destAddrName = destAddrName;
-    }
-
-    /**
-     * This method retunr the destination
+     * This method return the destination
      * @return
      *  destination
      */
@@ -254,16 +256,30 @@ public class Request implements Serializable {
         return this.estimatedCost;
     }
 
-    public void setEstimatedCost(Float estimatedCost) {
-        this.estimatedCost = estimatedCost;
-    }
-
     /**
      * This method set the estimated cost
      * @param estimatedCost
      *  estimated cost
      */
-//    public void setEstimatedCost(float estimatedCost) {
-//        this.estimatedCost = estimatedCost;
-//    }
+    public void setEstimatedCost(Float estimatedCost) {
+        this.estimatedCost = estimatedCost;
+    }
+
+    /**
+     * This method return the time recorded of the request
+     * @return
+     *  time recorded
+     */
+    public Integer getTimeRecording() {
+        return timeRecording;
+    }
+
+    /**
+     * This method set the value of time record of the request
+     * @param timeRecording
+     *  candidate time
+     */
+    public void setTimeRecording(Integer timeRecording) {
+        this.timeRecording = timeRecording;
+    }
 }

@@ -33,11 +33,13 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.DirectionsApi;
@@ -68,13 +70,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * (rider can only cancel ride in a reasonable amount of time)
  */
 
-public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener {
+public class RiderWaitingRideActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener, TaskLoadedCallback {
 
     LinearLayout linearLayout;
     BottomSheetBehavior bottomSheetBehavior;
 
     TextView driverDistance;
-    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress;
+    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress, driverPlateNumber;
 
     Button DetailButton;
     TextViewSFProDisplayRegular CallButton;
@@ -86,6 +88,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     MarkerOptions start, destination, driver_loc;
     DirectionsResult directionsResult;
     Marker driverLoc;
+    protected Polyline currentPolyline;
+    Request mRequest;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -94,8 +99,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
 
     /**
-     * 问题：
-     * 1.目前还不能更新bottom sheet的detail
      * @param savedInstanceState
      */
 
@@ -134,13 +137,18 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         estimateFare = linearLayout.findViewById(R.id.estimate_fare);
         startAddress = linearLayout.findViewById(R.id.start_address);
         endAddress = linearLayout.findViewById(R.id.end_address);
+        driverPlateNumber = linearLayout.findViewById(R.id.driver_plate_number);
+
 
         driverName.setText(mRequest.getDriver().getAccountInfo().getFirstName());
+        driverPlateNumber.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getPlateNumber());
 
         driverEmail.setText(mRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(mRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(mRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
         estimateFare.setText("$" + Float.toString(mRequest.getEstimatedCost()));
+        startAddress.setText(mRequest.getStart().getAddressName());
+        endAddress.setText(mRequest.getDestination().getAddressName());
 
         //set Image View
         iconImage = linearLayout.findViewById(R.id.icon);
@@ -167,6 +175,9 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         markerOptionsList.add(driver_loc);
         markerOptionsList.add(start);
         markerOptionsList.add(destination);
+
+        new FetchURL(RiderWaitingRideActivity.this)
+                .execute(getUrl(start.getPosition(), destination.getPosition(), "driving"), "driving");
 
 
         //draw route
@@ -240,10 +251,20 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
     public void onMapReady(GoogleMap googleMap) {
         boolean success = true;
 
+
+
         mMap = googleMap;
+        mMap.setBuildingsEnabled(true);
+        mMap.setTrafficEnabled(true);
+
         mMap.addMarker(start);
         mMap.addMarker(destination);
         mMap.setMyLocationEnabled(true);
+        UiSettings mUiSettings = mMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(true);
+        mUiSettings.setZoomGesturesEnabled(true);
+
         driverLoc = mMap.addMarker(driver_loc);
         showAllMarkers();
 
@@ -267,6 +288,31 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
     }
 
+
+
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+
+
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+    }
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
+    }
 
     public void showAllMarkers() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -312,6 +358,8 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
 
         }
     }
+
+
 
     @Override
     public void onLocationChanged(android.location.Location location) {
@@ -425,23 +473,6 @@ public class RiderWaitingRideActivity extends DrawRouteBaseActivity implements O
         System.out.println("New location -----------" + location_temp.getLatitude() + " " + location_temp.getLongitude());
         onLocationChanged(location_temp);
 
-//        LatLng latLng = new LatLng(location.getLat(), location.getLon());
-//
-//        //move map camera
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//
-//        if (driver_loc != null) {
-//            driver_loc.position(latLng);
-//
-//        }
-//        else {
-////            driver_loc = new MarkerOptions().position(latLng).title("driver's current location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_caronmap));
-////            markerOptionsList.add(driver_loc);
-//        }
-//
-////        showAllMarkers();
 
     }
 }
