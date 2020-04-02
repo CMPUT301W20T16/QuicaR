@@ -194,6 +194,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
                         .getInstance()
                         .setRequestArrived(currentRequest.getRid(),
                                 DriverOnGoingActivity.this);
+                showQRBottom();
 
             }
         });
@@ -367,10 +368,6 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 //            long tDelta = tEnd - tStart;
 //            double elapsedSeconds = tDelta / 1000.0;
 
-
-//            //if the ride is longer or shorter than expcetd
-//            //charge 1 extra dollar per 5 minutes
-//            double extraCost = (elapsedSeconds/6000 - currentRequest.getTimeRecording()) / 5;
 //            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + (float)extraCost);
 //            currentRequest.setTimeRecording((int)elapsedSeconds/60000);
             showQRBottom();
