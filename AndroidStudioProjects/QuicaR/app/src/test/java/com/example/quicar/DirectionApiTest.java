@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -18,11 +19,11 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
-public class GoogleMapTest {
+public class DirectionApiTest {
 
 
     @Test
-    public void testGetDirections1() throws Exception{
+    public void testGetDirections() throws Exception{
 
             DirectionsResult result =
                     DirectionsApi.getDirections(getGeoContext(), "Sydney, AU", "Melbourne, AU").await();
@@ -41,7 +42,6 @@ public class GoogleMapTest {
             assertEquals(1, result.routes[0].legs.length);
             assertEquals("Melbourne VIC, Australia", result.routes[0].legs[0].endAddress);
             assertEquals("Sydney NSW, Australia", result.routes[0].legs[0].startAddress);
-
 
     }
 
@@ -65,14 +65,27 @@ public class GoogleMapTest {
 
             assertNotNull(result.routes);
             assertEquals(1, result.routes.length);
-            
+
 
 
     }
 
 
+    @Test
+    public void testResponseTimesArePopulatedCorrectly() throws Exception {
 
+            DirectionsResult result =
+                    DirectionsApi.newRequest(getGeoContext())
+                            .mode(TravelMode.TRANSIT)
+                            .origin("483 George St, Sydney NSW 2000, Australia")
+                            .destination("182 Church St, Parramatta NSW 2150, Australia")
+                            .await();
 
+            assertEquals(1, result.routes.length);
+            assertEquals(1, result.routes[0].legs.length);
+            
+
+    }
 
 
 
@@ -85,6 +98,9 @@ public class GoogleMapTest {
                 .setWriteTimeout(1, TimeUnit.SECONDS);
         return geoApiContext;
     }
+
+
+
 
 
 
