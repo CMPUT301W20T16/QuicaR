@@ -35,7 +35,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     public static class LocationViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, View.OnLongClickListener{
         public TextView startAdresse;
-        public TextView endAdresse;
+        public TextView startLocation;
         CardView mCardView;
         RecyclerViewClickListener recyclerViewClickListener;
 
@@ -49,7 +49,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         public LocationViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             startAdresse = itemView.findViewById(R.id.start_address);
-            endAdresse = itemView.findViewById(R.id.end_address);
+            startLocation = itemView.findViewById(R.id.start_location);
             mCardView = itemView.findViewById(R.id.location_card_view);
 
             mCardView.setOnCreateContextMenuListener((View.OnCreateContextMenuListener) this);
@@ -103,6 +103,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
         //getStart and getEnd currently return lat and lng, need address
         holder.startAdresse.setText(currentItem.getAddressName());
+        holder.startLocation.setText(currentItem.getName());
 
     }
 

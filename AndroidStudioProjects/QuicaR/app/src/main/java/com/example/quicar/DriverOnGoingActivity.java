@@ -75,6 +75,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
     TextViewSFProDisplayMedium riderName;
     Button_SF_Pro_Display_Medium confirmButton;
     TextViewSFProDisplayRegular callButton, emailButton;
+
     Request currentRequest = null;
     ImageView qrCode;
 
@@ -142,8 +143,8 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
         riderPhone.setText(currentRequest.getRider().getAccountInfo().getPhone());
         riderName.setText(currentRequest.getRider().getName());
 
-        // start timing the activity
-        long tStart = System.currentTimeMillis();
+//        // start timing the activity
+//        long tStart = System.currentTimeMillis();
 
 
 
@@ -193,6 +194,7 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
                         .getInstance()
                         .setRequestArrived(currentRequest.getRid(),
                                 DriverOnGoingActivity.this);
+                showQRBottom();
 
             }
         });
@@ -362,15 +364,12 @@ public class DriverOnGoingActivity extends BaseActivity implements OnGetRequestD
 
             System.out.println("susccess------------------");
 
-            long tEnd = System.currentTimeMillis();
-            long tDelta = tEnd - tStart;
-            double elapsedSeconds = tDelta / 1000.0;
+//            long tEnd = System.currentTimeMillis();
+//            long tDelta = tEnd - tStart;
+//            double elapsedSeconds = tDelta / 1000.0;
 
-
-            //if the ride is longer or shorter than expcetd
-            //charge 1 extra dollar per 5 minutes
-//            float extraCost = (elapsedSeconds - currentRequest.getEstimateTime()) / 5;
-//            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + extraCost);
+//            currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + (float)extraCost);
+//            currentRequest.setTimeRecording((int)elapsedSeconds/60000);
             showQRBottom();
 
         }

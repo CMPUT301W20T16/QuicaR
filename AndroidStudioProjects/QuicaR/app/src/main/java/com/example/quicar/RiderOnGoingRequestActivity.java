@@ -66,6 +66,8 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
 
     Request currentRequest = null;
 
+    long tStart;
+
     DirectionsResult directionsResult;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
@@ -121,6 +123,11 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
         driverEmail.setText(currentRequest.getDriver().getAccountInfo().getEmail());
         driverPhone.setText(currentRequest.getDriver().getAccountInfo().getPhone());
         driverRating.setText(currentRequest.getDriver().getAccountInfo().getDriverInfo().getRating().toString());
+        startAddress.setText(currentRequest.getStart().getAddressName());
+        endAddress.setText(currentRequest.getDestination().getAddressName());
+
+        // start timing the activity
+        tStart = System.currentTimeMillis();
 
         start_location = currentRequest.getStart();
         end_location = currentRequest.getDestination();
@@ -325,7 +332,20 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
     public void onArrivedNotification(Request request) {
         System.out.println("------------- ride is arrived -----------------");
         Toast.makeText(RiderOnGoingRequestActivity.this, "rider is picked up by driver", Toast.LENGTH_SHORT).show();
+
+        long tEnd = System.currentTimeMillis();
+        long tDelta = tEnd - tStart;
+        double elapsedSeconds = tDelta / 1000.0;
+
+        //if the ride is longer or shorter than expcetd
+        //charge 1 extra dollar per 5 minutes
+        double extraCost = (elapsedSeconds/6000 - currentRequest.getTimeRecording()) / 5;
+        currentRequest.setEstimatedCost(currentRequest.getEstimatedCost() + (float)extraCost);
+        currentRequest.setTimeRecording((int)elapsedSeconds/60000);
+
         Intent intent = new Intent(RiderOnGoingRequestActivity.this, RiderReviewActivity.class);
+        intent.putExtra("extra cost", extraCost);
+        intent.putExtra("real time", elapsedSeconds/6000);
         startActivity(intent);
         finish();
 
