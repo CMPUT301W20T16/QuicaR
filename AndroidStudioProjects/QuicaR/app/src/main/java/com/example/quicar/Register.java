@@ -99,6 +99,7 @@ public class Register extends AppCompatActivity implements OnGetUserDataListener
                                         user.setBasic(mUserName, mEmail, mPwd);
                                         UserDataHelper.getInstance().addNewUser(user, listener);
                                         DatabaseHelper.getInstance().setCurrentUser(user);
+                                        // signs in with realtime database
                                         database.getInstance().getReference("User").child(auth.getInstance().getCurrentUser().getUid())
                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
