@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="80dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
@@ -67,7 +67,7 @@
                 android:layout_marginStart="-1dp"
                 android:layout_marginTop="-1dp"
                 android:textSize="14sp"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:visibility="invisible" />
         </RadioGroup>
 
