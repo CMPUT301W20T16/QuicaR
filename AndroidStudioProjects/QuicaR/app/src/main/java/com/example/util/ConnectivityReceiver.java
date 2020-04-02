@@ -28,6 +28,11 @@ public class ConnectivityReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * This method check the network connection state
+     * @return
+     *  state of network connection
+     */
     public static boolean isConnected() {
         ConnectivityManager
                 cm = (ConnectivityManager) MyApplication.getInstance().getApplicationContext()
@@ -37,7 +42,9 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                 && activeNetwork.isConnectedOrConnecting();
     }
 
-
+    /**
+     * This is the interface that can be implemented to get network connection changed notification
+     */
     public interface ConnectivityReceiverListener {
         void onNetworkConnectionChanged(boolean isConnected);
     }

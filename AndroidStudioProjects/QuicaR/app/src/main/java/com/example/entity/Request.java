@@ -265,10 +265,20 @@ public class Request implements Serializable {
         this.estimatedCost = estimatedCost;
     }
 
+    /**
+     * This method return the time recorded of the request
+     * @return
+     *  time recorded
+     */
     public Integer getTimeRecording() {
         return timeRecording;
     }
 
+    /**
+     * This method set the value of time record of the request
+     * @param timeRecording
+     *  candidate time
+     */
     public void setTimeRecording(Integer timeRecording) {
         this.timeRecording = timeRecording;
     }

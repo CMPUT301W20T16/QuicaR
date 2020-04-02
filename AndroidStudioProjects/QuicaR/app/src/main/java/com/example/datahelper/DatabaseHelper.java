@@ -151,10 +151,20 @@ public class DatabaseHelper {
         userState.setCurrentMode(currentMode);
     }
 
+    /**
+     * This is the getter method of user state attribute
+     * @return
+     *  current user state
+     */
     public UserState getUserState() {
         return userState;
     }
 
+    /**
+     * This is the setter method of user state
+     * @param userState
+     *  new user state
+     */
     public void setUserState(UserState userState) {
         this.userState = userState;
     }
