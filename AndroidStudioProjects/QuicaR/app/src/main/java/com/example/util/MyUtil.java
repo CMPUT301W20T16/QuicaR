@@ -40,6 +40,15 @@ public class MyUtil {
         }
     }
 
+    /**
+     * This method check if the vitual keyboard should be hidden. It is called when no input view is clicked or focused
+     * @param v
+     *  view
+     * @param event
+     *  motion event
+     * @return
+     *  state of hide keyboard
+     */
     public static boolean isShouldHideKeyboard(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {  //判断得到的焦点控件是否包含EditText
             int[] l = {0, 0};
@@ -60,6 +69,11 @@ public class MyUtil {
         return false;
     }
 
+    /**
+     * This method is used to maintain the correctness of activity flow
+     * @param context
+     *  context of activity that is going to another activity
+     */
     public static void goToIntent(Context context) {
         // handle previous activity here
         UserState userState = DatabaseHelper.getInstance().getUserState();

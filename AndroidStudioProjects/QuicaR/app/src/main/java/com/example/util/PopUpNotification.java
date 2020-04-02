@@ -15,29 +15,62 @@ public class PopUpNotification {
     private String title = "empty title";
     private String msg = "empty body";
 
+    /**
+     * This is the empty constructor of PopUpNotification
+     */
     public PopUpNotification() {}
 
+    /**
+     * Constructor of PopUpNotification
+     * @param title
+     *  title of the notification
+     * @param msg
+     *  body message of notification
+     */
     public PopUpNotification(String title, String msg) {
         this.title = title;
         this.msg = msg;
     }
 
+    /**
+     * This method return the title of the notification
+     * @return
+     *  title of the notification
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * This method set the title of the notification
+     * @param title
+     *  title of the notification
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * This method return the body message of the notification
+     * @return
+     *  body message of the notification
+     */
     public String getMsg() {
         return msg;
     }
 
+    /**
+     * This method set the body message of the notification
+     * @param msg
+     *  body message of the notification
+     */
     public void setMsg(String msg) {
         this.msg = msg;
     }
 
+    /**
+     * This method build/send the notification out
+     */
     public void build() {
         sendPopUpNotification();
     }
