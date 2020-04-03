@@ -32,8 +32,8 @@ public class LoginTest {
         //solo.enterText((EditText) solo.getView(R.id.sign_in_email), "usertest");
         final TextInputLayout userNameInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_email);
         final TextInputLayout passwordInput = (TextInputLayout) solo.getCurrentActivity().findViewById(R.id.sign_in_password);
-        solo.enterText(userNameInput.getEditText(), "mushroom");
-        solo.enterText(passwordInput.getEditText(), "mushroom");
+        solo.enterText(userNameInput.getEditText(), "yao");
+        solo.enterText(passwordInput.getEditText(), "123456");
         // solo.clickOnButton("LOGIN");
         solo.clickOnView(solo.getView(R.id.sign_in_button));
         solo.clearEditText(userNameInput.getEditText());

@@ -140,7 +140,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         String userEmailStr =currentUser.getAccountInfo().getEmail();
         String userNameStr = currentUser.getAccountInfo().getUserName();
 
-
+        System.out.println("GUGU");
+        System.out.println(userEmailStr);
         userName_textView.setText(userNameStr);
         userEmail_textView.setText(userEmailStr);
 
@@ -155,8 +156,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         String firstName = currentUser.getAccountInfo().getFirstName();
         String lastName = currentUser.getAccountInfo().getLastName();
         String phone = currentUser.getAccountInfo().getPhone();
-//        System.out.println(firstName);
-////        System.out.println("haha");
         if (firstName == null | lastName == null | phone == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("update profile")//设置标题
