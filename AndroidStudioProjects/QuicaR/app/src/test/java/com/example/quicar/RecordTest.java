@@ -40,7 +40,6 @@ public class RecordTest {
         record.setDateTime(newDate);
         assertEquals(newDate, record.getDateTime());
 
-
         record.setRating(5.f);
         assertEquals(5.f, (float)record.getReqRating());
 
