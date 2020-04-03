@@ -70,10 +70,10 @@ public class RegisterDriverActivity extends AppCompatActivity implements OnGetUs
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent me) {
-        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
-            View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
-            if (MyUtil.isShouldHideKeyboard(v, me)) { //判断用户点击的是否是输入框以外的区域
-                MyUtil.disableSoftInputFromAppearing(this);  //收起键盘
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {  //when user click
+            View v = getCurrentFocus();
+            if (MyUtil.isShouldHideKeyboard(v, me)) { //if user click other area
+                MyUtil.disableSoftInputFromAppearing(this);  //get keyboard back
             }
         }
         return super.dispatchTouchEvent(me);
