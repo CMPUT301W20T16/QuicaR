@@ -246,6 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
+        markerOptionsList.clear();
 
     }
 

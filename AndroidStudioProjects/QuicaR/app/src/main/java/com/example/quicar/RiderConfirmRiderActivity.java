@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.UserDataHelper;
 import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.entity.Location;
@@ -67,7 +68,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     private Button confirmButton, cancelButton;
     private Request currentRequest = null;
     private DirectionsResult directionsResult;
-    protected Polyline currentPolyline;
+
 
 
     private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
@@ -76,7 +77,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private Location start_location, end_location;
     private MarkerOptions start, destination;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
 
 
     /**
@@ -195,18 +196,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         // if user selected cancel button
         // return to previous activity RiderSelectLocation
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        cancelButton.setOnClickListener(v -> {
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
+            DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(null);
+            DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(null);
+            UserStateDataHelper.getInstance().recordState();
 
-            @Override
-            public void onClick(View v) {
-                /* added for user state */
-                DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
-                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(null);
-                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(null);
-                UserStateDataHelper.getInstance().recordState();
-
-                finish();
-            }
+            finish();
         });
 
 
@@ -250,6 +247,12 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                     }
 
                     travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
+//                    User user = UserDataHelper.getInstance().getUser();
+//                    if (travelFare > UserDataHelper.getInstance().getUser()){
+//                        Intent intent = new Intent(RiderConfirmRiderActivity.this,);
+//                        startActivity(intent);
+//                        finish();
+//                    }
 
                     view_distance.setText(travelDistance);
                     view_time.setText(travelTime);
@@ -280,7 +283,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-        
+
 
     }
 
