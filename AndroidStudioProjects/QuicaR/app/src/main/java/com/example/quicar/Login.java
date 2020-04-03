@@ -328,21 +328,24 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
     @Override
     public void onStateUpdated() {
         Request currentRequest = DatabaseHelper.getInstance().getUserState().getCurrentRequest();
-        if (currentRequest.getRid() != null) {
-            RequestDataHelper
-                    .getInstance()
-                    .queryUserRequest(DatabaseHelper
-                                    .getInstance()
-                                    .getUserState()
-                                    .getCurrentRequest()
-                                    .getRid()
-                            , this);
-        } else {
-            Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
-            pgsBar.setVisibility(View.INVISIBLE);
-            MyUtil.goToIntent(Login.this);
+        /* add currentRequest check for null by Yuxin */
+        if (currentRequest != null ) {
+            if (currentRequest.getRid() != null) {
+                RequestDataHelper
+                        .getInstance()
+                        .queryUserRequest(DatabaseHelper
+                                        .getInstance()
+                                        .getUserState()
+                                        .getCurrentRequest()
+                                        .getRid()
+                                , this);
+            } else {
+                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                ProgressBar pgsBar = (ProgressBar) findViewById(R.id.pBar);
+                pgsBar.setVisibility(View.INVISIBLE);
+                MyUtil.goToIntent(Login.this);
+            }
         }
     }
 //      Network connection part

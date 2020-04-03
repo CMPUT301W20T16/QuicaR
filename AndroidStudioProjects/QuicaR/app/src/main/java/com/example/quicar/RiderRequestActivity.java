@@ -104,60 +104,7 @@ public class RiderRequestActivity extends BaseActivity {
      */
 
     // get address name in String from lat and long
-    public String findAddress(double lat, double lng) {
 
-        // set pick up location automatically as customer's current location
-        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-        if (lat != 0 && lng != 0) {
-            try {
-                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (addresses != null) {
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                if (address.length() != 0) {
-                    return address;
-                }
-            }
-
-        }
-        return null;
-
-    }
-
-//    public String findFeatureName (double lat, double lng) {
-//        String featureName = null;
-//        // set pick up location automatically as customer's current location
-//        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-//
-//        if (lat != 0 && lng != 0) {
-//            try {
-//                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-//
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (addresses != null) {
-//                Address obj = addresses.get(0);
-//                featureName = obj.getSubLocality(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//
-//                    return featureName;
-//
-//            }
-//
-//        }
-//        return null;
-//
-//    }
 
 
 
