@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:maxLength="20"
+
                 android:inputType="textEmailAddress"
                 android:padding="10dp"
                 android:singleLine="true"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profile_username"
-            android:maxLength="10"
+
             app:errorTextAppearance="@style/error"
             app:errorEnabled="true">
 
