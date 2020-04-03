@@ -59,6 +59,7 @@ public class UserProfileActivityTest {
         solo.enterText(phoneLayout.getEditText(), "12345678");
         solo.enterText(firstNameLayout.getEditText(), "Mushroom");
         solo.enterText(lastNameLayout.getEditText(), "Teemo");
+//        solo.enterText(passwordLayout.getEditText(),"Mushroom");
 
 
 //        solo.clickOnText("Preferences");
@@ -95,7 +96,7 @@ public class UserProfileActivityTest {
         solo.assertCurrentActivity("Wrong Activity", UserProfileActivity.class);
         solo.pressSpinnerItem(0,0);
         System.out.println("here");
-        Assert.assertTrue(solo.isSpinnerTextSelected(0,"no selection") );
+        Assert.assertTrue(solo.isSpinnerTextSelected(0,"no selection"));
         solo.goBack();
     }
 
