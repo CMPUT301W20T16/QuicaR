@@ -40,6 +40,10 @@ public class RecordTest {
         record.setDateTime(newDate);
         assertEquals(newDate, record.getDateTime());
 
+//        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.CANADA);
+//        String dateString = sdf.format(newDate);
+//        assertEquals(dateString, record.getDateTimeString());
+
         record.setRating(5.f);
         assertEquals(5.f, (float)record.getReqRating());
 
