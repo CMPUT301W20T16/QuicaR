@@ -247,12 +247,13 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
                     }
 
                     travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
-//                    User user = UserDataHelper.getInstance().getUser();
-//                    if (travelFare > UserDataHelper.getInstance().getUser()){
-//                        Intent intent = new Intent(RiderConfirmRiderActivity.this,);
-//                        startActivity(intent);
-//                        finish();
-//                    }
+
+                    if (travelFare > DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBalance()){
+                        Toast.makeText(RiderConfirmRiderActivity.this, "current balance not enough for this trip, please recharge", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RiderConfirmRiderActivity.this, WalletOverviewActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
                     view_distance.setText(travelDistance);
                     view_time.setText(travelTime);
