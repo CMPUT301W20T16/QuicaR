@@ -157,6 +157,10 @@ public class RegisterDriverActivity extends AppCompatActivity implements OnGetUs
         }
     }
 
+
+    /**
+     * for check valid user input
+     */
     public boolean checkValidate (){
         if (!validateLicenseNumberLayout() || !validatesinNumber() || !validatePlateNumber()) {
             return false;
@@ -166,11 +170,6 @@ public class RegisterDriverActivity extends AppCompatActivity implements OnGetUs
     }
 
 
-//    @Override
-//    public void onSuccess(User user, String tag) {
-//        if (tag == UserDataHelper.UPDATE_USER_TAG)
-//            startActivity(new Intent(getApplicationContext(), DriverBrowsingActivity.class));
-//    }
     /**
      *
      * for implement to get databasework
