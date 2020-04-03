@@ -30,10 +30,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+
+/**
+ * This is a UI test for driver activity
+ * from browsing open requests to receiving a payment from rider
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class DriverActivityTest {
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
