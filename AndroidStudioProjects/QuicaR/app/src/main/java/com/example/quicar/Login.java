@@ -131,6 +131,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
                                                     FirebaseUser currentUser = mAuth.getCurrentUser();
 
                                                     /* added by Jeremy */
+                                                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                                                     UserDataHelper.getInstance().getUser(myID, listener);
                                                     ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
                                                     pgsBar.setVisibility(v.VISIBLE);
@@ -163,6 +164,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
                                     for (UserInfo profile : currentUser.getProviderData()) {
                                         String name = profile.getDisplayName();
                                         /* added by Jeremy */
+                                        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                                         UserDataHelper.getInstance().getUser(name, listener);
                                         ProgressBar pgsBar = (ProgressBar)findViewById(R.id.pBar);
                                         pgsBar.setVisibility(v.VISIBLE);
@@ -340,7 +342,6 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
                                         .getRid()
                                 , this);
             } else {
-                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 ProgressBar pgsBar = (ProgressBar) findViewById(R.id.pBar);
                 pgsBar.setVisibility(View.INVISIBLE);
