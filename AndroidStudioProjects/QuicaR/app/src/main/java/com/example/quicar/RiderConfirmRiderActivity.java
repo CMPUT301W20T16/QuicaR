@@ -250,7 +250,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                     if (travelFare > DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBalance()){
                         Toast.makeText(RiderConfirmRiderActivity.this, "current balance not enough for this trip, please recharge", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(RiderConfirmRiderActivity.this, WalletOverviewActivity.class);
+                        Intent intent = new Intent(RiderConfirmRiderActivity.this, RiderSelectLocationActivity.class);
                         startActivity(intent);
                         finish();
                     }

@@ -42,7 +42,7 @@ public class RiderSelectionActivityTest {
 
 
 
-        //Activity activity = rule.getActivity();
+        Activity activity = rule.getActivity();
     }
 
     @Test
