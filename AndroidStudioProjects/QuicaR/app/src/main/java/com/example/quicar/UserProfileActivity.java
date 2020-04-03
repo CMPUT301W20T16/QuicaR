@@ -213,22 +213,11 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                     birthDate = null;
                 }
             }
-            //change later
-//            if (this.emailLayout.getEditText().getText() != null) {
-//                email = this.emailLayout.getEditText().getText().toString();
-//                ;
-//            }
             email = user.getAccountInfo().getEmail();
 
-//            if (this.usernameLayout.getEditText().getText() != null) {
-//                username = this.usernameLayout.getEditText().getText().toString();
-//                ;
-//            }
             username = user.getAccountInfo().getUserName();
             if(this.phoneLayout.getEditText().getText()!= null){
                 phone = this.phoneLayout.getEditText().getText().toString();
-//                System.out.println("here");
-//                System.out.println(phone);
 
             }
             if(this.firstNameLayout.getEditText().getText() != null){
@@ -236,7 +225,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             }
             if(this.lastNameLayout.getEditText().getText()!= null){
                 lastName = this.lastNameLayout.getEditText().getText().toString();
-//                System.out.println(lastName);
             }
             if (this.spinnerGender.getSelectedItem()!= null){
                 gender = spinnerGender.getSelectedItem().toString();
