@@ -59,7 +59,6 @@ public class UserProfileActivityTest {
         solo.enterText(phoneLayout.getEditText(), "12345678");
         solo.enterText(firstNameLayout.getEditText(), "Mushroom");
         solo.enterText(lastNameLayout.getEditText(), "Teemo");
-        solo.enterText(passwordLayout.getEditText(),"Mushroom");
 
 
 //        solo.clickOnText("Preferences");
