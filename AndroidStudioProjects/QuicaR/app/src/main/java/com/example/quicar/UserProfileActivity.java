@@ -79,8 +79,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
 
         // below set for user info  invisible
-//        this.usernameLayout.setVisibility(View.GONE);
-//        this.emailLayout.setVisibility(View.GONE);
         this.passwordLayout.setVisibility(View.GONE);
 
 
@@ -117,10 +115,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
         });
 
 
-
-
-
-//        String userName = DatabaseHelper.getCurrentUserName();
         //Test
         String userName = DatabaseHelper.getInstance().getCurrentUserName();
         // get current user
@@ -244,18 +238,13 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 //                System.out.println(lastName);
             }
             if (this.spinnerGender.getSelectedItem()!= null){
-//            if (this.genderLayout.getEditText().getText()!= null){
-//                gender = this.genderLayout.getEditText().getText().toString();
                 gender = spinnerGender.getSelectedItem().toString();
             }
             if (this.passwordLayout.getEditText() != null){
                 password = this.passwordLayout.getEditText().getText().toString();
             }
         }
-        // ???
-//        System.out.println(birthDate);
         user.setAccountInfo(accNo, firstName,lastName, birthDate, gender,  phone,  email,  username, password, wallet);
-//        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }
@@ -286,15 +275,9 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
 
             DriverInfo driverInfo = user.getAccountInfo().getDriverInfo();
             Double rating = driverInfo.getRating();
-            // change later
-//            rating = 5.0;
-
+            // update User info
             user.setDriverInfo( rating,  plate,  license,  sin);
         }
-        // ???
-//        System.out.println(birthDate);
-
-//        System.out.println(user.getAccountInfo().getBirthDate());
         ;
 
     }
@@ -384,7 +367,6 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
             if (user.getAccountInfo().getGender() != null){
                 String gender = user.getAccountInfo().getGender();
                 spinnerGender.setSelection(((ArrayAdapter<String>)spinnerGender.getAdapter()).getPosition(gender));
-//                this.genderLayout.getEditText().setText(user.getAccountInfo().getGender());
             }
             if (user.getAccountInfo().getPassword() != null){
                 this.passwordLayout.getEditText().setText(user.getAccountInfo().getPassword());

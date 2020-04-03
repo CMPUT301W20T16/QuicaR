@@ -101,29 +101,16 @@ public class WalletOverviewActivity extends AppCompatActivity implements OnGetUs
         balance.setText(currentBalance);
         balance.bringToFront();
 
-        camera_scan.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ScanTransferActivity.class));
-            }
-        });
+        camera_scan.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ScanTransferActivity.class)));
 
-        card_info.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        card_info.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ManageCardActivity.class)));
+
+        recharge.setOnClickListener(v -> {
+            if (DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBankAccountArrayList().size() != 0) {
+                startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
+            }else{
+                Toast.makeText(getApplicationContext(), "You haven't bind a card, please bind a card first", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
-            }
-        });
-
-        recharge.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if (DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBankAccountArrayList().size() != 0) {
-                    startActivity(new Intent(getApplicationContext(), RechargeActivity.class));
-                }else{
-                    Toast.makeText(getApplicationContext(), "You haven't bind a card, please bind a card first", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), ManageCardActivity.class));
-                }
             }
         });
     }

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.datahelper.UserDataHelper;
 import com.example.datahelper.UserStateDataHelper;
 import com.example.entity.Request;
 import com.example.entity.Location;
@@ -67,7 +68,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
     private Button confirmButton, cancelButton;
     private Request currentRequest = null;
     private DirectionsResult directionsResult;
-    protected Polyline currentPolyline;
+
 
 
     private TextViewSFProDisplayRegular view_distance, view_time, view_fare, view_start, view_end;
@@ -76,7 +77,7 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
     private Location start_location, end_location;
     private MarkerOptions start, destination;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
 
 
     /**
@@ -195,18 +196,14 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         // if user selected cancel button
         // return to previous activity RiderSelectLocation
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        cancelButton.setOnClickListener(v -> {
+            /* added for user state */
+            DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
+            DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(null);
+            DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(null);
+            UserStateDataHelper.getInstance().recordState();
 
-            @Override
-            public void onClick(View v) {
-                /* added for user state */
-                DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
-                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setStart(null);
-                DatabaseHelper.getInstance().getUserState().getCurrentRequest().setDestination(null);
-                UserStateDataHelper.getInstance().recordState();
-
-                finish();
-            }
+            finish();
         });
 
 
@@ -251,6 +248,13 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
                     travelFare = (float) estimateFare(directionsResult.routes[0].legs[0].distance.inMeters);
 
+                    if (travelFare > DatabaseHelper.getInstance().getCurrentUser().getAccountInfo().getWallet().getBalance()){
+                        Toast.makeText(RiderConfirmRiderActivity.this, "current balance not enough for this trip, please recharge", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RiderConfirmRiderActivity.this, WalletOverviewActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
                     view_distance.setText(travelDistance);
                     view_time.setText(travelTime);
                     view_fare.setText("$ " + travelFare);
@@ -281,69 +285,6 @@ public class RiderConfirmRiderActivity extends BaseActivity implements OnGetRequ
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
 
-
-
-
-
-    }
-
-    public void showAllMarkers() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (MarkerOptions m : markerOptionsList) {
-            builder.include(m.getPosition());
-
-        }
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-
-    }
-
-
-    protected GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-            if (results.routes.length == 0){
-                return;
-            }
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x2e8b57));
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
-    }
-
-
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-
-
-        return url;
 
     }
 

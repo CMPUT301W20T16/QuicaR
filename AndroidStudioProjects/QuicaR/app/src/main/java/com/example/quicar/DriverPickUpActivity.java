@@ -56,22 +56,15 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener, TaskLoadedCallback {
-    LinearLayout linearLayout;
-    BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout linearLayout;
+    private BottomSheetBehavior bottomSheetBehavior;
 
-    TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress,travelTime;
-    TextViewSFProDisplayMedium riderName;
+    private TextViewSFProDisplayRegular riderEmail, riderPhone, startAddress, endAddress,travelTime;TextViewSFProDisplayMedium riderName;Button_SF_Pro_Display_Medium confirmButton;TextViewSFProDisplayRegular callButton, emailButton;
+    private Request currentRequest = null;
+    private DirectionsResult directionsResult;
 
-    Button_SF_Pro_Display_Medium confirmButton;
-    TextViewSFProDisplayRegular callButton, emailButton;
-    Request currentRequest = null;
-    DirectionsResult directionsResult;
-
-    Location driver_start_location, driver_end_location;
-    MarkerOptions start, destination;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
-
-    protected Polyline currentPolyline;
+    private Location driver_start_location, driver_end_location;
+    private MarkerOptions start, destination;
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -168,22 +161,6 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
             e.printStackTrace();
         }
 
-//        if(directionsResult == null){
-//            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
-//            startActivity(intent);
-//            finish();
-//
-//        }
-//
-//        if(directionsResult.routes == null){
-//            Toast.makeText(DriverPickUpActivity.this, "no route to this rider found!", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(DriverPickUpActivity.this,DriverBrowsingActivity.class);
-//            startActivity(intent);
-//            finish();
-//
-//        }
-
         travelTime.setText(directionsResult.routes[0].legs[0].duration.humanReadable);
 
 
@@ -193,20 +170,17 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 //                        "driver", this);
 
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* Edited by Jeremy */
-                if (currentRequest == null)
-                    return;
-                /* End here */
+        confirmButton.setOnClickListener(v -> {
+            /* Edited by Jeremy */
+            if (currentRequest == null)
+                return;
+            /* End here */
 
-                RequestDataHelper
-                        .getInstance()
-                        .setRequestPickedUp(currentRequest.getRid(),
-                                DriverPickUpActivity.this);
+            RequestDataHelper
+                    .getInstance()
+                    .setRequestPickedUp(currentRequest.getRid(),
+                            DriverPickUpActivity.this);
 
-            }
         });
 
     }
@@ -251,12 +225,7 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
         }
 
 //
-//        try {
-//            //draw route
-//            //addPolyline(directionsResult, mMap);
-//        }catch (Exception e){
 //
-//        }
 
 
     }
@@ -269,37 +238,8 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     }
 
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
 
 
-        return url;
-
-    }
-
-
-    public void showAllMarkers() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (MarkerOptions m : markerOptionsList) {
-            builder.include(m.getPosition());
-
-        }
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-
-    }
 
     @Override
     public void onLocationChanged(android.location.Location location) {
@@ -356,34 +296,6 @@ public class DriverPickUpActivity extends BaseActivity implements OnGetRequestDa
 
     }
 
-
-    protected GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-//            if (results.routes.length == 0)
-
-
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
-    }
 
 
 

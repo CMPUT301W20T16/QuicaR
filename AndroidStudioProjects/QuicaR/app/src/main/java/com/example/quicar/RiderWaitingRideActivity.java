@@ -72,25 +72,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RiderWaitingRideActivity extends BaseActivity implements OnGetRequestDataListener, OnGetLocationDataListener, TaskLoadedCallback {
 
-    LinearLayout linearLayout;
-    BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout linearLayout;
+    private BottomSheetBehavior bottomSheetBehavior;
 
-    TextView driverDistance;
-    TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress, driverPlateNumber;
+    private TextView driverDistance;private TextView driverName, driverRating, driverEmail, driverPhone, startAddress, endAddress, driverPlateNumber;private Button DetailButton;
+    private TextViewSFProDisplayRegular CallButton;
+    private TextViewSFProDisplayRegular EmailButton, estimateFare;
+    private Button_SF_Pro_Display_Medium CancelButton;
+    private CircleImageView iconImage;
 
-    Button DetailButton;
-    TextViewSFProDisplayRegular CallButton;
-    TextViewSFProDisplayRegular EmailButton, estimateFare;
-    Button_SF_Pro_Display_Medium CancelButton;
-    CircleImageView iconImage;
-
-    Location rider_start_location, rider_end_location;
-    MarkerOptions start, destination, driver_loc;
-    DirectionsResult directionsResult;
+    private Location rider_start_location, rider_end_location;
+    private MarkerOptions start, destination, driver_loc;
+    private DirectionsResult directionsResult;
     Marker driverLoc;
-    protected Polyline currentPolyline;
+
     Request mRequest;
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
 
     final private String PROVİDER = LocationManager.GPS_PROVIDER;
 
@@ -241,7 +238,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
 
-
     }
 
     /**
@@ -249,7 +245,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        boolean success = true;
 
 
 
@@ -298,65 +293,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-    }
-
-    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameter = str_origin + "&" + str_dest + "&" + mode;
-        String format = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
-                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
-
-
-        return url;
-
-    }
-
-    public void showAllMarkers() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (MarkerOptions m : markerOptionsList) {
-            builder.include(m.getPosition());
-
-        }
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-
-    }
-
-    protected GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setQueryRateLimit(3)
-                .setApiKey(getString(R.string.map_key))
-                .setConnectTimeout(1, TimeUnit.SECONDS)
-                .setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-        return geoApiContext;
-    }
-
-
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-//            if (results.routes.length == 0)
-
-
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
     }
 
 
@@ -457,8 +393,6 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
     }
 
 
-
-
     @Override
     public void onUpdate(Location location) {
         if (location != null) {
@@ -475,4 +409,5 @@ public class RiderWaitingRideActivity extends BaseActivity implements OnGetReque
 
 
     }
+
 }

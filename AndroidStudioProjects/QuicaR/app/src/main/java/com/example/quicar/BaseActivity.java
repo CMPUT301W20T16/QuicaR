@@ -45,6 +45,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,13 +53,21 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.maps.GeoApiContext;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiver.ConnectivityReceiverListener {
     protected GoogleMap mMap;
@@ -80,6 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     protected FirebaseAuth mAuth;
 
     private double radius = 1000;
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+    protected Polyline currentPolyline;
 
 
     @Override
@@ -178,6 +189,79 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
 
     }
+
+    public String findAddress(double lat, double lng) {
+
+        // set pick up location automatically as customer's current location
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        if (lat != 0 && lng != 0) {
+            try {
+                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addresses != null) {
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                if (address.length() != 0) {
+                    return address;
+                }
+            }
+
+        }
+        return null;
+
+    }
+
+
+    public String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameter = str_origin + "&" + str_dest + "&" + mode;
+        String format = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?"
+                + parameter + "&key=AIzaSyC2x1BCzgthK4_jfvqjmn6_uyscCiKSc34";
+
+
+        return url;
+
+    }
+
+    public void showAllMarkers() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (MarkerOptions m : markerOptionsList) {
+            builder.include(m.getPosition());
+
+        }
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.30);
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
+        markerOptionsList.clear();
+
+    }
+
+
+    protected GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.map_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+        return geoApiContext;
+    }
+
+
 
     /**
      * google map methods
