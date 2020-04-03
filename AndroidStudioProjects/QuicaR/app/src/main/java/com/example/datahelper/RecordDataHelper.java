@@ -198,7 +198,10 @@ public class RecordDataHelper {
                                    Log.d(TAG, document.getId() + " => " + document.getData());
                                    query = document.toObject(Record.class);
                                    //  add record of rider name is current user name
-                                   records.add(query);
+                                   if (query.getRequest().getRider().getName().equals(userName)
+                                           || query.getRequest().getDriver().getName().equals(userName)) {
+                                       records.add(query);
+                                   }
                                }
                                if (query == null) {
                                    listener.onFailure(userName + " has no history");
