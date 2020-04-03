@@ -49,21 +49,20 @@ public class RiderSelectLocationActivity extends AppCompatActivity implements On
 
     private int currentPosition;
 
-    String address,adminiArea = null,phone;
+    private String address,adminiArea = null,phone;
     private double currentLat,currentLng;
     private Location start_location, end_location;
 
-    PlacesClient placesClient;
+    private PlacesClient placesClient;
 
     private RecyclerView mRecyclerView;
     private LocationAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Location> locationList;
 
-    ImageView swapIcon;
-    TextView start, end;
+    private ImageView swapIcon;private TextView start, end;
 
-    AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
+    private AutocompleteSupportFragment pickUpAutoComplete, destinationAutoComplete;
 
 
     /**

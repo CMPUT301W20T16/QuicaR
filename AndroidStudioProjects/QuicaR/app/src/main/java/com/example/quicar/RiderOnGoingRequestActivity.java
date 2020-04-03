@@ -249,6 +249,7 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
+        markerOptionsList.clear();
 
     }
 
@@ -264,22 +265,6 @@ public class RiderOnGoingRequestActivity extends DrawRouteBaseActivity implement
     }
 
 
-    protected void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        if (results != null) {
-//            if (results.routes.length == 0)
-
-
-            List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-            mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0x802e8b57));
-            System.out.println("----------Time---------- :"+ results.routes[0].legs[0].duration.humanReadable);
-            System.out.println("----------Distance---------- :" + results.routes[0].legs[0].distance.humanReadable);
-
-        }
-        else{
-            System.out.println("------- null request queried.--------------");
-
-        }
-    }
 
     @Override
     public void onLocationChanged(android.location.Location location) {

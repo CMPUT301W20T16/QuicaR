@@ -56,7 +56,7 @@ public class BankAccount implements Serializable {
     }
 
     public String getNameOnCard() {
-        return this.cardnumber;
+        return this.nameOnCard;
     }
 
     public String getCardnumber() {

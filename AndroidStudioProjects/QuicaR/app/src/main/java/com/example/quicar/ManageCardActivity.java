@@ -136,7 +136,7 @@ public class ManageCardActivity extends AppCompatActivity implements OnGetUserDa
                     cardAdapter.notifyDataSetChanged();
                     DatabaseHelper.getInstance().setCurrentUser(user);
                     UserDataHelper.getInstance().updateUserProfile(user, this);
-                    System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
+//                    System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
                 }
                 break;
 //            case 2:
