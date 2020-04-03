@@ -165,7 +165,9 @@ public class RiderMatchingActivity extends BaseActivity implements OnGetRequestD
 //                    .queryUserRequest(DatabaseHelper.getInstance().getCurrentUserName(),
 //                            "rider", this);
             /* added for user state */
-            DatabaseHelper.getInstance().getUserState().setOnMatching(true);
+            DatabaseHelper.getInstance().getUserState().setOnMatching(false);
+            DatabaseHelper.getInstance().getUserState().setOnConfirm(false);
+            DatabaseHelper.getInstance().getUserState().setCurrentRequest(new Request());
             UserStateDataHelper.getInstance().recordState();
 
             Intent intent = new Intent(RiderMatchingActivity.this, RiderRequestActivity.class);
