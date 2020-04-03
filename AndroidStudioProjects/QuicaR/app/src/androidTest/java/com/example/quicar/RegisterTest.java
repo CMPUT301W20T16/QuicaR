@@ -44,11 +44,11 @@ public class RegisterTest {
         final TextInputLayout password = solo.getCurrentActivity().findViewById(R.id.password);
         final TextInputLayout cfmPassword = solo.getCurrentActivity().findViewById(R.id.confirm_password);
         solo.enterText(username.getEditText(), "helloworld");
-        solo.enterText(email.getEditText(), "helloworld@gmail.ca");
+        solo.enterText(email.getEditText(), "helloworld@gmail.com");
         solo.enterText(password.getEditText(), "123456");
         solo.enterText(cfmPassword.getEditText(), "123456");
         solo.clickOnView(solo.getView(R.id.sign_up_button));
-        assertTrue(solo.waitForText("sign up success", 1, 3000));
+        assertFalse(solo.waitForText("sign up success", 1, 3000));
         assertFalse(solo.waitForText("sign up failed",1,3000));
     }
 
