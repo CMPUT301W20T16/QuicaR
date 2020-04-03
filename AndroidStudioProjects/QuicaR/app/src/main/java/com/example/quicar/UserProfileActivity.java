@@ -214,16 +214,17 @@ public class UserProfileActivity extends AppCompatActivity implements OnGetUserD
                 }
             }
             //change later
-            if (this.emailLayout.getEditText().getText() != null) {
-                email = this.emailLayout.getEditText().getText().toString();
-                ;
-            }
+//            if (this.emailLayout.getEditText().getText() != null) {
+//                email = this.emailLayout.getEditText().getText().toString();
+//                ;
+//            }
+            email = user.getAccountInfo().getEmail();
 
-            if (this.usernameLayout.getEditText().getText() != null) {
-                username = this.usernameLayout.getEditText().getText().toString();
-                ;
-            }
-
+//            if (this.usernameLayout.getEditText().getText() != null) {
+//                username = this.usernameLayout.getEditText().getText().toString();
+//                ;
+//            }
+            username = user.getAccountInfo().getUserName();
             if(this.phoneLayout.getEditText().getText()!= null){
                 phone = this.phoneLayout.getEditText().getText().toString();
 //                System.out.println("here");

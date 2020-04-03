@@ -3,6 +3,7 @@ package com.example.quicar;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,6 +51,8 @@ public class HistoryActivity extends AppCompatActivity implements OnGetRecordDat
 
     @Override
     public void onFailure(String errorMessage) {
+//        Toast.makeText(HistoryActivity.this,
+//                errorMessage, Toast.LENGTH_SHORT).show();
 
     }
 
