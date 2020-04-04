@@ -66,6 +66,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
+                    // if user clicks "change email"
                     AlertDialog.Builder builder = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflater = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialog = inflater.inflate(R.layout.username_update_dialog, null);
@@ -154,6 +155,7 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                 }
 
                 if (position == 1) {
+                    // if user clicks "change password"
                     AlertDialog.Builder builderPwd = new AlertDialog.Builder(UpdateAccountActivity.this);
                     LayoutInflater inflaterPwd = LayoutInflater.from(UpdateAccountActivity.this);
                     View viewDialogPwd = inflaterPwd.inflate(R.layout.password_update_dialog, null);
@@ -199,9 +201,11 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                // re auth successful
                                                 Log.d(TAG, "User re-authenticated.");
                                                 Toast.makeText(getApplicationContext(), "re-authenticated", Toast.LENGTH_SHORT).show();
                                                 if (!pwdReset.equals(pwdResetConfirm)) {
+                                                    // if user confirms the password incorrectly
                                                     Toast.makeText(getApplicationContext(), "new passwords didn't match", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     mUser.updatePassword(pwdReset)
@@ -240,6 +244,10 @@ public class UpdateAccountActivity extends AppCompatActivity implements OnGetUse
 
     public static boolean isValidEmail(String email)
     {
+        /**
+         * validate the correct form of the email
+         * @param email: user enters the email
+         */
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +

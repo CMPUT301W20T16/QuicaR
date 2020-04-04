@@ -110,6 +110,8 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
                     return;
                 }
                 if (!checkUserNameOrEmail(myID)) {
+                    // If user signs in my username
+                    // retrieve that user's email
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                     Query query = databaseReference.child("User").orderByChild("accountInfo/userName").equalTo(myID);
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,6 +125,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
 
                                 User myUser = dataSnapshot1.getValue(User.class);
                                 String getEmail = myUser.getAccountInfo().getEmail();
+                                // get user's email
                                 mAuth.signInWithEmailAndPassword(getEmail, mypwd)
                                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -154,6 +157,7 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
                         }
                     });
                 } else {
+                    // if user signs in by email
                     mAuth.signInWithEmailAndPassword(myID, mypwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -296,6 +300,9 @@ public class Login extends AppCompatActivity implements OnGetUserDataListener, O
         }
     }
 
+    /**
+     * save user's login information
+     * */
     public void getPrefData() {
         SharedPreferences sp = getSharedPreferences(PREF, MODE_PRIVATE);
         if (sp.contains("mpref_name")) {
